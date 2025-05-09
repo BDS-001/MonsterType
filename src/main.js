@@ -1,6 +1,5 @@
 import './style.css';
 import Game from './game';
+import { phaserConfig } from './config/phaserConfig';
 
-const test = document.createElement('p')
-document.getElementById('app').appendChild(test)
-new Game(test)
+new Game(phaserConfig)
