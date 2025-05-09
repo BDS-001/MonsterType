@@ -1,3 +1,5 @@
+import Phaser from "phaser";
+
 export const phaserConfig = {
     type: Phaser.AUTO,
     width: 800,
