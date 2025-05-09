@@ -1,13 +1,20 @@
+import Phaser from 'phaser';
+import GameScene from './scenes/gameplayScene';
+
 export default class Game {
-    constructor(typingDom) {
-        this.dom = typingDom
-        this.#setupKeyListeners()
+    constructor(gameConfig) {
+        gameConfig.scene = [GameScene]
+        this.game = new Phaser.Game(gameConfig);
+        this.startGame()
         return
     }
 
-    #setupKeyListeners() {
-        window.addEventListener('keydown', (event) => {
-            this.dom.textContent = `${event.key}`
-        })
+    startGame() {
+        this.game.scene.start('GameScene');
+    }
+
+    goToMenu() {
+        // add later
+        // this.game.scene.start('MenuScene');
     }
 }
