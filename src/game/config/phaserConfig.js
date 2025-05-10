@@ -14,4 +14,19 @@ export const phaserConfig = {
             debug: false
         }
     },
+
+    fps: {
+        target: 60,
+        forceSetTimeOut: false,
+        deltaHistory: 10,
+    },
+    render: {
+        fps: {
+            min: 10,
+            target: 60,
+            limit: 120,
+            forceSetTimeOut: false,
+            deltaHistory: 10
+        }
+    }
 };
