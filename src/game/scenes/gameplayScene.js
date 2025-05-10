@@ -19,10 +19,6 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
         console.log('Create phase');
-        this.keyDisplay = this.add.text(100, 100, '', {
-            font: '32px Arial',
-            fill: '#ffffff'
-        });
 
         // Use phaser key linstener instead of event listener
         this.input.keyboard.on('keydown', (event) => {
@@ -33,9 +29,20 @@ export default class GameScene extends Phaser.Scene {
         // make a custom class to add player sprite
         this.player = new Player(this, 400, 300);
         this.enemy = new Enemy(this, 50, 50)
+
+        this.fpsText = this.add.text(10, 10, 'FPS: 0', { 
+            font: '16px Arial', 
+            fill: '#00ff00' 
+        });
+
+        this.keyDisplay = this.add.text(100, 100, '', {
+            font: '32px Arial',
+            fill: '#ffffff'
+        });
     }
 
     update() {
         this.keyDisplay.text = this.currentKey
+        this.fpsText.setText('FPS: ' + Math.round(this.game.loop.actualFps));
     }
 }
