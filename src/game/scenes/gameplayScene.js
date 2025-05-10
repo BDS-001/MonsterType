@@ -27,7 +27,7 @@ export default class GameScene extends Phaser.Scene {
         });
 
         // make a custom class to add player sprite
-        this.player = new Player(this, 400, 300);
+        this.player = new Player(this, this.game.config.width / 2, this.game.config.height / 2);
         this.enemy = new Enemy(this, 50, 50)
 
         this.fpsText = this.add.text(10, 10, 'FPS: 0', { 
