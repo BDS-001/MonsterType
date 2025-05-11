@@ -1,7 +1,12 @@
 import Phaser from "phaser";
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y) {
+    constructor(scene, minDistance, maxDistance) {
+        const angle = Math.random() * Math.PI * 2
+        const distance = minDistance + Math.random() * (maxDistance - minDistance)
+        const x = scene.player.x + Math.cos(angle) * distance;
+        const y = scene.player.y + Math.sin(angle) * distance;
+
         super(scene, x, y, 'enemy');
         this.scene = scene;
         scene.add.existing(this);

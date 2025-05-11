@@ -8,6 +8,7 @@ export default class GameScene extends Phaser.Scene {
         this.currentKey = null;
         this.player = null
         this.enemies
+        this.spawnTimer
     }
 
     preload() {
@@ -26,18 +27,26 @@ export default class GameScene extends Phaser.Scene {
             console.log(`Key pressed: ${this.currentKey}`);
         });
 
-        // setup enmies array using phaser group
-        this.enemies = this.add.group();
-        this.enemies.addMultiple([new Enemy(this, 200, 200), new Enemy(this, 400, 200), new Enemy(this, 600, 200)]);
-
         //player sprite
         this.player = new Player(this, this.game.config.width / 2, this.game.config.height / 2);
+
+        // setup enmies array using phaser group
+        this.enemies = this.add.group();
+        this.spawnEnemies()
 
         //fps counter text
         this.fpsText = this.add.text(10, 10, 'FPS: 0', { 
             font: '16px Arial', 
             fill: '#00ff00' 
         });
+    }
+
+    spawnEnemies() {
+        this.spawnTimer = setTimeout(() => {
+            clearTimeout(this.spawnTimer)
+            this.enemies.add(new Enemy(this, 100, 800))
+            this.spawnEnemies()
+        }, 1000)
     }
 
     update() {
