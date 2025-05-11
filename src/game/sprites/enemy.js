@@ -1,7 +1,13 @@
 import Phaser from "phaser";
+import wordBank from "../data/wordbank";
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, minDistance, maxDistance) {
+
+        //calculate the word index
+        const wordbankIndex = Math.floor(Math.random() * wordBank['easy'].length)
+        
+        //calculate the random coordiantes
         const angle = Math.random() * Math.PI * 2
         const distance = minDistance + Math.random() * (maxDistance - minDistance)
         const x = scene.player.x + Math.cos(angle) * distance;
@@ -11,7 +17,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
         scene.add.existing(this);
         this.setScale(8);
-        this.word = 'test'
+        this.word = wordBank['easy'][wordbankIndex]
         
         this.healthText = scene.add.text(x, y, this.word, { 
             fontFamily: 'Arial', 
