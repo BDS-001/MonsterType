@@ -2,54 +2,80 @@ import Phaser from 'phaser';
 import Player from '../sprites/player';
 import Enemy from '../sprites/enemy';
 
+/**
+ * Main gameplay scene
+ */
 export default class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene');
+        
+        // Initialize properties
         this.currentKey = null;
-        this.player = null
-        this.enemies = null
-        this.spawnEvent = null
+        this.player = null;
+        this.enemies = null;
+        this.spawnEvent = null;
+        this.fpsText = null;
     }
 
     preload() {
-        //preload game assets
-        console.log('Preload phase');
-        this.load.image('player', 'assets/sprite1.png')
-        this.load.image('enemy', 'assets/sprite2.png')
+        // Load game images
+        this.load.image('player', 'assets/sprite1.png');
+        this.load.image('enemy', 'assets/sprite2.png');
     }
 
     create() {
-        console.log('Create phase');
-
-        // Use phaser key linstener instead of event listener
-        this.input.keyboard.on('keydown', (event) => {
-            this.currentKey = event.key;
-            console.log(`Key pressed: ${this.currentKey}`);
-        });
-
-        //player sprite
-        this.player = new Player(this, this.game.config.width / 2, this.game.config.height / 2);
-
-        // setup enmies array using phaser group
-        this.enemies = this.add.group();
-        this.startSpawn()
-
-        //fps counter text
-        this.fpsText = this.add.text(10, 10, 'FPS: 0', { 
+        // Constants
+        const FPS_TEXT_STYLE = { 
             font: '16px Arial', 
             fill: '#00ff00' 
+        };
+        const ENEMY_SPAWN_DELAY = 1000; // ms
+        
+        // Setup keyboard input
+        this.setupKeyboardInput();
+        
+        // Create player at center of screen
+        this.createPlayer();
+        
+        // Setup enemy group and spawning
+        this.setupEnemies(ENEMY_SPAWN_DELAY);
+        
+        // Add FPS counter
+        this.fpsText = this.add.text(10, 10, 'FPS: 0', FPS_TEXT_STYLE);
+    }
+
+    // Setup keyboard input handling
+    setupKeyboardInput() {
+        this.input.keyboard.on('keydown', (event) => {
+            this.currentKey = event.key;
         });
+    }
+
+    createPlayer() {
+        const centerX = this.game.config.width / 2;
+        const centerY = this.game.config.height / 2;
+        this.player = new Player(this, centerX, centerY);
+    }
+
+    setupEnemies(spawnDelay) {
+        // Create enemy group
+        this.enemies = this.add.group();
+        
+        // Start spawning enemies
+        this.startSpawn(spawnDelay);
     }
 
     spawnEnemy() {
-        this.enemies.add(new Enemy(this, 100, 800))
+        const MIN_SPAWN_DISTANCE = 100;
+        const MAX_SPAWN_DISTANCE = 800;
+        this.enemies.add(new Enemy(this, MIN_SPAWN_DISTANCE, MAX_SPAWN_DISTANCE));
     }
 
-    startSpawn() {
+    startSpawn(delay) {
         this.spawnEvent = this.time.addEvent({
-            delay: 1000,
+            delay: delay,
             callback: this.spawnEnemy,
-            callbackScope: this,  
+            callbackScope: this,
             loop: true
         });
     }
@@ -62,13 +88,26 @@ export default class GameScene extends Phaser.Scene {
     }
 
     update() {
-        this.fpsText.setText('FPS: ' + Math.round(this.game.loop.actualFps));
+        // Update FPS counter
+        this.updateFpsCounter();
         
-        const currentEnemies = this.enemies.getChildren()
+        // Update all enemies
+        this.updateEnemies();
+        
+        // Reset current key after updating enemies
+        this.currentKey = null;
+    }
+    
+    updateFpsCounter() {
+        this.fpsText.setText('FPS: ' + Math.round(this.game.loop.actualFps));
+    }
+    
+    updateEnemies() {
+        const currentEnemies = this.enemies.getChildren();
+        
+        // Update each enemy (looping backward to handle removals)
         for (let i = currentEnemies.length - 1; i >= 0; i--) {
-            currentEnemies[i].update(this.currentKey)
+            currentEnemies[i].update(this.currentKey);
         }
-
-        this.currentKey = null
     }
 }
