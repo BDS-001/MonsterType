@@ -7,8 +7,8 @@ export default class GameScene extends Phaser.Scene {
         super('GameScene');
         this.currentKey = null;
         this.player = null
-        this.enemies
-        this.spawnTimer
+        this.enemies = null
+        this.spawnEvent = null
     }
 
     preload() {
@@ -32,7 +32,7 @@ export default class GameScene extends Phaser.Scene {
 
         // setup enmies array using phaser group
         this.enemies = this.add.group();
-        this.spawnEnemies()
+        this.startSpawn()
 
         //fps counter text
         this.fpsText = this.add.text(10, 10, 'FPS: 0', { 
@@ -41,12 +41,24 @@ export default class GameScene extends Phaser.Scene {
         });
     }
 
-    spawnEnemies() {
-        this.spawnTimer = setTimeout(() => {
-            clearTimeout(this.spawnTimer)
-            this.enemies.add(new Enemy(this, 100, 800))
-            this.spawnEnemies()
-        }, 1000)
+    spawnEnemy() {
+        this.enemies.add(new Enemy(this, 100, 800))
+    }
+
+    startSpawn() {
+        this.spawnEvent = this.time.addEvent({
+            delay: 1000,
+            callback: this.spawnEnemy,
+            callbackScope: this,  
+            loop: true
+        });
+    }
+
+    stopSpawn() {
+        if (this.spawnEvent) {
+            this.spawnEvent.remove();
+            this.spawnEvent = null;
+        }
     }
 
     update() {
