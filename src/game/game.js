@@ -3,6 +3,10 @@ import GameScene from './scenes/gameplayScene';
 
 export default class Game {
     constructor(gameConfig) {
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        gameConfig.width = viewportWidth
+        gameConfig.height = viewportHeight
         gameConfig.scene = [GameScene]
         this.game = new Phaser.Game(gameConfig); // Setup the phaser game
 
