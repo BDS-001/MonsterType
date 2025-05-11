@@ -5,7 +5,7 @@ import Enemy from '../sprites/enemy';
 export default class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene');
-        this.currentKey = 'Welcome to game!';
+        this.currentKey = null;
         this.keyDisplay = null;
         this.player = null
         this.enemy = null
@@ -28,7 +28,7 @@ export default class GameScene extends Phaser.Scene {
 
         // make a custom class to add player sprite
         this.player = new Player(this, this.game.config.width / 2, this.game.config.height / 2);
-        this.enemy = new Enemy(this, 50, 50)
+        this.enemy = new Enemy(this, 200, 200)
 
         this.fpsText = this.add.text(10, 10, 'FPS: 0', { 
             font: '16px Arial', 
@@ -44,5 +44,7 @@ export default class GameScene extends Phaser.Scene {
     update() {
         this.keyDisplay.text = this.currentKey
         this.fpsText.setText('FPS: ' + Math.round(this.game.loop.actualFps));
+        this.enemy.update(this.currentKey)
+        this.currentKey = null
     }
 }
