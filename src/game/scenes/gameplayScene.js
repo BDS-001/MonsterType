@@ -20,12 +20,12 @@ export default class GameScene extends Phaser.Scene {
 
     preload() {
         // Load game images
-        this.load.image('player', 'assets/sprite1.png');
-        this.load.image('enemy', 'assets/sprite2.png');
+        this.load.image('player', 'assets/playerRight.png');
+        this.load.image('enemy', 'assets/zombieRight.png');
     }
 
     create() {
-        const ENEMY_SPAWN_DELAY = 1000; // ms
+        const ENEMY_SPAWN_DELAY = 4000; // ms
         
         // Setup keyboard input
         this.setupKeyboardInput();
