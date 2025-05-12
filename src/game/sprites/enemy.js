@@ -28,9 +28,11 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         // Store references
         this.scene = scene;
         this.word = word;
+        this.moveSpeed = 40; 
         
         // Add this sprite to the scene
         scene.add.existing(this);
+        scene.physics.add.existing(this);
         this.setScale(ENEMY_SCALE);
         
         // Create the text that displays the word
@@ -38,6 +40,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         
         // Center the text on the sprite
         this.healthText.setOrigin(0.5);
+        this.healthText.setPosition(this.x, this.y - 30)
     }
 
     updateWord(letter) {
@@ -49,6 +52,23 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             // Update the displayed text
             this.healthText.setText(this.word);
         }
+    }
+
+    moveEnemy() {
+        //move enemy towards player
+        const player = this.scene.player;
+        const directionX = player.x - this.x;
+        const directionY = player.y - this.y;
+
+        // Normalize the direction vector (make it length 1)
+        const length = Math.sqrt(directionX * directionX + directionY * directionY);
+        const normalizedX = directionX / length;
+        const normalizedY = directionY / length;
+
+        this.setVelocity(
+            normalizedX * this.moveSpeed,
+            normalizedY * this.moveSpeed
+        );
     }
 
     destroy(fromScene) {
@@ -70,6 +90,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         // Destroy the enemy if the word is complete
         if (this.word.length < 1) {
             this.destroy();
+        } else {
+            this.moveEnemy();
+            this.healthText.setPosition(this.x, this.y - 30)
         }
     }
 }
