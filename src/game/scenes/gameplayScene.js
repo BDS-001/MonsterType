@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Player from '../sprites/player';
 import Enemy from '../sprites/enemy';
+import fpsCounter from '../util/fpsCounter';
 
 /**
  * Main gameplay scene
@@ -14,7 +15,7 @@ export default class GameScene extends Phaser.Scene {
         this.player = null;
         this.enemies = null;
         this.spawnEvent = null;
-        this.fpsText = null;
+        this.fpsDisplay = null;
     }
 
     preload() {
@@ -24,11 +25,6 @@ export default class GameScene extends Phaser.Scene {
     }
 
     create() {
-        // Constants
-        const FPS_TEXT_STYLE = { 
-            font: '16px Arial', 
-            fill: '#00ff00' 
-        };
         const ENEMY_SPAWN_DELAY = 1000; // ms
         
         // Setup keyboard input
@@ -41,7 +37,8 @@ export default class GameScene extends Phaser.Scene {
         this.setupEnemies(ENEMY_SPAWN_DELAY);
         
         // Add FPS counter
-        this.fpsText = this.add.text(10, 10, 'FPS: 0', FPS_TEXT_STYLE);
+        this.fpsDisplay = new fpsCounter(this)
+
     }
 
     // Setup keyboard input handling
@@ -89,17 +86,13 @@ export default class GameScene extends Phaser.Scene {
 
     update() {
         // Update FPS counter
-        this.updateFpsCounter();
+        this.fpsDisplay.updateFPS()
         
         // Update all enemies
         this.updateEnemies();
         
         // Reset current key after updating enemies
         this.currentKey = null;
-    }
-    
-    updateFpsCounter() {
-        this.fpsText.setText('FPS: ' + Math.round(this.game.loop.actualFps));
     }
     
     updateEnemies() {
