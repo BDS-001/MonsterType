@@ -87,7 +87,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.updateWord(letter);
         }
         
-        // Destroy the enemy if the word is complete
+        // Destroy the enemy if the word is complete, else move towards the palyer
         if (this.word.length < 1) {
             this.destroy();
         } else {
