@@ -7,7 +7,7 @@ import wordBank from "../data/wordbank";
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, minDistance, maxDistance) {
         // Constants
-        const ENEMY_SCALE = 8;
+        const ENEMY_SCALE = 4;
         const TEXT_STYLE = { 
             fontFamily: 'Arial', 
             fontSize: 16, 
