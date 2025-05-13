@@ -12,7 +12,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
         
         // Constants
-        const PLAYER_SCALE = 8;
+        const PLAYER_SCALE = 4;
         
         // Set the scale of the player sprite
         this.setScale(PLAYER_SCALE);
