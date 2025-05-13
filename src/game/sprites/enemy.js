@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import wordBank from "../data/wordbank";
+import settings from "../config/gameConfig";
 
 /**
  * Enemy class that spawns with a word that players need to type
@@ -7,7 +8,6 @@ import wordBank from "../data/wordbank";
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, minDistance, maxDistance) {
         // Constants
-        const ENEMY_SCALE = 4;
         const TEXT_STYLE = { 
             fontFamily: 'Arial', 
             fontSize: 16, 
@@ -33,7 +33,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         // Add this sprite to the scene
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setScale(ENEMY_SCALE);
+        this.setScale(settings.SPRITE_SCALE);
         
         // Create the text that displays the word
         this.healthText = scene.add.text(spawnPosition.x, spawnPosition.y - (this.displayHeight / 2) - 10, this.word, TEXT_STYLE);
