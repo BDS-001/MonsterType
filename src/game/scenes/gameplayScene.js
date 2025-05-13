@@ -64,7 +64,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     spawnEnemy() {
-        const MIN_SPAWN_DISTANCE = 100;
+        const MIN_SPAWN_DISTANCE = 400;
         const MAX_SPAWN_DISTANCE = 800;
         this.enemies.add(new Enemy(this, MIN_SPAWN_DISTANCE, MAX_SPAWN_DISTANCE));
     }

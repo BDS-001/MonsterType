@@ -36,7 +36,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.setScale(ENEMY_SCALE);
         
         // Create the text that displays the word
-        this.healthText = scene.add.text(spawnPosition.x, spawnPosition.y - (this.displayHeight / 2), this.word, TEXT_STYLE);
+        this.healthText = scene.add.text(spawnPosition.x, spawnPosition.y - (this.displayHeight / 2) - 10, this.word, TEXT_STYLE);
         
         // Center the text on the sprite
         this.healthText.setOrigin(0.5);
@@ -92,7 +92,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.destroy();
         } else {
             this.moveEnemy();
-            this.healthText.setPosition(this.x, this.y - (this.displayHeight / 2))
+            this.healthText.setPosition(this.x, this.y - (this.displayHeight / 2) - 10)
         }
     }
 }
