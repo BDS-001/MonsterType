@@ -51,6 +51,12 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             
             // Update the displayed text
             this.healthText.setText(this.word);
+
+            //use tint to make a damage effect
+            this.setTint(0xff0000);
+            this.scene.time.delayedCall(100, () => {
+                 this.clearTint(); // Return to normal
+            });
         }
     }
 
