@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import Player from '../sprites/player';
 import Enemy from '../sprites/enemy';
 import fpsCounter from '../util/fpsCounter';
+import settings from '../config/gameConfig';
 
 /**
  * Main gameplay scene
@@ -16,6 +17,7 @@ export default class GameScene extends Phaser.Scene {
         this.enemies = null;
         this.spawnEvent = null;
         this.fpsDisplay = null;
+        this.grassBackground = null;
     }
 
     preload() {
@@ -23,9 +25,22 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('player', 'assets/playerRight.png');
         this.load.image('zombieRight', 'assets/zombieRight.png');
         this.load.image('zombieLeft', 'assets/zombieLeft.png');
+        this.load.image('grass', 'assets/grass.png')
     }
 
     create() {
+
+        this.grassBackground = this.add.tileSprite(
+            0, 0,                                   // Position at top-left corner
+            this.cameras.main.width,                // Width of game canvas
+            this.cameras.main.height,               // Height of game canvas
+            'grass'                             // Your grass tile's image key
+        );
+        this.grassBackground.setScale(settings.SPRITE_SCALE)
+        
+        // Set the origin to the top-left (0,0) instead of center
+        this.grassBackground.setOrigin(0, 0);
+
         const ENEMY_SPAWN_DELAY = 1000; // ms
         
         // Setup keyboard input
