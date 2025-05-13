@@ -21,9 +21,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         
         // Calculate random spawn position
         const spawnPosition = calculateRandomPosition(scene.player, minDistance, maxDistance);
-        
+        const spriteImage = spawnPosition.x > scene.player.x ? 'zombieLeft' : 'zombieRight' 
         // Call the parent constructor
-        super(scene, spawnPosition.x, spawnPosition.y, 'enemy');
+        super(scene, spawnPosition.x, spawnPosition.y, spriteImage);
         
         // Store references
         this.scene = scene;
