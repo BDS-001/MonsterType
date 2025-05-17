@@ -29,6 +29,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
         this.word = word;
         this.moveSpeed = 40; 
+        this.knockback = 80
         
         // Add this sprite to the scene
         scene.add.existing(this);
@@ -57,6 +58,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.scene.time.delayedCall(100, () => {
                  this.clearTint(); // Return to normal
             });
+            this.knockbackEnemy()
         }
     }
 
@@ -75,6 +77,20 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             normalizedX * this.moveSpeed,
             normalizedY * this.moveSpeed
         );
+    }
+
+    knockbackEnemy() {
+        const player = this.scene.player;
+        const directionX = player.x - this.x;
+        const directionY = player.y - this.y;
+
+        // Normalize the direction vector (make it length 1)
+        const length = Math.sqrt(directionX * directionX + directionY * directionY);
+        const normalizedX = directionX / length;
+        const normalizedY = directionY / length;
+
+        this.x -= normalizedX * this.knockback;
+        this.y -= normalizedY * this.knockback;
     }
 
     destroy(fromScene) {
