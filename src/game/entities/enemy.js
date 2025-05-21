@@ -27,11 +27,12 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         
         // Store references
         this.scene = scene;
-        this.word = word;
         this.moveSpeed = 40; 
         this.knockback = 80;
-        this.letterIndex = 0;
-        this.displayedWord = word
+        this.fullWord = word;
+        this.typedIndex = 0;
+        this.hitIndex = 0;
+        this.displayedWord = this.fullWord;
         
         // Add this sprite to the scene
         scene.add.existing(this);
@@ -44,31 +45,38 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         // Center the text on the sprite
         this.healthText.setOrigin(0.5);
         this.healthText.setPosition(this.x, this.y - 30)
+        this.healthText.setText(this.displayedWord);
     }
 
     updateWord(letter) {
-        // Check if the typed letter matches the first letter of the word
-        if (this.letterIndex < this.word.length && letter === this.word[this.letterIndex]) {
-            //create bullet (testing)
+        if (this.typedIndex < this.fullWord.length && letter === this.fullWord[this.typedIndex]) {
             this.scene.fireProjectile(this.scene.player, this);
-            this.letterIndex += 1
+            this.typedIndex++;
         }
     }
 
+
     takeDamage() {
-            // Remove the first letter from the word
-            this.displayedWord = this.displayedWord.slice(1);
-            
-            // Update the displayed text
+        // only apply damage if there’s still a pending shot
+        if (this.hitIndex < this.typedIndex) {
+            this.hitIndex++;
+
+            // slice off as many letters as have _actually_ hit
+            this.displayedWord = this.fullWord.slice(this.hitIndex);
             this.healthText.setText(this.displayedWord);
 
-            //use tint to make a damage effect
+            // flash + knockback…
             this.setTint(0xff0000);
-            this.scene.time.delayedCall(100, () => {
-                 this.clearTint(); // Return to normal
-            });
-            this.knockbackEnemy()
+            this.scene.time.delayedCall(100, () => this.clearTint());
+            this.knockbackEnemy();
+
+            // if we’ve removed the whole word, kill the enemy
+            if (this.displayedWord.length === 0) {
+                this.destroy();
+            }
+        }
     }
+
 
     moveEnemy() {
         //move enemy towards player
@@ -117,13 +125,8 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.updateWord(letter);
         }
         
-        // Destroy the enemy if the word is complete, else move towards the palyer
-        if (this.displayedWord.length < 1) {
-            this.destroy();
-        } else {
-            this.moveEnemy();
-            this.healthText.setPosition(this.x, this.y - (this.displayHeight / 2) - 10)
-        }
+        this.moveEnemy();
+        this.healthText.setPosition(this.x, this.y - (this.displayHeight / 2) - 10)
     }
 }
 
