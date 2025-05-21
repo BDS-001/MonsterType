@@ -18,6 +18,7 @@ export default class GameScene extends Phaser.Scene {
         this.spawnEvent = null;
         this.fpsDisplay = null;
         this.grassBackground = null;
+        this.playerImmunity = false
     }
 
     preload() {
@@ -61,10 +62,15 @@ export default class GameScene extends Phaser.Scene {
     }
 
     handleEnemyCollision(player, enemy) {
-        player.takeDamage()
-        enemy.knockbackEnemy()
-        
-        console.log("Player health: " + player.health);
+        if (!this.playerImmunity) {
+            player.takeDamage()
+            enemy.knockbackEnemy()
+            console.log("Player health: " + player.health);
+            this.playerImmunity = true
+            this.time.delayedCall(200, () => {
+                this.playerImmunity = false
+            });
+        }
     }
 
     // Setup keyboard input handling
