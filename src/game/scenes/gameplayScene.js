@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import Player from '../sprites/player';
-import Enemy from '../sprites/enemy';
+import Player from '../entities/player';
+import Enemy from '../entities/enemy';
 import fpsCounter from '../util/fpsCounter';
 import settings from '../config/gameConfig';
 
