@@ -63,20 +63,31 @@ export default class GameScene extends Phaser.Scene {
         this.fpsDisplay = new fpsCounter(this)
 
         // Enable player and enemie collision
-        this.physics.add.overlap(this.player, this.enemies, this.handleEnemyCollision, null, this);
+        this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
+        this.physics.add.overlap(this.enemies, this.projectiles, this.handleProjectileEnemyCollision, null, this);
 
     }
 
-    handleEnemyCollision(player, enemy) {
+    handlePlayerEnemyCollision(player, enemy) {
         if (!this.playerImmunity) {
             player.takeDamage()
             enemy.knockbackEnemy()
-            console.log("Player health: " + player.health);
+
             this.playerImmunity = true
             this.time.delayedCall(200, () => {
                 this.playerImmunity = false
             });
         }
+    }
+
+    handleProjectileEnemyCollision(enemy, projectile) {
+        if (!projectile.active || projectile.targetEnemy !== enemy) {
+            return;
+        }
+    
+        console.log("Target match - applying damage!");
+        enemy.takeDamage();
+        projectile.kill()
     }
 
     // Setup keyboard input handling
@@ -146,7 +157,9 @@ export default class GameScene extends Phaser.Scene {
         const projectile = this.projectiles.get();
         
         if (projectile) {
-            projectile.fire(source.x, source.y, targetEnemy.x, targetEnemy.y);
+            console.log("Before firing - Target enemy:", targetEnemy);
+            projectile.fire(source, targetEnemy);
+            console.log("After firing - projectile.targetEnemy:", projectile.targetEnemy);
         }
     }
 
