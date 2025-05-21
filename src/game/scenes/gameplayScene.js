@@ -61,13 +61,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     handleEnemyCollision(player, enemy) {
-        player.health -= 10; 
-        
-        // Visual feedback
-        player.setTint(0xff0000);
-        this.time.delayedCall(100, () => {
-            player.clearTint();
-        });
+        player.takeDamage()
         enemy.knockbackEnemy()
         
         console.log("Player health: " + player.health);
