@@ -55,6 +55,22 @@ export default class GameScene extends Phaser.Scene {
         // Add FPS counter
         this.fpsDisplay = new fpsCounter(this)
 
+        // Enable player and enemie collision
+        this.physics.add.overlap(this.player, this.enemies, this.handleEnemyCollision, null, this);
+
+    }
+
+    handleEnemyCollision(player, enemy) {
+        player.health -= 10; 
+        
+        // Visual feedback
+        player.setTint(0xff0000);
+        this.time.delayedCall(100, () => {
+            player.clearTint();
+        });
+        enemy.knockbackEnemy()
+        
+        console.log("Player health: " + player.health);
     }
 
     // Setup keyboard input handling
