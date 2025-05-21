@@ -59,6 +59,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
                  this.clearTint(); // Return to normal
             });
             this.knockbackEnemy()
+
+            //create bullet (testing)
+            this.scene.fireProjectile(this.scene.player, this);
         }
     }
 
