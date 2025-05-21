@@ -3,6 +3,7 @@ import Player from '../entities/player';
 import Enemy from '../entities/enemy';
 import fpsCounter from '../util/fpsCounter';
 import settings from '../config/gameConfig';
+import Projectile from '../entities/projectile';
 
 /**
  * Main gameplay scene
@@ -19,6 +20,7 @@ export default class GameScene extends Phaser.Scene {
         this.fpsDisplay = null;
         this.grassBackground = null;
         this.playerImmunity = false
+        this.projectiles = null;
     }
 
     preload() {
@@ -27,6 +29,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('zombieRight', 'assets/zombieRight.png');
         this.load.image('zombieLeft', 'assets/zombieLeft.png');
         this.load.image('grass', 'assets/grass.png')
+        this.load.image('projectile', 'assets/basicShot.png')
     }
 
     create() {
@@ -52,6 +55,9 @@ export default class GameScene extends Phaser.Scene {
         
         // Setup enemy group and spawning
         this.setupEnemies(ENEMY_SPAWN_DELAY);
+
+        // Setup projectiles
+        this.setupProjectiles();
         
         // Add FPS counter
         this.fpsDisplay = new fpsCounter(this)
@@ -94,6 +100,16 @@ export default class GameScene extends Phaser.Scene {
         this.startSpawn(spawnDelay);
     }
 
+    setupProjectiles() {
+    this.projectiles = this.physics.add.group({
+        classType: Projectile,
+        defaultKey: 'projectile',
+        maxSize: 30,
+        active: false,
+        visible: false
+    });
+}
+
     spawnEnemy() {
         const MIN_SPAWN_DISTANCE = 400;
         const MAX_SPAWN_DISTANCE = 800;
@@ -116,12 +132,32 @@ export default class GameScene extends Phaser.Scene {
         }
     }
 
+    updateProjectiles() {
+        const projectiles = this.projectiles.getChildren();
+        for (let i = 0; i < projectiles.length; i++) {
+            const projectile = projectiles[i];
+            if (projectile.active) {
+                projectile.update();
+            }
+        }
+    }
+
+    fireProjectile(source, targetEnemy) {
+        const projectile = this.projectiles.get();
+        
+        if (projectile) {
+            projectile.fire(source.x, source.y, targetEnemy.x, targetEnemy.y);
+        }
+    }
+
     update() {
         // Update FPS counter
         this.fpsDisplay.updateFPS()
         
         // Update all enemies
         this.updateEnemies();
+
+        this.updateProjectiles();
         
         // Reset current key after updating enemies
         this.currentKey = null;
