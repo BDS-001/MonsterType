@@ -21,19 +21,31 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
         this.setVisible(false);
         
         this.speed = 2000;
+        this.targetEnemy = null
+    }
+
+    kill() {
+        this.setActive(false);
+        this.setVisible(false);
+        this.body.enable = false; 
+        this.targetEnemy = null
     }
     
-    fire(x, y, targetX, targetY) {
-        // Position the projectile at the starting point
-        this.setPosition(x, y);
-        
-        // Make it active and visible
+    fire(source, target) {
+
+        this.targetEnemy = target;
+        this.body.enable = true;
         this.setActive(true);
         this.setVisible(true);
+
+        // Position the projectile at the starting point
+        this.setPosition(source.x, source.y);
+        
+        this.body.enable = true;
         
         // Calculate direction towards target
-        const directionX = targetX - x;
-        const directionY = targetY - y;
+        const directionX = target.x - source.x;
+        const directionY = target.y - source.y;
         
         // Normalize the direction vector
         const length = Math.sqrt(directionX * directionX + directionY * directionY);
@@ -54,6 +66,7 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
             this.y < bounds.y || this.y > bounds.height) {
             this.setActive(false);
             this.setVisible(false);
+            this.body.enable = false; 
         }
     }
 }
