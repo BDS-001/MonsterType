@@ -3,32 +3,32 @@ import GameScene from './scenes/gameplayScene';
 import { PauseScene } from './scenes/pauseScene';
 
 export default class Game {
-    constructor(gameConfig) {
-        // Adjust config to match viewport dimensions
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        
-        // Apply configurations
-        const config = {
-            ...gameConfig,
-            width: viewportWidth,
-            height: viewportHeight,
-            scene: [PauseScene, GameScene]
-        };
+	constructor(gameConfig) {
+		// Adjust config to match viewport dimensions
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
 
-        // Initialize Phaser game instance
-        this.game = new Phaser.Game(config);
+		// Apply configurations
+		const config = {
+			...gameConfig,
+			width: viewportWidth,
+			height: viewportHeight,
+			scene: [PauseScene, GameScene],
+		};
 
-        this.startGame()
-        return
-    }
+		// Initialize Phaser game instance
+		this.game = new Phaser.Game(config);
 
-    startGame() {
-        this.game.scene.start('GameScene');
-    }
+		this.startGame();
+		return;
+	}
 
-    goToMenu() {
-        // add later
-        // this.game.scene.start('MenuScene');
-    }
+	startGame() {
+		this.game.scene.start('GameScene');
+	}
+
+	goToMenu() {
+		// add later
+		// this.game.scene.start('MenuScene');
+	}
 }
