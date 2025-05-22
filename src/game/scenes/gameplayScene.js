@@ -96,7 +96,6 @@ export default class GameScene extends Phaser.Scene {
 			return;
 		}
 
-		console.log('Target match - applying damage!');
 		enemy.takeDamage();
 		projectile.kill();
 	}
@@ -168,9 +167,7 @@ export default class GameScene extends Phaser.Scene {
 		const projectile = this.projectiles.get();
 
 		if (projectile) {
-			console.log('Before firing - Target enemy:', targetEnemy);
 			projectile.fire(source, targetEnemy);
-			console.log('After firing - projectile.targetEnemy:', projectile.targetEnemy);
 		}
 	}
 

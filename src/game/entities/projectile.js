@@ -40,8 +40,6 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 		// Position the projectile at the starting point
 		this.setPosition(source.x, source.y);
 
-		this.body.enable = true;
-
 		// Calculate direction towards target
 		const directionX = target.x - source.x;
 		const directionY = target.y - source.y;

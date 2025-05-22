@@ -89,47 +89,29 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
 	updateWord(letter) {
 		if (this.isDestroyed) {
-			console.warn('Trying to update destroyed enemy!');
 			return;
 		}
-
 		if (this.typedIndex < this.fullWord.length && letter === this.fullWord[this.typedIndex]) {
-			console.log(`Enemy ${this.fullWord}: Letter '${letter}' matched at index ${this.typedIndex}`);
-
 			this.typedIndex++;
 			this.pendingShots++;
 			this.totalShotsFired++;
 
-			console.log(
-				`Firing projectile. Pending shots: ${this.pendingShots}, Total fired: ${this.totalShotsFired}`
-			);
 			this.scene.fireProjectile(this.scene.player, this);
 
 			this.updateDebugDisplay();
-		} else {
-			console.log(
-				`Enemy ${this.fullWord}: Letter '${letter}' did not match expected '${this.fullWord[this.typedIndex]}' at index ${this.typedIndex}`
-			);
 		}
 	}
 
 	takeDamage() {
 		if (this.isDestroyed) {
-			console.warn('Trying to damage destroyed enemy!');
 			return;
 		}
-
-		console.log(
-			`Enemy ${this.fullWord}: Taking damage. hitIndex: ${this.hitIndex}, typedIndex: ${this.typedIndex}, pending: ${this.pendingShots}`
-		);
 
 		// only apply damage if there's still a pending shot
 		if (this.hitIndex < this.typedIndex && this.pendingShots > 0) {
 			this.hitIndex++;
 			this.pendingShots--;
 			this.totalShotsHit++;
-
-			console.log(`Damage applied! New hitIndex: ${this.hitIndex}, pending: ${this.pendingShots}`);
 
 			// slice off as many letters as have _actually_ hit
 			this.displayedWord = this.fullWord.slice(this.hitIndex);
@@ -146,15 +128,11 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
 			// if we've removed the whole word, kill the enemy
 			if (this.displayedWord.length === 0) {
-				console.log(`Enemy ${this.fullWord}: Word completed, destroying enemy`);
 				this.destroy();
 			} else {
 				this.updateDebugDisplay();
 			}
 		} else {
-			console.warn(
-				`Enemy ${this.fullWord}: Damage blocked! hitIndex: ${this.hitIndex}, typedIndex: ${this.typedIndex}, pending: ${this.pendingShots}`
-			);
 			this.updateDebugDisplay();
 		}
 	}
@@ -192,7 +170,6 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	destroy(fromScene) {
-		console.log(`Enemy ${this.fullWord}: Destroying enemy`);
 		this.isDestroyed = true;
 
 		// First destroy the text

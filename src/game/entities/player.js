@@ -15,11 +15,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		// Set the scale of the player sprite
 		this.setScale(settings.SPRITE_SCALE);
 		this.health = 100;
-		this.immune = false;
-	}
-
-	update() {
-		return;
 	}
 
 	takeDamage() {
