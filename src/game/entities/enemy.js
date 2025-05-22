@@ -1,230 +1,240 @@
-import Phaser from "phaser";
-import wordBank from "../data/wordbank";
-import settings from "../config/gameConfig";
+import Phaser from 'phaser';
+import wordBank from '../data/wordbank';
+import settings from '../config/gameConfig';
 
 /**
  * Enemy class that spawns with a word that players need to type
  */
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, minDistance, maxDistance) {
-        // Constants
-        const TEXT_STYLE = { 
-            fontFamily: 'Arial', 
-            fontSize: 16, 
-            color: '#ffffff' 
-        };
+	constructor(scene, minDistance, maxDistance) {
+		// Constants
+		const TEXT_STYLE = {
+			fontFamily: 'Arial',
+			fontSize: 16,
+			color: '#ffffff',
+		};
 
-        const DEBUG_STYLE = {
-            fontFamily: 'Arial',
-            fontSize: 12,
-            color: '#ffff00',
-            backgroundColor: '#000000',
-            padding: { x: 4, y: 2 }
-        };
-        
-        // Select a random word from the word bank
-        const wordCategory = 'easy';
-        const wordbankIndex = Math.floor(Math.random() * wordBank[wordCategory].length);
-        const word = wordBank[wordCategory][wordbankIndex];
-        
-        // Calculate random spawn position
-        const spawnPosition = calculateRandomPosition(scene.player, minDistance, maxDistance);
-        const spriteImage = spawnPosition.x > scene.player.x ? 'zombieLeft' : 'zombieRight' 
-        // Call the parent constructor
-        super(scene, spawnPosition.x, spawnPosition.y, spriteImage);
-        
-        // Store references
-        this.scene = scene;
-        this.moveSpeed = 40; 
-        this.knockback = 80;
-        this.fullWord = word;
-        this.typedIndex = 0;
-        this.hitIndex = 0;
-        this.displayedWord = this.fullWord;
-        this.pendingShots = 0; // Track shots that haven't hit yet
-        this.totalShotsFired = 0;
-        this.totalShotsHit = 0;
-        this.isDestroyed = false;
-        
-        // Add this sprite to the scene
-        scene.add.existing(this);
-        scene.physics.add.existing(this);
-        this.setScale(settings.SPRITE_SCALE);
-        
-        // Create the text that displays the word
-        this.healthText = scene.add.text(spawnPosition.x, spawnPosition.y - (this.displayHeight / 2) - 10, this.word, TEXT_STYLE);
-        
-        // Center the text on the sprite
-        this.healthText.setOrigin(0.5);
-        this.healthText.setPosition(this.x, this.y - 30)
-        this.healthText.setText(this.displayedWord);
+		const DEBUG_STYLE = {
+			fontFamily: 'Arial',
+			fontSize: 12,
+			color: '#ffff00',
+			backgroundColor: '#000000',
+			padding: { x: 4, y: 2 },
+		};
 
-        // Create debug text display
-        this.debugText = scene.add.text(this.x, this.y + 40, '', DEBUG_STYLE);
-        this.debugText.setOrigin(0.5);
-        this.updateDebugDisplay();
-    }
+		// Select a random word from the word bank
+		const wordCategory = 'easy';
+		const wordbankIndex = Math.floor(Math.random() * wordBank[wordCategory].length);
+		const word = wordBank[wordCategory][wordbankIndex];
 
-    updateDebugDisplay() {
-        if (this.debugText && !this.isDestroyed) {
-            const debugInfo = [
-                `Word: "${this.fullWord}"`,
-                `Display: "${this.displayedWord}"`,
-                `Typed: ${this.typedIndex}/${this.fullWord.length}`,
-                `Hit: ${this.hitIndex}/${this.typedIndex}`,
-                `Pending: ${this.pendingShots}`,
-                `Shots: ${this.totalShotsFired}→${this.totalShotsHit}`,
-                `Active: ${this.active}`,
-                `Body: ${this.body ? this.body.enable : 'null'}`
-            ].join('\n');
-            
-            this.debugText.setText(debugInfo);
-        }
-    }
+		// Calculate random spawn position
+		const spawnPosition = calculateRandomPosition(scene.player, minDistance, maxDistance);
+		const spriteImage = spawnPosition.x > scene.player.x ? 'zombieLeft' : 'zombieRight';
+		// Call the parent constructor
+		super(scene, spawnPosition.x, spawnPosition.y, spriteImage);
 
-    updateWord(letter) {
-        if (this.isDestroyed) {
-            console.warn("Trying to update destroyed enemy!");
-            return;
-        }
+		// Store references
+		this.scene = scene;
+		this.moveSpeed = 40;
+		this.knockback = 80;
+		this.fullWord = word;
+		this.typedIndex = 0;
+		this.hitIndex = 0;
+		this.displayedWord = this.fullWord;
+		this.pendingShots = 0; // Track shots that haven't hit yet
+		this.totalShotsFired = 0;
+		this.totalShotsHit = 0;
+		this.isDestroyed = false;
 
-        if (this.typedIndex < this.fullWord.length && letter === this.fullWord[this.typedIndex]) {
-            console.log(`Enemy ${this.fullWord}: Letter '${letter}' matched at index ${this.typedIndex}`);
-            
-            this.typedIndex++;
-            this.pendingShots++;
-            this.totalShotsFired++;
-            
-            console.log(`Firing projectile. Pending shots: ${this.pendingShots}, Total fired: ${this.totalShotsFired}`);
-            this.scene.fireProjectile(this.scene.player, this);
-            
-            this.updateDebugDisplay();
-        } else {
-            console.log(`Enemy ${this.fullWord}: Letter '${letter}' did not match expected '${this.fullWord[this.typedIndex]}' at index ${this.typedIndex}`);
-        }
-    }
+		// Add this sprite to the scene
+		scene.add.existing(this);
+		scene.physics.add.existing(this);
+		this.setScale(settings.SPRITE_SCALE);
 
-    takeDamage() {
-        if (this.isDestroyed) {
-            console.warn("Trying to damage destroyed enemy!");
-            return;
-        }
+		// Create the text that displays the word
+		this.healthText = scene.add.text(
+			spawnPosition.x,
+			spawnPosition.y - this.displayHeight / 2 - 10,
+			this.word,
+			TEXT_STYLE
+		);
 
-        console.log(`Enemy ${this.fullWord}: Taking damage. hitIndex: ${this.hitIndex}, typedIndex: ${this.typedIndex}, pending: ${this.pendingShots}`);
-        
-        // only apply damage if there's still a pending shot
-        if (this.hitIndex < this.typedIndex && this.pendingShots > 0) {
-            this.hitIndex++;
-            this.pendingShots--;
-            this.totalShotsHit++;
+		// Center the text on the sprite
+		this.healthText.setOrigin(0.5);
+		this.healthText.setPosition(this.x, this.y - 30);
+		this.healthText.setText(this.displayedWord);
 
-            console.log(`Damage applied! New hitIndex: ${this.hitIndex}, pending: ${this.pendingShots}`);
+		// Create debug text display
+		this.debugText = scene.add.text(this.x, this.y + 40, '', DEBUG_STYLE);
+		this.debugText.setOrigin(0.5);
+		this.updateDebugDisplay();
+	}
 
-            // slice off as many letters as have _actually_ hit
-            this.displayedWord = this.fullWord.slice(this.hitIndex);
-            this.healthText.setText(this.displayedWord);
+	updateDebugDisplay() {
+		if (this.debugText && !this.isDestroyed) {
+			const debugInfo = [
+				`Word: "${this.fullWord}"`,
+				`Display: "${this.displayedWord}"`,
+				`Typed: ${this.typedIndex}/${this.fullWord.length}`,
+				`Hit: ${this.hitIndex}/${this.typedIndex}`,
+				`Pending: ${this.pendingShots}`,
+				`Shots: ${this.totalShotsFired}→${this.totalShotsHit}`,
+				`Active: ${this.active}`,
+				`Body: ${this.body ? this.body.enable : 'null'}`,
+			].join('\n');
 
-            // flash + knockback…
-            this.setTint(0xff0000);
-            this.scene.time.delayedCall(100, () => {
-                if (!this.isDestroyed) {
-                    this.clearTint();
-                }
-            });
-            this.knockbackEnemy();
+			this.debugText.setText(debugInfo);
+		}
+	}
 
-            // if we've removed the whole word, kill the enemy
-            if (this.displayedWord.length === 0) {
-                console.log(`Enemy ${this.fullWord}: Word completed, destroying enemy`);
-                this.destroy();
-            } else {
-                this.updateDebugDisplay();
-            }
-        } else {
-            console.warn(`Enemy ${this.fullWord}: Damage blocked! hitIndex: ${this.hitIndex}, typedIndex: ${this.typedIndex}, pending: ${this.pendingShots}`);
-            this.updateDebugDisplay();
-        }
-    }
+	updateWord(letter) {
+		if (this.isDestroyed) {
+			console.warn('Trying to update destroyed enemy!');
+			return;
+		}
 
-    moveEnemy() {
-        if (this.isDestroyed) return;
+		if (this.typedIndex < this.fullWord.length && letter === this.fullWord[this.typedIndex]) {
+			console.log(`Enemy ${this.fullWord}: Letter '${letter}' matched at index ${this.typedIndex}`);
 
-        //move enemy towards player
-        const player = this.scene.player;
-        const directionX = player.x - this.x;
-        const directionY = player.y - this.y;
+			this.typedIndex++;
+			this.pendingShots++;
+			this.totalShotsFired++;
 
-        // Normalize the direction vector (make it length 1)
-        const length = Math.sqrt(directionX * directionX + directionY * directionY);
-        const normalizedX = directionX / length;
-        const normalizedY = directionY / length;
+			console.log(
+				`Firing projectile. Pending shots: ${this.pendingShots}, Total fired: ${this.totalShotsFired}`
+			);
+			this.scene.fireProjectile(this.scene.player, this);
 
-        this.setVelocity(
-            normalizedX * this.moveSpeed,
-            normalizedY * this.moveSpeed
-        );
-    }
+			this.updateDebugDisplay();
+		} else {
+			console.log(
+				`Enemy ${this.fullWord}: Letter '${letter}' did not match expected '${this.fullWord[this.typedIndex]}' at index ${this.typedIndex}`
+			);
+		}
+	}
 
-    knockbackEnemy() {
-        if (this.isDestroyed) return;
+	takeDamage() {
+		if (this.isDestroyed) {
+			console.warn('Trying to damage destroyed enemy!');
+			return;
+		}
 
-        const player = this.scene.player;
-        const directionX = player.x - this.x;
-        const directionY = player.y - this.y;
+		console.log(
+			`Enemy ${this.fullWord}: Taking damage. hitIndex: ${this.hitIndex}, typedIndex: ${this.typedIndex}, pending: ${this.pendingShots}`
+		);
 
-        // Normalize the direction vector (make it length 1)
-        const length = Math.sqrt(directionX * directionX + directionY * directionY);
-        const normalizedX = directionX / length;
-        const normalizedY = directionY / length;
+		// only apply damage if there's still a pending shot
+		if (this.hitIndex < this.typedIndex && this.pendingShots > 0) {
+			this.hitIndex++;
+			this.pendingShots--;
+			this.totalShotsHit++;
 
-        this.x -= normalizedX * this.knockback;
-        this.y -= normalizedY * this.knockback;
-    }
+			console.log(`Damage applied! New hitIndex: ${this.hitIndex}, pending: ${this.pendingShots}`);
 
-    destroy(fromScene) {
-        console.log(`Enemy ${this.fullWord}: Destroying enemy`);
-        this.isDestroyed = true;
-        
-        // First destroy the text
-        if (this.healthText) {
-            this.healthText.destroy();
-        }
-        
-        // Destroy debug text
-        if (this.debugText) {
-            this.debugText.destroy();
-        }
-        
-        // Then call parent's destroy to destroy the sprite itself
-        super.destroy(fromScene);
-    }
-    
-    update(letter) {
-        if (this.isDestroyed) return;
+			// slice off as many letters as have _actually_ hit
+			this.displayedWord = this.fullWord.slice(this.hitIndex);
+			this.healthText.setText(this.displayedWord);
 
-        // Update word if a letter was typed
-        if (letter) {
-            this.updateWord(letter);
-        }
-        
-        this.moveEnemy();
-        
-        // Update text positions
-        if (this.healthText) {
-            this.healthText.setPosition(this.x, this.y - (this.displayHeight / 2) - 10);
-        }
-        if (this.debugText) {
-            this.debugText.setPosition(this.x, this.y + 40);
-        }
-    }
+			// flash + knockback…
+			this.setTint(0xff0000);
+			this.scene.time.delayedCall(100, () => {
+				if (!this.isDestroyed) {
+					this.clearTint();
+				}
+			});
+			this.knockbackEnemy();
+
+			// if we've removed the whole word, kill the enemy
+			if (this.displayedWord.length === 0) {
+				console.log(`Enemy ${this.fullWord}: Word completed, destroying enemy`);
+				this.destroy();
+			} else {
+				this.updateDebugDisplay();
+			}
+		} else {
+			console.warn(
+				`Enemy ${this.fullWord}: Damage blocked! hitIndex: ${this.hitIndex}, typedIndex: ${this.typedIndex}, pending: ${this.pendingShots}`
+			);
+			this.updateDebugDisplay();
+		}
+	}
+
+	moveEnemy() {
+		if (this.isDestroyed) return;
+
+		//move enemy towards player
+		const player = this.scene.player;
+		const directionX = player.x - this.x;
+		const directionY = player.y - this.y;
+
+		// Normalize the direction vector (make it length 1)
+		const length = Math.sqrt(directionX * directionX + directionY * directionY);
+		const normalizedX = directionX / length;
+		const normalizedY = directionY / length;
+
+		this.setVelocity(normalizedX * this.moveSpeed, normalizedY * this.moveSpeed);
+	}
+
+	knockbackEnemy() {
+		if (this.isDestroyed) return;
+
+		const player = this.scene.player;
+		const directionX = player.x - this.x;
+		const directionY = player.y - this.y;
+
+		// Normalize the direction vector (make it length 1)
+		const length = Math.sqrt(directionX * directionX + directionY * directionY);
+		const normalizedX = directionX / length;
+		const normalizedY = directionY / length;
+
+		this.x -= normalizedX * this.knockback;
+		this.y -= normalizedY * this.knockback;
+	}
+
+	destroy(fromScene) {
+		console.log(`Enemy ${this.fullWord}: Destroying enemy`);
+		this.isDestroyed = true;
+
+		// First destroy the text
+		if (this.healthText) {
+			this.healthText.destroy();
+		}
+
+		// Destroy debug text
+		if (this.debugText) {
+			this.debugText.destroy();
+		}
+
+		// Then call parent's destroy to destroy the sprite itself
+		super.destroy(fromScene);
+	}
+
+	update(letter) {
+		if (this.isDestroyed) return;
+
+		// Update word if a letter was typed
+		if (letter) {
+			this.updateWord(letter);
+		}
+
+		this.moveEnemy();
+
+		// Update text positions
+		if (this.healthText) {
+			this.healthText.setPosition(this.x, this.y - this.displayHeight / 2 - 10);
+		}
+		if (this.debugText) {
+			this.debugText.setPosition(this.x, this.y + 40);
+		}
+	}
 }
 
 function calculateRandomPosition(target, minDistance, maxDistance) {
-    const angle = Math.random() * Math.PI * 2;
-    const distance = minDistance + Math.random() * (maxDistance - minDistance);
-    
-    const x = target.x + Math.cos(angle) * distance;
-    const y = target.y + Math.sin(angle) * distance;
-    
-    return { x, y };
+	const angle = Math.random() * Math.PI * 2;
+	const distance = minDistance + Math.random() * (maxDistance - minDistance);
+
+	const x = target.x + Math.cos(angle) * distance;
+	const y = target.y + Math.sin(angle) * distance;
+
+	return { x, y };
 }

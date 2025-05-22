@@ -9,179 +9,190 @@ import Projectile from '../entities/projectile';
  * Main gameplay scene
  */
 export default class GameScene extends Phaser.Scene {
-    constructor() {
-        super('GameScene');
-        
-        // Initialize properties
-        this.currentKey = null;
-        this.player = null;
-        this.enemies = null;
-        this.spawnEvent = null;
-        this.fpsDisplay = null;
-        this.grassBackground = null;
-        this.playerImmunity = false
-        this.projectiles = null;
-    }
+	constructor() {
+		super('GameScene');
 
-    preload() {
-        // Load game images
-        this.load.image('player', 'assets/playerRight.png');
-        this.load.image('zombieRight', 'assets/zombieRight.png');
-        this.load.image('zombieLeft', 'assets/zombieLeft.png');
-        this.load.image('grass', 'assets/grass.png')
-        this.load.image('projectile', 'assets/basicShot.png')
-    }
+		// Initialize properties
+		this.currentKey = null;
+		this.player = null;
+		this.enemies = null;
+		this.spawnEvent = null;
+		this.fpsDisplay = null;
+		this.grassBackground = null;
+		this.playerImmunity = false;
+		this.projectiles = null;
+	}
 
-    create() {
+	preload() {
+		// Load game images
+		this.load.image('player', 'assets/playerRight.png');
+		this.load.image('zombieRight', 'assets/zombieRight.png');
+		this.load.image('zombieLeft', 'assets/zombieLeft.png');
+		this.load.image('grass', 'assets/grass.png');
+		this.load.image('projectile', 'assets/basicShot.png');
+	}
 
-        this.grassBackground = this.add.tileSprite(
-            0, 0,                                   // Position at top-left corner
-            this.cameras.main.width,                // Width of game canvas
-            this.cameras.main.height,               // Height of game canvas
-            'grass'                             // Your grass tile's image key
-        );
-        this.grassBackground.setScale(settings.SPRITE_SCALE)
-        
-        // Set the origin to the top-left (0,0) instead of center
-        this.grassBackground.setOrigin(0, 0);
+	create() {
+		this.grassBackground = this.add.tileSprite(
+			0,
+			0, // Position at top-left corner
+			this.cameras.main.width, // Width of game canvas
+			this.cameras.main.height, // Height of game canvas
+			'grass' // Your grass tile's image key
+		);
+		this.grassBackground.setScale(settings.SPRITE_SCALE);
 
-        const ENEMY_SPAWN_DELAY = 1000; // ms
-        
-        // Setup keyboard input
-        this.setupKeyboardInput();
-        
-        // Create player at center of screen
-        this.createPlayer();
-        
-        // Setup enemy group and spawning
-        this.setupEnemies(ENEMY_SPAWN_DELAY);
+		// Set the origin to the top-left (0,0) instead of center
+		this.grassBackground.setOrigin(0, 0);
 
-        // Setup projectiles
-        this.setupProjectiles();
-        
-        // Add FPS counter
-        this.fpsDisplay = new fpsCounter(this)
+		const ENEMY_SPAWN_DELAY = 1000; // ms
 
-        // Enable player and enemie collision
-        this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
-        this.physics.add.overlap(this.enemies, this.projectiles, this.handleProjectileEnemyCollision, null, this);
+		// Setup keyboard input
+		this.setupKeyboardInput();
 
-    }
+		// Create player at center of screen
+		this.createPlayer();
 
-    handlePlayerEnemyCollision(player, enemy) {
-        if (!this.playerImmunity) {
-            player.takeDamage()
-            enemy.knockbackEnemy()
+		// Setup enemy group and spawning
+		this.setupEnemies(ENEMY_SPAWN_DELAY);
 
-            this.playerImmunity = true
-            this.time.delayedCall(200, () => {
-                this.playerImmunity = false
-            });
-        }
-    }
+		// Setup projectiles
+		this.setupProjectiles();
 
-    handleProjectileEnemyCollision(enemy, projectile) {
-        if (!projectile.active || projectile.targetEnemy !== enemy) {
-            return;
-        }
-    
-        console.log("Target match - applying damage!");
-        enemy.takeDamage();
-        projectile.kill()
-    }
+		// Add FPS counter
+		this.fpsDisplay = new fpsCounter(this);
 
-    // Setup keyboard input handling
-    setupKeyboardInput() {
-        this.input.keyboard.on('keydown', (event) => {
-            this.currentKey = event.key;
-        });
-    }
+		// Enable player and enemie collision
+		this.physics.add.overlap(
+			this.player,
+			this.enemies,
+			this.handlePlayerEnemyCollision,
+			null,
+			this
+		);
+		this.physics.add.overlap(
+			this.enemies,
+			this.projectiles,
+			this.handleProjectileEnemyCollision,
+			null,
+			this
+		);
+	}
 
-    createPlayer() {
-        const centerX = this.game.config.width / 2;
-        const centerY = this.game.config.height / 2;
-        this.player = new Player(this, centerX, centerY);
-    }
+	handlePlayerEnemyCollision(player, enemy) {
+		if (!this.playerImmunity) {
+			player.takeDamage();
+			enemy.knockbackEnemy();
 
-    setupEnemies(spawnDelay) {
-        // Create enemy group
-        this.enemies = this.add.group();
-        
-        // Start spawning enemies
-        this.startSpawn(spawnDelay);
-    }
+			this.playerImmunity = true;
+			this.time.delayedCall(200, () => {
+				this.playerImmunity = false;
+			});
+		}
+	}
 
-    setupProjectiles() {
-    this.projectiles = this.physics.add.group({
-        classType: Projectile,
-        defaultKey: 'projectile',
-        maxSize: 30,
-        active: false,
-        visible: false
-    });
-}
+	handleProjectileEnemyCollision(enemy, projectile) {
+		if (!projectile.active || projectile.targetEnemy !== enemy) {
+			return;
+		}
 
-    spawnEnemy() {
-        const MIN_SPAWN_DISTANCE = 400;
-        const MAX_SPAWN_DISTANCE = 800;
-        this.enemies.add(new Enemy(this, MIN_SPAWN_DISTANCE, MAX_SPAWN_DISTANCE));
-    }
+		console.log('Target match - applying damage!');
+		enemy.takeDamage();
+		projectile.kill();
+	}
 
-    startSpawn(delay) {
-        this.spawnEvent = this.time.addEvent({
-            delay: delay,
-            callback: this.spawnEnemy,
-            callbackScope: this,
-            loop: true
-        });
-    }
+	// Setup keyboard input handling
+	setupKeyboardInput() {
+		this.input.keyboard.on('keydown', (event) => {
+			this.currentKey = event.key;
+		});
+	}
 
-    stopSpawn() {
-        if (this.spawnEvent) {
-            this.spawnEvent.remove();
-            this.spawnEvent = null;
-        }
-    }
+	createPlayer() {
+		const centerX = this.game.config.width / 2;
+		const centerY = this.game.config.height / 2;
+		this.player = new Player(this, centerX, centerY);
+	}
 
-    updateProjectiles() {
-        const projectiles = this.projectiles.getChildren();
-        for (let i = 0; i < projectiles.length; i++) {
-            const projectile = projectiles[i];
-            if (projectile.active) {
-                projectile.update();
-            }
-        }
-    }
+	setupEnemies(spawnDelay) {
+		// Create enemy group
+		this.enemies = this.add.group();
 
-    fireProjectile(source, targetEnemy) {
-        const projectile = this.projectiles.get();
-        
-        if (projectile) {
-            console.log("Before firing - Target enemy:", targetEnemy);
-            projectile.fire(source, targetEnemy);
-            console.log("After firing - projectile.targetEnemy:", projectile.targetEnemy);
-        }
-    }
+		// Start spawning enemies
+		this.startSpawn(spawnDelay);
+	}
 
-    update() {
-        // Update FPS counter
-        this.fpsDisplay.updateFPS()
-        
-        // Update all enemies
-        this.updateEnemies();
+	setupProjectiles() {
+		this.projectiles = this.physics.add.group({
+			classType: Projectile,
+			defaultKey: 'projectile',
+			maxSize: 30,
+			active: false,
+			visible: false,
+		});
+	}
 
-        this.updateProjectiles();
-        
-        // Reset current key after updating enemies
-        this.currentKey = null;
-    }
-    
-    updateEnemies() {
-        const currentEnemies = this.enemies.getChildren();
-        
-        // Update each enemy (looping backward to handle removals)
-        for (let i = currentEnemies.length - 1; i >= 0; i--) {
-            currentEnemies[i].update(this.currentKey);
-        }
-    }
+	spawnEnemy() {
+		const MIN_SPAWN_DISTANCE = 400;
+		const MAX_SPAWN_DISTANCE = 800;
+		this.enemies.add(new Enemy(this, MIN_SPAWN_DISTANCE, MAX_SPAWN_DISTANCE));
+	}
+
+	startSpawn(delay) {
+		this.spawnEvent = this.time.addEvent({
+			delay: delay,
+			callback: this.spawnEnemy,
+			callbackScope: this,
+			loop: true,
+		});
+	}
+
+	stopSpawn() {
+		if (this.spawnEvent) {
+			this.spawnEvent.remove();
+			this.spawnEvent = null;
+		}
+	}
+
+	updateProjectiles() {
+		const projectiles = this.projectiles.getChildren();
+		for (let i = 0; i < projectiles.length; i++) {
+			const projectile = projectiles[i];
+			if (projectile.active) {
+				projectile.update();
+			}
+		}
+	}
+
+	fireProjectile(source, targetEnemy) {
+		const projectile = this.projectiles.get();
+
+		if (projectile) {
+			console.log('Before firing - Target enemy:', targetEnemy);
+			projectile.fire(source, targetEnemy);
+			console.log('After firing - projectile.targetEnemy:', projectile.targetEnemy);
+		}
+	}
+
+	update() {
+		// Update FPS counter
+		this.fpsDisplay.updateFPS();
+
+		// Update all enemies
+		this.updateEnemies();
+
+		this.updateProjectiles();
+
+		// Reset current key after updating enemies
+		this.currentKey = null;
+	}
+
+	updateEnemies() {
+		const currentEnemies = this.enemies.getChildren();
+
+		// Update each enemy (looping backward to handle removals)
+		for (let i = currentEnemies.length - 1; i >= 0; i--) {
+			currentEnemies[i].update(this.currentKey);
+		}
+	}
 }

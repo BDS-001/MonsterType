@@ -1,5 +1,5 @@
 const settings = {
-    SPRITE_SCALE: 4
-}
+	SPRITE_SCALE: 4,
+};
 
-export default settings
+export default settings;
