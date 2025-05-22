@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import GameScene from './scenes/gameplayScene';
-import { PauseScene } from './scenes/pauseScene';
+import GameScene from '../scenes/gameplayScene';
+import { PauseScene } from '../scenes/pauseScene';
 
 export default class Game {
 	constructor(gameConfig) {

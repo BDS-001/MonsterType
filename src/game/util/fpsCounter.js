@@ -8,10 +8,7 @@ export default class fpsCounter extends Phaser.GameObjects.Text {
 		};
 		super(scene, x, y, text, FPS_TEXT_STYLE);
 		scene.add.existing(this);
-		this.isCustomText = true;
-
 		this.scene = scene;
-		this.fpsText = null;
 	}
 
 	updateFPS() {
