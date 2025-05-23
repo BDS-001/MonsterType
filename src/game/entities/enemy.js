@@ -88,6 +88,18 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		}
 	}
 
+	isEnemyOnScreen() {
+		const camera = this.scene.cameras.main;
+		const margin = 50; // Small buffer zone
+
+		return (
+			this.x > camera.scrollX - margin &&
+			this.x < camera.scrollX + camera.width + margin &&
+			this.y > camera.scrollY - margin &&
+			this.y < camera.scrollY + camera.height + margin
+		);
+	}
+
 	updateWord(letter) {
 		if (this.isDestroyed) {
 			return;
@@ -191,7 +203,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		if (this.isDestroyed) return;
 
 		// Update word if a letter was typed
-		if (letter) {
+		if (this.isEnemyOnScreen() && letter) {
 			this.updateWord(letter);
 		}
 

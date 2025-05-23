@@ -46,7 +46,7 @@ export default class GameScene extends Phaser.Scene {
 		// Set the origin to the top-left (0,0) instead of center
 		this.grassBackground.setOrigin(0, 0);
 
-		const ENEMY_SPAWN_DELAY = 2000; // ms
+		const ENEMY_SPAWN_DELAY = 1000; // ms
 
 		// Setup keyboard input
 		this.setupKeyboardInput();
