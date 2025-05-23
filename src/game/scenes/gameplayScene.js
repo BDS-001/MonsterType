@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 import Player from '../entities/player';
 import Enemy from '../entities/enemy';
 import fpsCounter from '../util/fpsCounter';
-import settings from '../config/gameConfig';
 import Projectile from '../entities/projectile';
+import { gameSettings } from '../core/constants';
 
 /**
  * Main gameplay scene
@@ -40,7 +40,7 @@ export default class GameScene extends Phaser.Scene {
 			this.cameras.main.height, // Height of game canvas
 			'grass' // Your grass tile's image key
 		);
-		this.grassBackground.setScale(settings.SPRITE_SCALE);
+		this.grassBackground.setScale(gameSettings.SPRITE_SCALE);
 
 		// Set the origin to the top-left (0,0) instead of center
 		this.grassBackground.setOrigin(0, 0);

@@ -1,6 +1,6 @@
 // File: ./src/game/entities/projectile.js
 import Phaser from 'phaser';
-import settings from '../config/gameConfig';
+import { gameSettings } from '../core/constants';
 
 export default class Projectile extends Phaser.Physics.Arcade.Image {
 	constructor(scene, x, y) {
@@ -14,7 +14,7 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 		scene.physics.add.existing(this);
 
 		// Set the scale of the projectile
-		this.setScale(settings.SPRITE_SCALE / 2);
+		this.setScale(gameSettings.SPRITE_SCALE / 2);
 
 		// Set active and visible to false initially
 		this.setActive(false);
