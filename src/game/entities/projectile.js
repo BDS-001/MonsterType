@@ -60,9 +60,7 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 		// Deactivate when projectile leaves the screen
 		const bounds = this.scene.physics.world.bounds;
 		if (this.x < bounds.x || this.x > bounds.width || this.y < bounds.y || this.y > bounds.height) {
-			this.setActive(false);
-			this.setVisible(false);
-			this.body.enable = false;
+			this.kill();
 		}
 	}
 }
