@@ -6,7 +6,7 @@ import { gameSettings } from '../core/constants';
  * Enemy class that spawns with a word that players need to type
  */
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
-	constructor(scene, minDistance, maxDistance) {
+	constructor(scene, minDistance, maxDistance, id) {
 		// Constants
 		const TEXT_STYLE = {
 			fontFamily: 'Arial',
@@ -34,6 +34,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		super(scene, spawnPosition.x, spawnPosition.y, spriteImage);
 
 		// Store references
+		this.id = id
 		this.scene = scene;
 		this.moveSpeed = 40;
 		this.knockback = 80;

@@ -21,6 +21,7 @@ export default class GameScene extends Phaser.Scene {
 		this.grassBackground = null;
 		this.playerImmunity = false;
 		this.projectiles = null;
+		this.currentEnemyId = 0;
 	}
 
 	preload() {
@@ -45,7 +46,7 @@ export default class GameScene extends Phaser.Scene {
 		// Set the origin to the top-left (0,0) instead of center
 		this.grassBackground.setOrigin(0, 0);
 
-		const ENEMY_SPAWN_DELAY = 1000; // ms
+		const ENEMY_SPAWN_DELAY = 2000; // ms
 
 		// Setup keyboard input
 		this.setupKeyboardInput();
@@ -92,7 +93,7 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	handleProjectileEnemyCollision(enemy, projectile) {
-		if (!projectile.active || projectile.targetEnemy !== enemy) {
+		if (!projectile.active || projectile.targetEnemyId !== enemy.id) {
 			return;
 		}
 
@@ -135,7 +136,8 @@ export default class GameScene extends Phaser.Scene {
 	spawnEnemy() {
 		const MIN_SPAWN_DISTANCE = 400;
 		const MAX_SPAWN_DISTANCE = 800;
-		this.enemies.add(new Enemy(this, MIN_SPAWN_DISTANCE, MAX_SPAWN_DISTANCE));
+		this.enemies.add(new Enemy(this, MIN_SPAWN_DISTANCE, MAX_SPAWN_DISTANCE, this.currentEnemyId));
+		this.currentEnemyId++;
 	}
 
 	startSpawn(delay) {
