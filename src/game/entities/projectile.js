@@ -22,6 +22,7 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 
 		this.speed = 2000;
 		this.targetEnemyId = null;
+		this.deactiveBuffer = 50;
 	}
 
 	kill() {
@@ -59,7 +60,12 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 	update() {
 		// Deactivate when projectile leaves the screen
 		const bounds = this.scene.physics.world.bounds;
-		if (this.x < bounds.x || this.x > bounds.width || this.y < bounds.y || this.y > bounds.height) {
+		if (
+			this.x < bounds.x - this.deactiveBuffer ||
+			this.x > bounds.width + this.deactiveBuffer ||
+			this.y < bounds.y - this.deactiveBuffer ||
+			this.y > bounds.height + this.deactiveBuffer
+		) {
 			this.kill();
 		}
 	}
