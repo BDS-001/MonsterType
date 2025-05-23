@@ -125,9 +125,10 @@ export default class GameScene extends Phaser.Scene {
 		this.projectiles = this.physics.add.group({
 			classType: Projectile,
 			defaultKey: 'projectile',
-			maxSize: 30,
+			maxSize: 100,
 			active: false,
 			visible: false,
+			runChildUpdate: true,
 		});
 	}
 
@@ -168,7 +169,9 @@ export default class GameScene extends Phaser.Scene {
 
 		if (projectile) {
 			projectile.fire(source, targetEnemy);
+			return true;
 		}
+		return false;
 	}
 
 	update() {

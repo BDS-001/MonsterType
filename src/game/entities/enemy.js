@@ -92,12 +92,12 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 			return;
 		}
 		if (this.typedIndex < this.fullWord.length && letter === this.fullWord[this.typedIndex]) {
-			this.typedIndex++;
-			this.pendingShots++;
-			this.totalShotsFired++;
-
-			this.scene.fireProjectile(this.scene.player, this);
-
+			const projectileFired = this.scene.fireProjectile(this.scene.player, this);
+			if (projectileFired) {
+				this.typedIndex++;
+				this.pendingShots++;
+				this.totalShotsFired++;
+			}
 			this.updateDebugDisplay();
 		}
 	}
