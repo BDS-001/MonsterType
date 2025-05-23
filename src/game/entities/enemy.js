@@ -6,7 +6,7 @@ import { gameSettings } from '../core/constants';
  * Enemy class that spawns with a word that players need to type
  */
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
-	constructor(scene, minDistance, maxDistance, id) {
+	constructor(scene, id) {
 		// Constants
 		const TEXT_STYLE = {
 			fontFamily: 'Arial',
@@ -28,13 +28,13 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		const word = wordBank[wordCategory][wordbankIndex];
 
 		// Calculate random spawn position
-		const spawnPosition = calculateRandomPosition(scene.player, minDistance, maxDistance);
+		const spawnPosition = calculateRandomPosition(scene.cameras.main);
 		const spriteImage = spawnPosition.x > scene.player.x ? 'zombieLeft' : 'zombieRight';
 		// Call the parent constructor
 		super(scene, spawnPosition.x, spawnPosition.y, spriteImage);
 
 		// Store references
-		this.id = id
+		this.id = id;
 		this.scene = scene;
 		this.moveSpeed = 40;
 		this.knockback = 80;
@@ -207,12 +207,18 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 	}
 }
 
-function calculateRandomPosition(target, minDistance, maxDistance) {
-	const angle = Math.random() * Math.PI * 2;
-	const distance = minDistance + Math.random() * (maxDistance - minDistance);
+function calculateRandomPosition(camera) {
+	const width = camera.width;
+	const height = camera.height;
 
-	const x = target.x + Math.cos(angle) * distance;
-	const y = target.y + Math.sin(angle) * distance;
+	const centerX = width / 2;
+	const centerY = height / 2;
+
+	const angle = Math.random() * Math.PI * 2;
+	const maxRadius = Math.sqrt(width * width + height * height) / 2 + 50;
+
+	let x = centerX + Math.cos(angle) * maxRadius;
+	let y = centerY + Math.sin(angle) * maxRadius;
 
 	return { x, y };
 }
