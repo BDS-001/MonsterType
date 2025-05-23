@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import settings from '../config/gameConfig';
+import { gameSettings } from '../core/constants';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
 	constructor(scene, x, y) {
@@ -13,7 +13,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		scene.physics.add.existing(this);
 
 		// Set the scale of the player sprite
-		this.setScale(settings.SPRITE_SCALE);
+		this.setScale(gameSettings.SPRITE_SCALE);
 		this.health = 100;
 	}
 
