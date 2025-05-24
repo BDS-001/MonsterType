@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import Player from '../entities/player';
-import Enemy from '../entities/enemy';
+import EnemyManager from '../managers/EnemyManager'
 import fpsCounter from '../util/fpsCounter';
 import Projectile from '../entities/projectile';
 import { gameSettings } from '../core/constants';
@@ -15,13 +15,10 @@ export default class GameScene extends Phaser.Scene {
 		// Initialize properties
 		this.currentKey = null;
 		this.player = null;
-		this.enemies = null;
-		this.spawnEvent = null;
 		this.fpsDisplay = null;
 		this.grassBackground = null;
 		this.playerImmunity = false;
 		this.projectiles = null;
-		this.currentEnemyId = 0;
 	}
 
 	preload() {
@@ -46,16 +43,16 @@ export default class GameScene extends Phaser.Scene {
 		// Set the origin to the top-left (0,0) instead of center
 		this.grassBackground.setOrigin(0, 0);
 
-		const ENEMY_SPAWN_DELAY = 1000; // ms
-
 		// Setup keyboard input
 		this.setupKeyboardInput();
 
 		// Create player at center of screen
 		this.createPlayer();
 
-		// Setup enemy group and spawning
-		this.setupEnemies(ENEMY_SPAWN_DELAY);
+		this.enemyManager = new EnemyManager(this);
+		
+		// Start spawning
+		this.enemyManager.startSpawning(1000);		
 
 		// Setup projectiles
 		this.setupProjectiles();
@@ -66,13 +63,13 @@ export default class GameScene extends Phaser.Scene {
 		// Enable player and enemie collision
 		this.physics.add.overlap(
 			this.player,
-			this.enemies,
+			this.enemyManager.enemies,
 			this.handlePlayerEnemyCollision,
 			null,
 			this
 		);
 		this.physics.add.overlap(
-			this.enemies,
+			this.enemyManager.enemies,
 			this.projectiles,
 			this.handleProjectileEnemyCollision,
 			null,
@@ -114,14 +111,6 @@ export default class GameScene extends Phaser.Scene {
 		this.player = new Player(this, centerX, centerY);
 	}
 
-	setupEnemies(spawnDelay) {
-		// Create enemy group
-		this.enemies = this.add.group();
-
-		// Start spawning enemies
-		this.startSpawn(spawnDelay);
-	}
-
 	setupProjectiles() {
 		this.projectiles = this.physics.add.group({
 			classType: Projectile,
@@ -131,27 +120,6 @@ export default class GameScene extends Phaser.Scene {
 			visible: false,
 			runChildUpdate: true,
 		});
-	}
-
-	spawnEnemy() {
-		this.enemies.add(new Enemy(this, this.currentEnemyId));
-		this.currentEnemyId++;
-	}
-
-	startSpawn(delay) {
-		this.spawnEvent = this.time.addEvent({
-			delay: delay,
-			callback: this.spawnEnemy,
-			callbackScope: this,
-			loop: true,
-		});
-	}
-
-	stopSpawn() {
-		if (this.spawnEvent) {
-			this.spawnEvent.remove();
-			this.spawnEvent = null;
-		}
 	}
 
 	updateProjectiles() {
@@ -179,20 +147,11 @@ export default class GameScene extends Phaser.Scene {
 		this.fpsDisplay.updateFPS();
 
 		// Update all enemies
-		this.updateEnemies();
+		this.enemyManager.update()
 
 		this.updateProjectiles();
 
 		// Reset current key after updating enemies
 		this.currentKey = null;
-	}
-
-	updateEnemies() {
-		const currentEnemies = this.enemies.getChildren();
-
-		// Update each enemy (looping backward to handle removals)
-		for (let i = currentEnemies.length - 1; i >= 0; i--) {
-			currentEnemies[i].update(this.currentKey);
-		}
 	}
 }
