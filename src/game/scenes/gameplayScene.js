@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import Player from '../entities/player';
-import EnemyManager from '../managers/EnemyManager'
+import EnemyManager from '../managers/EnemyManager';
 import fpsCounter from '../util/fpsCounter';
 import Projectile from '../entities/projectile';
 import { gameSettings } from '../core/constants';
@@ -50,9 +50,9 @@ export default class GameScene extends Phaser.Scene {
 		this.createPlayer();
 
 		this.enemyManager = new EnemyManager(this);
-		
+
 		// Start spawning
-		this.enemyManager.startSpawning(1000);		
+		this.enemyManager.startSpawning(1000);
 
 		// Setup projectiles
 		this.setupProjectiles();
@@ -147,7 +147,7 @@ export default class GameScene extends Phaser.Scene {
 		this.fpsDisplay.updateFPS();
 
 		// Update all enemies
-		this.enemyManager.update()
+		this.enemyManager.update();
 
 		this.updateProjectiles();
 
