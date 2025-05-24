@@ -63,13 +63,13 @@ export default class GameScene extends Phaser.Scene {
 		// Enable player and enemie collision
 		this.physics.add.overlap(
 			this.player,
-			this.enemyManager.enemies,
+			this.enemyManager.getEnemies(),
 			this.handlePlayerEnemyCollision,
 			null,
 			this
 		);
 		this.physics.add.overlap(
-			this.enemyManager.enemies,
+			this.enemyManager.getEnemies(),
 			this.projectiles,
 			this.handleProjectileEnemyCollision,
 			null,
