@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import Player from '../entities/player';
 import EnemyManager from '../managers/EnemyManager';
 import fpsCounter from '../util/fpsCounter';
-import Projectile from '../entities/projectile';
+import ProjectileManager from '../managers/ProjectileManager';
 import { gameSettings } from '../core/constants';
 
 /**
@@ -50,12 +50,10 @@ export default class GameScene extends Phaser.Scene {
 		this.createPlayer();
 
 		this.enemyManager = new EnemyManager(this);
-
-		// Start spawning
 		this.enemyManager.startSpawning(1000);
 
-		// Setup projectiles
-		this.setupProjectiles();
+		this.projectileManager = new ProjectileManager(this)
+		this.projectileManager.setupProjectiles();
 
 		// Add FPS counter
 		this.fpsDisplay = new fpsCounter(this);
@@ -70,11 +68,21 @@ export default class GameScene extends Phaser.Scene {
 		);
 		this.physics.add.overlap(
 			this.enemyManager.getEnemies(),
-			this.projectiles,
+			this.projectileManager.getProjectiles(),
 			this.handleProjectileEnemyCollision,
 			null,
 			this
 		);
+	}
+
+	fireProjectile(source, targetEnemy) {
+		const projectile = this.projectileManager.getProjectiles().get();
+
+		if (projectile) {
+			projectile.fire(source, targetEnemy);
+			return true;
+		}
+		return false;
 	}
 
 	handlePlayerEnemyCollision(player, enemy) {
@@ -111,37 +119,6 @@ export default class GameScene extends Phaser.Scene {
 		this.player = new Player(this, centerX, centerY);
 	}
 
-	setupProjectiles() {
-		this.projectiles = this.physics.add.group({
-			classType: Projectile,
-			defaultKey: 'projectile',
-			maxSize: 100,
-			active: false,
-			visible: false,
-			runChildUpdate: true,
-		});
-	}
-
-	updateProjectiles() {
-		const projectiles = this.projectiles.getChildren();
-		for (let i = 0; i < projectiles.length; i++) {
-			const projectile = projectiles[i];
-			if (projectile.active) {
-				projectile.update();
-			}
-		}
-	}
-
-	fireProjectile(source, targetEnemy) {
-		const projectile = this.projectiles.get();
-
-		if (projectile) {
-			projectile.fire(source, targetEnemy);
-			return true;
-		}
-		return false;
-	}
-
 	update() {
 		// Update FPS counter
 		this.fpsDisplay.updateFPS();
@@ -149,7 +126,8 @@ export default class GameScene extends Phaser.Scene {
 		// Update all enemies
 		this.enemyManager.update();
 
-		this.updateProjectiles();
+		// Update projectiles
+		this.projectileManager.update();
 
 		// Reset current key after updating enemies
 		this.currentKey = null;
