@@ -3,6 +3,7 @@ import Player from '../entities/player';
 import EnemyManager from '../managers/EnemyManager';
 import fpsCounter from '../util/fpsCounter';
 import ProjectileManager from '../managers/ProjectileManager';
+import InputManager from '../managers/InputManager';
 import { gameSettings } from '../core/constants';
 
 /**
@@ -13,12 +14,10 @@ export default class GameScene extends Phaser.Scene {
 		super('GameScene');
 
 		// Initialize properties
-		this.currentKey = null;
 		this.player = null;
 		this.fpsDisplay = null;
 		this.grassBackground = null;
 		this.playerImmunity = false;
-		this.projectiles = null;
 	}
 
 	preload() {
@@ -44,7 +43,7 @@ export default class GameScene extends Phaser.Scene {
 		this.grassBackground.setOrigin(0, 0);
 
 		// Setup keyboard input
-		this.setupKeyboardInput();
+		this.inputManager = new InputManager(this)
 
 		// Create player at center of screen
 		this.createPlayer();
@@ -106,13 +105,6 @@ export default class GameScene extends Phaser.Scene {
 		projectile.kill();
 	}
 
-	// Setup keyboard input handling
-	setupKeyboardInput() {
-		this.input.keyboard.on('keydown', (event) => {
-			this.currentKey = event.key;
-		});
-	}
-
 	createPlayer() {
 		const centerX = this.game.config.width / 2;
 		const centerY = this.game.config.height / 2;
@@ -124,12 +116,12 @@ export default class GameScene extends Phaser.Scene {
 		this.fpsDisplay.updateFPS();
 
 		// Update all enemies
-		this.enemyManager.update();
+		this.enemyManager.update(this.inputManager.getCurrentKey());
 
 		// Update projectiles
 		this.projectileManager.update();
 
 		// Reset current key after updating enemies
-		this.currentKey = null;
+		this.inputManager.update()
 	}
 }

@@ -43,14 +43,14 @@ export default class EnemyManager {
 		}
 	}
 
-	update() {
+	update(currentKey) {
 		const currentEnemies = this.enemies.getChildren();
 
 		// Update each enemy (loop backwards to handle potential removals)
 		for (let i = currentEnemies.length - 1; i >= 0; i--) {
 			const enemy = currentEnemies[i];
 			// Pass the current input key from scene
-			enemy.update(this.scene.currentKey);
+			enemy.update(currentKey);
 		}
 	}
 
