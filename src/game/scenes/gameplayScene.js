@@ -4,6 +4,7 @@ import EnemyManager from '../managers/EnemyManager';
 import fpsCounter from '../util/fpsCounter';
 import ProjectileManager from '../managers/ProjectileManager';
 import InputManager from '../managers/InputManager';
+import CollisionManager from '../managers/CollisionManager';
 import { gameSettings } from '../core/constants';
 
 /**
@@ -13,11 +14,10 @@ export default class GameScene extends Phaser.Scene {
 	constructor() {
 		super('GameScene');
 
-		// Initialize properties
+		// Initialize properties (removed playerImmunity - now handled by CollisionManager)
 		this.player = null;
 		this.fpsDisplay = null;
 		this.grassBackground = null;
-		this.playerImmunity = false;
 	}
 
 	preload() {
@@ -30,48 +30,45 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	create() {
-		this.grassBackground = this.add.tileSprite(
-			0,
-			0, // Position at top-left corner
-			this.cameras.main.width, // Width of game canvas
-			this.cameras.main.height, // Height of game canvas
-			'grass' // Your grass tile's image key
-		);
-		this.grassBackground.setScale(gameSettings.SPRITE_SCALE);
+		// Setup background
+		this.setupBackground();
 
-		// Set the origin to the top-left (0,0) instead of center
-		this.grassBackground.setOrigin(0, 0);
-
-		// Setup keyboard input
-		this.inputManager = new InputManager(this)
-
-		// Create player at center of screen
+		// Initialize managers
+		this.inputManager = new InputManager(this);
+		
+		// Create player
 		this.createPlayer();
-
+		
+		// Create entity managers
 		this.enemyManager = new EnemyManager(this);
+		this.projectileManager = new ProjectileManager(this);
+		
+		// Create collision manager
+		this.collisionManager = new CollisionManager(this);
+		
+		// Start game systems
 		this.enemyManager.startSpawning(1000);
-
-		this.projectileManager = new ProjectileManager(this)
-		this.projectileManager.setupProjectiles();
 
 		// Add FPS counter
 		this.fpsDisplay = new fpsCounter(this);
+	}
 
-		// Enable player and enemie collision
-		this.physics.add.overlap(
-			this.player,
-			this.enemyManager.getEnemies(),
-			this.handlePlayerEnemyCollision,
-			null,
-			this
+	setupBackground() {
+		this.grassBackground = this.add.tileSprite(
+			0,
+			0,
+			this.cameras.main.width,
+			this.cameras.main.height,
+			'grass'
 		);
-		this.physics.add.overlap(
-			this.enemyManager.getEnemies(),
-			this.projectileManager.getProjectiles(),
-			this.handleProjectileEnemyCollision,
-			null,
-			this
-		);
+		this.grassBackground.setScale(gameSettings.SPRITE_SCALE);
+		this.grassBackground.setOrigin(0, 0);
+	}
+
+	createPlayer() {
+		const centerX = this.game.config.width / 2;
+		const centerY = this.game.config.height / 2;
+		this.player = new Player(this, centerX, centerY);
 	}
 
 	fireProjectile(source, targetEnemy) {
@@ -84,44 +81,13 @@ export default class GameScene extends Phaser.Scene {
 		return false;
 	}
 
-	handlePlayerEnemyCollision(player, enemy) {
-		if (!this.playerImmunity) {
-			player.takeDamage();
-			enemy.knockbackEnemy();
-
-			this.playerImmunity = true;
-			this.time.delayedCall(200, () => {
-				this.playerImmunity = false;
-			});
-		}
-	}
-
-	handleProjectileEnemyCollision(enemy, projectile) {
-		if (!projectile.active || projectile.targetEnemyId !== enemy.id) {
-			return;
-		}
-
-		enemy.takeDamage();
-		projectile.kill();
-	}
-
-	createPlayer() {
-		const centerX = this.game.config.width / 2;
-		const centerY = this.game.config.height / 2;
-		this.player = new Player(this, centerX, centerY);
-	}
-
 	update() {
 		// Update FPS counter
 		this.fpsDisplay.updateFPS();
 
-		// Update all enemies
+		// Update managers
 		this.enemyManager.update(this.inputManager.getCurrentKey());
-
-		// Update projectiles
 		this.projectileManager.update();
-
-		// Reset current key after updating enemies
-		this.inputManager.update()
+		this.inputManager.update();
 	}
 }
