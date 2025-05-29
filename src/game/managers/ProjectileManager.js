@@ -8,19 +8,19 @@ export default class ProjectileManager {
 		this.setupProjectiles();
 	}
 
-		setupProjectiles() {
-			this.projectiles = this.scene.physics.add.group({
-				classType: Projectile,
-				defaultKey: 'projectile',
-				maxSize: 100,
-				active: false,
-				visible: false,
-				runChildUpdate: true,
-			});
-		}
+	setupProjectiles() {
+		this.projectiles = this.scene.physics.add.group({
+			classType: Projectile,
+			defaultKey: 'projectile',
+			maxSize: 100,
+			active: false,
+			visible: false,
+			runChildUpdate: true,
+		});
+	}
 
 	getProjectiles() {
-		return this.projectiles
+		return this.projectiles;
 	}
 
 	update() {
