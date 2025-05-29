@@ -5,6 +5,7 @@ import fpsCounter from '../util/fpsCounter';
 import ProjectileManager from '../managers/ProjectileManager';
 import InputManager from '../managers/InputManager';
 import CollisionManager from '../managers/CollisionManager';
+import gameState from '../core/gameState';
 import { gameSettings } from '../core/constants';
 
 /**
@@ -30,22 +31,25 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	create() {
+		//setup gamestate
+		gameState.setGameScene(this);
+
 		// Setup background
 		this.setupBackground();
 
 		// Initialize managers
 		this.inputManager = new InputManager(this);
-		
+
 		// Create player
 		this.createPlayer();
-		
+
 		// Create entity managers
 		this.enemyManager = new EnemyManager(this);
 		this.projectileManager = new ProjectileManager(this);
-		
+
 		// Create collision manager
 		this.collisionManager = new CollisionManager(this);
-		
+
 		// Start game systems
 		this.enemyManager.startSpawning(1000);
 

@@ -1,84 +1,77 @@
-import gameState from "../core/gameState";
+import gameState from '../core/gameState';
 
 export default class CollisionManager {
-    constructor(scene) {
-        this.scene = scene;
-        this.playerImmunity = false;
-        
-        this.setupCollisions();
-    }
+	constructor(scene) {
+		this.scene = scene;
 
-    setupCollisions() {
-        // Player vs Enemy collision
-        this.scene.physics.add.overlap(
-            this.scene.player,
-            this.scene.enemyManager.getEnemies(),
-            this.handlePlayerEnemyCollision.bind(this),
-            null,
-            this.scene
-        );
+		this.setupCollisions();
+	}
 
-        // Projectile vs Enemy collision
-        this.scene.physics.add.overlap(
-            this.scene.enemyManager.getEnemies(),
-            this.scene.projectileManager.getProjectiles(),
-            this.handleProjectileEnemyCollision.bind(this),
-            null,
-            this.scene
-        );
-    }
+	setupCollisions() {
+		// Player vs Enemy collision
+		this.scene.physics.add.overlap(
+			this.scene.player,
+			this.scene.enemyManager.getEnemies(),
+			this.handlePlayerEnemyCollision.bind(this),
+			null,
+			this.scene
+		);
 
-    handlePlayerEnemyCollision(player, enemy) {
-        // Skip collision if player is immune
-        if (this.playerImmunity) {
-            return;
-        }
+		// Projectile vs Enemy collision
+		this.scene.physics.add.overlap(
+			this.scene.enemyManager.getEnemies(),
+			this.scene.projectileManager.getProjectiles(),
+			this.handleProjectileEnemyCollision.bind(this),
+			null,
+			this.scene
+		);
+	}
 
-        // Apply damage and knockback
-        gameState.playerHit(10)
-        player.takeDamage();
-        enemy.knockbackEnemy();
+	handlePlayerEnemyCollision(player, enemy) {
+		// Skip collision if player is immune
+		if (gameState.getPlayerImmunity()) {
+			return;
+		}
 
-        // Set temporary immunity
-        this.playerImmunity = true;
-        this.scene.time.delayedCall(200, () => {
-            this.playerImmunity = false;
-        });
-    }
+		// Apply damage and knockback
+		gameState.playerHit(10);
+		player.takeDamage();
+		enemy.knockbackEnemy();
+	}
 
-    handleProjectileEnemyCollision(enemy, projectile) {
-        // Check if projectile is active and targeting this enemy
-        if (!projectile.active || projectile.targetEnemyId !== enemy.id) {
-            return;
-        }
+	handleProjectileEnemyCollision(enemy, projectile) {
+		// Check if projectile is active and targeting this enemy
+		if (!projectile.active || projectile.targetEnemyId !== enemy.id) {
+			return;
+		}
 
-        // Apply damage and remove projectile
-        enemy.takeDamage();
-        projectile.kill();
-    }
+		// Apply damage and remove projectile
+		enemy.takeDamage();
+		projectile.kill();
+	}
 
-    // Utility methods for managing immunity
-    setPlayerImmunity(immune) {
-        this.playerImmunity = immune;
-    }
+	// Utility methods for managing immunity
+	setPlayerImmunity(immune) {
+		this.playerImmunity = immune;
+	}
 
-    isPlayerImmune() {
-        return this.playerImmunity;
-    }
+	isPlayerImmune() {
+		return this.playerImmunity;
+	}
 
-    // Method to add new collision types in the future
-    addCollision(objectA, objectB, callback, processCallback = null) {
-        this.scene.physics.add.overlap(
-            objectA,
-            objectB,
-            callback.bind(this),
-            processCallback,
-            this.scene
-        );
-    }
+	// Method to add new collision types in the future
+	addCollision(objectA, objectB, callback, processCallback = null) {
+		this.scene.physics.add.overlap(
+			objectA,
+			objectB,
+			callback.bind(this),
+			processCallback,
+			this.scene
+		);
+	}
 
-    // Cleanup method
-    destroy() {
-        this.playerImmunity = false;
-    }
+	// Cleanup method
+	destroy() {
+		this.playerImmunity = false;
+	}
 }
