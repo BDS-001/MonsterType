@@ -4,8 +4,9 @@ class GameState {
     this.player = { health: 100, immunity: false };
   }
 
-  takeDamage(damage) {
+  playerHit(damage) {
     this.player.health -= damage
+    console.log(this.player.health)
   }
 }
 
