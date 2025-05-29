@@ -1,3 +1,5 @@
+import gameState from "../core/gameState";
+
 export default class CollisionManager {
     constructor(scene) {
         this.scene = scene;
@@ -33,6 +35,7 @@ export default class CollisionManager {
         }
 
         // Apply damage and knockback
+        gameState.playerHit(10)
         player.takeDamage();
         enemy.knockbackEnemy();
 
