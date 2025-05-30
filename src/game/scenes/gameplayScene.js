@@ -55,6 +55,17 @@ export default class GameScene extends Phaser.Scene {
 
 		// Add FPS counter
 		this.fpsDisplay = new fpsCounter(this);
+
+		//dev text
+		const devText = this.add.text(this.game.config.width / 2, 20, '🚧 GAME UNDER DEVELOPMENT 🚧', {
+			fontSize: '24px',
+			fontFamily: 'Arial, sans-serif',
+			fill: '#ffffff',
+			stroke: '#000000',
+			strokeThickness: 2,
+			fontStyle: 'bold'
+		});
+		devText.setOrigin(0.5, 0);
 	}
 
 	setupBackground() {
