@@ -3,6 +3,7 @@ class GameState {
 	constructor() {
 		this.gameScene = null;
 		this.player = { health: 100, immunity: false };
+		this.score = 0;
 	}
 
 	playerHit(damage) {
@@ -15,8 +16,16 @@ class GameState {
 		});
 	}
 
+	updateScore(val) {
+		this.score += val;
+	}
+
 	setGameScene(scene) {
 		this.gameScene = scene;
+	}
+
+	getScore() {
+		return this.score;
 	}
 
 	getPlayerImmunity() {

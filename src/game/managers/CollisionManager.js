@@ -48,6 +48,7 @@ export default class CollisionManager {
 		// Apply damage and remove projectile
 		enemy.takeDamage();
 		projectile.kill();
+		gameState.updateScore(10);
 	}
 
 	// Utility methods for managing immunity
