@@ -19,6 +19,7 @@ export default class GameScene extends Phaser.Scene {
 		this.player = null;
 		this.fpsDisplay = null;
 		this.grassBackground = null;
+		this.scoreText = null;
 	}
 
 	preload() {
@@ -63,9 +64,25 @@ export default class GameScene extends Phaser.Scene {
 			fill: '#ffffff',
 			stroke: '#000000',
 			strokeThickness: 2,
-			fontStyle: 'bold'
+			fontStyle: 'bold',
 		});
 		devText.setOrigin(0.5, 0);
+
+		//score text
+		this.scoreText = this.add.text(
+			this.game.config.width / 2,
+			60,
+			`Score: ${gameState.getScore()}`,
+			{
+				fontSize: '24px',
+				fontFamily: 'Arial, sans-serif',
+				fill: '#ffffff',
+				stroke: '#000000',
+				strokeThickness: 2,
+				fontStyle: 'bold',
+			}
+		);
+		this.scoreText.setOrigin(0.5, 0);
 	}
 
 	setupBackground() {
@@ -104,5 +121,6 @@ export default class GameScene extends Phaser.Scene {
 		this.enemyManager.update(this.inputManager.getCurrentKey());
 		this.projectileManager.update();
 		this.inputManager.update();
+		this.scoreText.setText(`Score: ${gameState.getScore()}`);
 	}
 }
