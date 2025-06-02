@@ -1,11 +1,11 @@
 import Phaser from 'phaser';
-import wordBank from '../data/wordbank';
-import { gameSettings } from '../core/constants';
+import wordBank from '../../data/wordbank';
+import { gameSettings } from '../../core/constants';
 
 /**
  * Enemy class that spawns with a word that players need to type
  */
-export default class Enemy extends Phaser.Physics.Arcade.Sprite {
+export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 	constructor(scene, id) {
 		// Constants
 		const TEXT_STYLE = {
@@ -23,21 +23,23 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		};
 
 		// Select a random word from the word bank
-		const wordCategory = 'easy';
+		const wordCategory = 'veryEasy';
 		const wordbankIndex = Math.floor(Math.random() * wordBank[wordCategory].length);
 		const word = wordBank[wordCategory][wordbankIndex];
 
 		// Calculate random spawn position
 		const spawnPosition = calculateRandomPosition(scene.cameras.main);
-		const spriteImage = spawnPosition.x > scene.player.x ? 'zombieLeft' : 'zombieRight';
+		const spriteImage = 'ghost';
+
 		// Call the parent constructor
 		super(scene, spawnPosition.x, spawnPosition.y, spriteImage);
+		if (spawnPosition.x > scene.player.x) this.flipX = true;
 
 		// Store references
 		this.id = id;
 		this.scene = scene;
-		this.moveSpeed = 40;
-		this.knockback = 80;
+		this.moveSpeed = 100;
+		this.knockback = 0;
 		this.fullWord = word;
 		this.typedIndex = 0;
 		this.hitIndex = 0;
