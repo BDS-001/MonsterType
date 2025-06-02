@@ -1,4 +1,5 @@
-import Enemy from '../entities/enemy';
+import Zombie from '../entities/enemies/zombie';
+import Ghost from '../entities/enemies/ghost';
 
 export default class EnemyManager {
 	constructor(scene) {
@@ -17,9 +18,12 @@ export default class EnemyManager {
 
 	spawnEnemy() {
 		// Create new enemy with scene reference and current ID
-		const enemy = new Enemy(this.scene, this.currentEnemyId);
-		this.enemies.add(enemy);
+		const zombie = new Zombie(this.scene, this.currentEnemyId);
 		this.currentEnemyId++;
+		const ghost = new Ghost(this.scene, this.currentEnemyId);
+		this.currentEnemyId++;
+		this.enemies.add(zombie);
+		this.enemies.add(ghost);
 	}
 
 	startSpawning(delay = 1000) {
