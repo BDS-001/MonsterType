@@ -18,49 +18,49 @@ function calculateRandomPosition(camera) {
 	return { x, y };
 }
 
-const defaultOptions = {moveSpeed: 50, knockback:10}
+const defaultOptions = { moveSpeed: 50, knockback: 10, wordCategory: 'easy', };
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
-    constructor(id, scene, spriteImage, wordCategory, options = {}) {
-        //get options
-        const enemyOptions = {...defaultOptions, ...options}
+	constructor(id, scene, spriteImage, options = {}) {
+		//get options
+		const enemyOptions = { ...defaultOptions, ...options };
 
-        //set sprite word
-        const wordBankIndex = Math.floor(Math.random() * wordBank[wordCategory].length)
-        const word = wordBank[wordCategory][wordBankIndex]
+		//set sprite word
+		const wordBankIndex = Math.floor(Math.random() * wordBank[enemyOptions.wordCategory].length);
+		const word = wordBank[enemyOptions.wordCategory][wordBankIndex];
 
-        //get coordinates
-        const {x: spawnX, y:spawnY} = calculateRandomPosition(scene.cameras.main);
+		//get coordinates
+		const { x: spawnX, y: spawnY } = calculateRandomPosition(scene.cameras.main);
 
-        //call super
-        super(scene, spawnX, spawnY, spriteImage)
+		//call super
+		super(scene, spawnX, spawnY, spriteImage);
 
-        //check sprite direction
-        if (this.x > scene.player.x) this.flipX = true;
+		//check sprite direction
+		if (this.x > scene.player.x) this.flipX = true;
 
-        //enemy store
-        this.id = id
+		//enemy store
+		this.id = id;
 
-        this.moveSpeed = enemyOptions.moveSpeed
-        this.knockback = enemyOptions.knockback
+		this.moveSpeed = enemyOptions.moveSpeed;
+		this.knockback = enemyOptions.knockback;
 
-        this.word = word
-        this.displayedWord = this.word;
-        this.typedIndex = 0;
+		this.word = word;
+		this.displayedWord = this.word;
+		this.typedIndex = 0;
 		this.hitIndex = 0;
-        this.pendingShots = 0;
-        this.totalShotsFired = 0;
+		this.pendingShots = 0;
+		this.totalShotsFired = 0;
 		this.totalShotsHit = 0;
 
-        this.isDestroyed = false;
+		this.isDestroyed = false;
 
-        // Add this sprite to the scene
+		// Add this sprite to the scene
 		scene.add.existing(this);
 		scene.physics.add.existing(this);
 		this.setScale(gameSettings.SPRITE_SCALE);
 
-        // Create the text that displays the word
-        const TEXT_STYLE = {
+		// Create the text that displays the word
+		const TEXT_STYLE = {
 			fontFamily: 'Arial',
 			fontSize: 16,
 			color: '#ffffff',
@@ -77,7 +77,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		this.healthText.setPosition(this.x, this.y - 30);
 
 		// Create debug text display
-        const DEBUG_STYLE = {
+		const DEBUG_STYLE = {
 			fontFamily: 'Arial',
 			fontSize: 12,
 			color: '#ffff00',
@@ -87,9 +87,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		this.debugText = scene.add.text(this.x, this.y + 40, '', DEBUG_STYLE);
 		this.debugText.setOrigin(0.5);
 		this.updateDebugDisplay();
-    }
+	}
 
-    updateDebugDisplay() {
+	updateDebugDisplay() {
 		if (this.debugText && !this.isDestroyed) {
 			const debugInfo = [
 				`Word: "${this.word}"`,
@@ -106,7 +106,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		}
 	}
 
-    isEnemyOnScreen() {
+	isEnemyOnScreen() {
 		const camera = this.scene.cameras.main;
 		const margin = 50; // Small buffer zone
 
@@ -118,7 +118,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		);
 	}
 
-    updateWord(letter) {
+	updateWord(letter) {
 		if (this.isDestroyed) {
 			return;
 		}
@@ -133,7 +133,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		}
 	}
 
-    takeDamage() {
+	takeDamage() {
 		if (this.isDestroyed) {
 			return;
 		}
@@ -168,43 +168,43 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		}
 	}
 
-    moveEnemy() {
-        if (this.isDestroyed) return;
+	moveEnemy() {
+		if (this.isDestroyed) return;
 
-        //move enemy towards player
-        const player = this.scene.player;
-        const directionX = player.x - this.x;
-        const directionY = player.y - this.y;
+		//move enemy towards player
+		const player = this.scene.player;
+		const directionX = player.x - this.x;
+		const directionY = player.y - this.y;
 
-        // Normalize the direction vector (make it length 1)
-        const length = Math.sqrt(directionX * directionX + directionY * directionY);
-        
-        // add length check to prevent division by zero
-        if (length > 0) {
-            const normalizedX = directionX / length;
-            const normalizedY = directionY / length;
-            this.setVelocity(normalizedX * this.moveSpeed, normalizedY * this.moveSpeed);
-        }
-    }
+		// Normalize the direction vector (make it length 1)
+		const length = Math.sqrt(directionX * directionX + directionY * directionY);
 
-    knockbackEnemy() {
-        if (this.isDestroyed || this.knockback === 0) return;
+		// add length check to prevent division by zero
+		if (length > 0) {
+			const normalizedX = directionX / length;
+			const normalizedY = directionY / length;
+			this.setVelocity(normalizedX * this.moveSpeed, normalizedY * this.moveSpeed);
+		}
+	}
 
-        const player = this.scene.player;
-        const directionX = player.x - this.x;
-        const directionY = player.y - this.y;
+	knockbackEnemy() {
+		if (this.isDestroyed || this.knockback === 0) return;
 
-        // Normalize the direction vector (make it length 1)
-        const length = Math.sqrt(directionX * directionX + directionY * directionY);
-        
-        // add length check to prevent division by zero
-        if (length > 0) {
-            const normalizedX = directionX / length;
-            const normalizedY = directionY / length;
-            this.x -= normalizedX * this.knockback;
-            this.y -= normalizedY * this.knockback;
-        }
-    }
+		const player = this.scene.player;
+		const directionX = player.x - this.x;
+		const directionY = player.y - this.y;
+
+		// Normalize the direction vector (make it length 1)
+		const length = Math.sqrt(directionX * directionX + directionY * directionY);
+
+		// add length check to prevent division by zero
+		if (length > 0) {
+			const normalizedX = directionX / length;
+			const normalizedY = directionY / length;
+			this.x -= normalizedX * this.knockback;
+			this.y -= normalizedY * this.knockback;
+		}
+	}
 
 	destroy(fromScene) {
 		this.isDestroyed = true;
