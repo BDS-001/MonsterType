@@ -27,7 +27,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         //set sprite word
         const wordBankIndex = Math.floor(Math.random() * wordBank[wordCategory].length)
-        this.word = wordBank[wordCategory][wordBankIndex]
+        const word = wordBank[wordCategory][wordBankIndex]
 
         //get coordinates
         const {x: spawnX, y:spawnY} = calculateRandomPosition(scene.cameras.main);
@@ -35,12 +35,16 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         //call super
         super(scene, spawnX, spawnY, spriteImage)
 
+        //check sprite direction
+        if (this.x > scene.player.x) this.flipX = true;
+
         //enemy store
         this.id = id
 
         this.moveSpeed = enemyOptions.moveSpeed
         this.knockback = enemyOptions.knockback
 
+        this.word = word
         this.displayedWord = this.word;
         this.typedIndex = 0;
 		this.hitIndex = 0;
