@@ -1,5 +1,6 @@
 import gameState from '../core/gameState';
 import HealthBar from '../util/healthBar';
+import fpsCounter from '../util/fpsCounter';
 
 export class HudScene extends Phaser.Scene {
 	constructor() {
@@ -7,6 +8,7 @@ export class HudScene extends Phaser.Scene {
 		this.scoreText = null;
 		this.healthBar = null;
 		this.healthText = null;
+		this.fpsDisplay = null;
 	}
 	create() {
 		//dev text
@@ -48,10 +50,15 @@ export class HudScene extends Phaser.Scene {
 
 		// Health bar positioned right next to the text
 		this.healthBar = new HealthBar(this, 85, this.game.config.height - 50);
+
+		// Add FPS counter
+		this.fpsDisplay = new fpsCounter(this);
 	}
 
 	update() {
 		this.scoreText.setText(`Score: ${gameState.getScore()}`);
+		// Update FPS counter
+		this.fpsDisplay.updateFPS();
 	}
 
 	decreaseHealth(amount) {
