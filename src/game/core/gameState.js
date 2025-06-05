@@ -8,6 +8,11 @@ class GameState {
 		this.gameScene = null;
 		this.player = { maxHealth: 100, health: 100, immunity: false };
 		this.score = 0;
+		this.gameOver = false;
+	}
+
+	toggleGameOver() {
+		this.gameOver = !this.gameOver;
 	}
 
 	playerHit(damage) {
