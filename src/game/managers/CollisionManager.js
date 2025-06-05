@@ -35,7 +35,7 @@ export default class CollisionManager {
 
 		// Apply damage and knockback
 		gameState.playerHit(10);
-		player.takeDamage();
+		player.takeDamage(enemy.damage);
 		enemy.knockbackEnemy();
 	}
 
