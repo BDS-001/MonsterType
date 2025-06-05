@@ -1,6 +1,10 @@
 //implement state management later
 class GameState {
 	constructor() {
+		this.resetGameState();
+	}
+
+	resetGameState() {
 		this.gameScene = null;
 		this.player = { health: 100, immunity: false };
 		this.score = 0;
