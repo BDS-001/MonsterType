@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import { gameSettings } from '../core/constants';
-import HealthBar from '../util/healthBar';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
 	constructor(scene, x, y) {
@@ -15,8 +14,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 		// Set the scale of the player sprite
 		this.setScale(gameSettings.SPRITE_SCALE);
-
-		this.healthBar = new HealthBar(scene, x, y);
 	}
 
 	takeDamage(amount) {
@@ -24,6 +21,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		this.scene.time.delayedCall(100, () => {
 			this.clearTint();
 		});
-		this.healthBar.decrease(amount);
+		// Health handled by HUD scene
+		this.scene.scene.get('HudScene').decreaseHealth(amount);
 	}
 }
