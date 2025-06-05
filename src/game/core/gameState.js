@@ -6,7 +6,7 @@ class GameState {
 
 	resetGameState() {
 		this.gameScene = null;
-		this.player = { health: 100, immunity: false };
+		this.player = { maxHealth: 100, health: 100, immunity: false };
 		this.score = 0;
 	}
 
