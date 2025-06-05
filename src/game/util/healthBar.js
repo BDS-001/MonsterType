@@ -11,7 +11,7 @@ export default class HealthBar {
 		this.value = gameState.player.health;
 		this.borderThickness = 8;
 		this.borderOffset = this.borderThickness / 2;
-		this.p = (this.width - this.borderThickness) / this.gameState.player.maxHealth;
+		this.p = (this.width - this.borderThickness) / gameState.player.maxHealth;
 
 		this.draw();
 

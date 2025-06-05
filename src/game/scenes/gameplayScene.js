@@ -86,6 +86,9 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	update() {
+		if (gameState.player.health <= 0) {
+			this.scene.pause()
+		}
 		// Update FPS counter
 		this.fpsDisplay.updateFPS();
 
