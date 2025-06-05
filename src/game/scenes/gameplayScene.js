@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import Player from '../entities/player';
 import EnemyManager from '../managers/EnemyManager';
-import fpsCounter from '../util/fpsCounter';
 import ProjectileManager from '../managers/ProjectileManager';
 import InputManager from '../managers/InputManager';
 import CollisionManager from '../managers/CollisionManager';
@@ -17,7 +16,6 @@ export default class GameScene extends Phaser.Scene {
 
 		// Initialize properties (removed playerImmunity - now handled by CollisionManager)
 		this.player = null;
-		this.fpsDisplay = null;
 		this.grassBackground = null;
 	}
 
@@ -53,8 +51,6 @@ export default class GameScene extends Phaser.Scene {
 		// Start game systems
 		this.enemyManager.startSpawning(1000);
 
-		// Add FPS counter
-		this.fpsDisplay = new fpsCounter(this);
 	}
 
 	setupBackground() {
@@ -89,9 +85,6 @@ export default class GameScene extends Phaser.Scene {
 		if (gameState.player.health <= 0) {
 			this.scene.pause()
 		}
-		// Update FPS counter
-		this.fpsDisplay.updateFPS();
-
 		// Update managers
 		this.enemyManager.update(this.inputManager.getCurrentKey());
 		this.projectileManager.update();
