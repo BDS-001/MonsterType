@@ -50,7 +50,6 @@ export default class GameScene extends Phaser.Scene {
 
 		// Start game systems
 		this.enemyManager.startSpawning(1000);
-
 	}
 
 	setupBackground() {
@@ -83,7 +82,9 @@ export default class GameScene extends Phaser.Scene {
 
 	update() {
 		if (gameState.player.health <= 0) {
-			this.scene.pause()
+			gameState.toggleGameOver();
+			this.scene.pause();
+			this.scene.setVisible(true, 'GameOver');
 		}
 		// Update managers
 		this.enemyManager.update(this.inputManager.getCurrentKey());

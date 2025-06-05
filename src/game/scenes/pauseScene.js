@@ -1,3 +1,5 @@
+import gameState from '../core/gameState';
+
 export class PauseScene extends Phaser.Scene {
 	constructor() {
 		super({ key: 'PauseScene', active: true });
@@ -10,6 +12,8 @@ export class PauseScene extends Phaser.Scene {
 
 		// lsiten for esc to toggle pause
 		this.input.keyboard.on('keydown-ESC', () => {
+			if (gameState.gameOver) return;
+
 			//gamescene name
 			const key = 'GameScene';
 			if (this.scene.isPaused(key)) {

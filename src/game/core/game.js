@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import GameScene from '../scenes/gameplayScene';
 import { PauseScene } from '../scenes/pauseScene';
 import { HudScene } from '../scenes/hudScene';
+import { GameOver } from '../scenes/gameOverScene';
 
 export default class Game {
 	constructor(gameConfig) {
@@ -14,7 +15,7 @@ export default class Game {
 			...gameConfig,
 			width: viewportWidth,
 			height: viewportHeight,
-			scene: [GameScene, HudScene, PauseScene],
+			scene: [GameScene, HudScene, PauseScene, GameOver],
 		};
 
 		// Initialize Phaser game instance
