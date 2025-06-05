@@ -18,7 +18,7 @@ function calculateRandomPosition(camera) {
 	return { x, y };
 }
 
-const defaultOptions = { moveSpeed: 50, knockback: 10, wordCategory: 'easy' };
+const defaultOptions = { moveSpeed: 50, knockback: 10, wordCategory: 'easy', damage: 10 };
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 	constructor(id, scene, spriteImage, options = {}) {
@@ -43,6 +43,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
 		this.moveSpeed = enemyOptions.moveSpeed;
 		this.knockback = enemyOptions.knockback;
+		this.damage = enemyOptions.damage;
 
 		this.word = word;
 		this.displayedWord = this.word;
