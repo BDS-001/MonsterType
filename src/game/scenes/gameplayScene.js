@@ -17,6 +17,8 @@ export default class GameScene extends Phaser.Scene {
 		// Initialize properties (removed playerImmunity - now handled by CollisionManager)
 		this.player = null;
 		this.grassBackground = null;
+
+		this.gameStartTime
 	}
 
 	preload() {
@@ -80,14 +82,14 @@ export default class GameScene extends Phaser.Scene {
 		return false;
 	}
 
-	update() {
+	update(time) {
 		if (gameState.player.health <= 0) {
 			gameState.toggleGameOver();
 			this.scene.pause();
 			this.scene.setVisible(true, 'GameOver');
 		}
 		// Update managers
-		this.enemyManager.update(this.inputManager.getCurrentKey());
+		this.enemyManager.update(time, this.inputManager.getCurrentKey());
 		this.projectileManager.update();
 		this.inputManager.update();
 	}

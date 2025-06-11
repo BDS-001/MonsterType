@@ -7,6 +7,7 @@ export default class EnemyManager {
 		this.enemies = null;
 		this.currentEnemyId = 0;
 		this.spawnEvent = null;
+		this.currentTime = 0;
 
 		this.setupEnemies();
 	}
@@ -16,7 +17,7 @@ export default class EnemyManager {
 		this.enemies = this.scene.add.group();
 	}
 
-	spawnEnemy() {
+	spawnEnemies() {
 		// Create new enemy with scene reference and current ID
 		const zombie = new Zombie(this.scene, this.currentEnemyId);
 		this.currentEnemyId++;
@@ -34,7 +35,7 @@ export default class EnemyManager {
 
 		this.spawnEvent = this.scene.time.addEvent({
 			delay: delay,
-			callback: this.spawnEnemy,
+			callback: this.spawnEnemies,
 			callbackScope: this,
 			loop: true,
 		});
@@ -47,7 +48,8 @@ export default class EnemyManager {
 		}
 	}
 
-	update(currentKey) {
+	update(time, currentKey) {
+		this.currentTime = time
 		const currentEnemies = this.enemies.getChildren();
 
 		// Update each enemy (loop backwards to handle potential removals)
