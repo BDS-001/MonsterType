@@ -18,7 +18,7 @@ export class GameOver extends Phaser.Scene {
 
 		// Center the game over text
 		this.add
-			.text(this.game.config.width / 2, this.game.config.width / 2 - 110, 'GAMEOVER', {
+			.text(this.game.config.width / 2, this.game.config.height / 2 - 110, 'GAMEOVER', {
 				fontSize: '48px',
 				color: '#fff',
 			})
@@ -27,7 +27,7 @@ export class GameOver extends Phaser.Scene {
 		// Add play again button
 		const playAgainButton = this.add.image(
 			this.game.config.width / 2,
-			this.game.config.width / 2,
+			this.game.config.height / 2,
 			'playagain'
 		);
 		playAgainButton.setScale(5);
