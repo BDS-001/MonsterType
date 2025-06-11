@@ -18,7 +18,7 @@ export default class GameScene extends Phaser.Scene {
 		this.player = null;
 		this.grassBackground = null;
 
-		this.gameStartTime
+		this.gameStartTime;
 	}
 
 	preload() {
@@ -51,7 +51,7 @@ export default class GameScene extends Phaser.Scene {
 		this.collisionManager = new CollisionManager(this);
 
 		// Start game systems
-		this.enemyManager.startSpawning(1000);
+		this.enemyManager.startSpawning();
 	}
 
 	setupBackground() {
