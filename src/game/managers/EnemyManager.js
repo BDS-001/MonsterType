@@ -26,19 +26,36 @@ export default class EnemyManager {
 		}
 	}
 
-	spawnEnemies() {
-		// increase difficulty every 30 seconds
-		const timeMultiplier = Math.floor(this.currentTime / 30000) + 1;
-		const zombieCount = this.wave % 5 > 0 ? Math.max(3, 1 + timeMultiplier) : 0;
-		
+	spawnEnemiesWaves() {
+		// increase difficulty every 20 seconds
+		const timeMultiplier = Math.floor(this.currentTime / 20000) + 1;
+		//zombies spawn 4 out of 5 waves
+		const zombieCount = this.wave % 5 > 0 ? Math.max(2, 1 + timeMultiplier) : 0;
+
 		//every 5 waves add 1
-		const ghostWaveMultiplier = Math.floor(this.wave / 5)
-		const ghostCount = this.wave % 5 === 0 ? 4 + ghostWaveMultiplier : 0;
+		const ghostWaveMultiplier = Math.floor(this.wave / 5);
+		const ghostCount = this.wave % 5 === 0 ? 6 + ghostWaveMultiplier : 0;
 
 		this.spawnEnemyType(Zombie, zombieCount);
 		this.spawnEnemyType(Ghost, ghostCount);
 
 		this.wave += 1;
+	}
+
+	spawnEnemiesGradual() {
+		const gameplaySeconds = this.currentTime / 1000;
+
+		let zombieCount = 1;
+		if (gameplaySeconds > 60) zombieCount = 2; // 2 zombies after 1 minute
+		if (gameplaySeconds > 120) zombieCount = 3; // 3 zombies after 2 minutes
+
+		let ghostCount = 0;
+		if (gameplaySeconds > 30 && Math.random() < 0.2) {
+			ghostCount = 1; // 20% chance of 1 ghost after 30 seconds
+		}
+
+		this.spawnEnemyType(Zombie, zombieCount);
+		this.spawnEnemyType(Ghost, ghostCount);
 	}
 
 	startSpawning(initialWaveDelay = 5000) {
