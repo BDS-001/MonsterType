@@ -11,7 +11,7 @@ export class GameOver extends Phaser.Scene {
 	}
 
 	create() {
-		this.scene.setVisible(true);
+		this.scene.setVisible(false);
 
 		// transparent backround for the scene so i can still see gameplay
 		this.cameras.main.setBackgroundColor('rgba(0,0,0,0.3)');

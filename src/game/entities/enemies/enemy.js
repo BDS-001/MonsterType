@@ -63,7 +63,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		// Create the text that displays the word
 		const TEXT_STYLE = {
 			fontFamily: 'Arial',
-			fontSize: 16,
+			fontSize: 28,
 			color: '#ffffff',
 		};
 		this.healthText = scene.add.text(
