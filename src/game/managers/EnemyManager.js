@@ -66,7 +66,7 @@ export default class EnemyManager {
 
 		this.spawnEvent = this.scene.time.addEvent({
 			delay: initialWaveDelay,
-			callback: this.spawnEnemies,
+			callback: this.spawnEnemiesWaves,
 			callbackScope: this,
 			loop: true,
 		});
