@@ -1,5 +1,6 @@
 import Zombie from '../entities/enemies/zombie';
 import Ghost from '../entities/enemies/ghost';
+import Mummy from '../entities/enemies/mummy';
 
 export default class EnemyManager {
 	constructor(scene) {
@@ -36,8 +37,12 @@ export default class EnemyManager {
 		const ghostWaveMultiplier = Math.floor(this.wave / 5);
 		const ghostCount = this.wave % 5 === 0 ? 6 + ghostWaveMultiplier : 0;
 
+		//mummies spawn every 7 waves starting from wave 7 (slow but hard words)
+		const mummyCount = this.wave >= 7 && this.wave % 7 === 0 ? 1 + Math.floor(this.wave / 14) : 0;
+
 		this.spawnEnemyType(Zombie, zombieCount);
 		this.spawnEnemyType(Ghost, ghostCount);
+		this.spawnEnemyType(Mummy, mummyCount);
 
 		this.wave += 1;
 	}
