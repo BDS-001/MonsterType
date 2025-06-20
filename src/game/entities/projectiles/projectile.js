@@ -1,10 +1,10 @@
 // File: ./src/game/entities/projectile.js
 import Phaser from 'phaser';
-import { gameSettings } from '../core/constants';
+import { gameSettings } from '../../core/constants';
 
 export default class Projectile extends Phaser.Physics.Arcade.Image {
-	constructor(scene, x, y) {
-		super(scene, x, y, 'projectile');
+	constructor(scene, x, y, spriteKey = 'projectile', damage = 1) {
+		super(scene, x, y, spriteKey);
 
 		// Reference to the scene
 		this.scene = scene;
@@ -21,6 +21,7 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 		this.setVisible(false);
 
 		this.speed = 2000;
+		this.damage = damage;
 		this.targetEnemyId = null;
 		this.deactiveBuffer = 50;
 	}
