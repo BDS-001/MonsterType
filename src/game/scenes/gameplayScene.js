@@ -76,7 +76,7 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	fireProjectile(source, targetEnemy) {
-		const projectile = this.projectileManager.getProjectiles().get();
+		const projectile = this.projectileManager.getProjectile();
 
 		if (projectile) {
 			projectile.fire(source, targetEnemy);
