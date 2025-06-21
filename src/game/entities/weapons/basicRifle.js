@@ -6,7 +6,7 @@ export default class BasicRifle extends Weapon {
 			attackSpeed: 800,
 			projectileCount: 1,
 			projectileType: 'basicShot',
-			spread: 0
+			spread: 0,
 		});
 	}
 }

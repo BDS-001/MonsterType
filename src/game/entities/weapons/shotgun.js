@@ -6,7 +6,7 @@ export default class Shotgun extends Weapon {
 			attackSpeed: 1000,
 			projectileCount: 3,
 			projectileType: 'basicShot',
-			spread: Math.PI / 6 // 30 degree spread
+			spread: Math.PI / 6, // 30 degree spread
 		});
 	}
 }
