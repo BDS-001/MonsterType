@@ -5,7 +5,7 @@ export default class ProjectileManager {
 	constructor(scene) {
 		this.scene = scene;
 		this.projectiles = null;
-		this.currentWeaponClass = HeavyRounds;
+		this.currentWeaponClass = BasicShot;
 
 		this.setupProjectiles();
 	}
