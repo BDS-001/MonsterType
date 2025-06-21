@@ -45,10 +45,11 @@ export default class CollisionManager {
 			return;
 		}
 
-		// Apply damage and remove projectile
-		enemy.takeDamage();
-		projectile.kill();
-		gameState.updateScore(10);
+		// Let projectile handle the hit (allows for unique weapon effects)
+		const hitSuccessful = projectile.hit(enemy);
+		if (hitSuccessful) {
+			gameState.updateScore(10);
+		}
 	}
 
 	// Utility methods for managing immunity

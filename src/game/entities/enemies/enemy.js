@@ -49,9 +49,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 		this.displayedWord = this.word;
 		this.typedIndex = 0;
 		this.hitIndex = 0;
-		this.pendingShots = 0;
-		this.totalShotsFired = 0;
-		this.totalShotsHit = 0;
+		this.pendingDamage = 0;
 
 		this.isDestroyed = false;
 
@@ -96,11 +94,8 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 				`Word: "${this.word}"`,
 				`Display: "${this.displayedWord}"`,
 				`Typed: ${this.typedIndex}/${this.word.length}`,
-				`Hit: ${this.hitIndex}/${this.typedIndex}`,
-				`Pending: ${this.pendingShots}`,
-				`Shots: ${this.totalShotsFired}→${this.totalShotsHit}`,
-				`Active: ${this.active}`,
-				`Body: ${this.body ? this.body.enable : 'null'}`,
+				`Hit: ${this.hitIndex}`,
+				`PendingDmg: ${this.pendingDamage}`,
 			].join('\n');
 
 			this.debugText.setText(debugInfo);
@@ -124,32 +119,36 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 			return;
 		}
 		if (this.typedIndex < this.word.length && letter === this.word[this.typedIndex]) {
-			const projectileFired = this.scene.fireProjectile(this.scene.player, this);
-			if (projectileFired) {
+			const projectileDamage = this.scene.fireProjectile(this.scene.player, this);
+			if (projectileDamage > 0) {
 				this.typedIndex++;
-				this.pendingShots++;
-				this.totalShotsFired++;
+				this.pendingDamage += projectileDamage;
 			}
 			this.updateDebugDisplay();
 		}
 	}
 
-	takeDamage() {
+	takeDamage(damage) {
 		if (this.isDestroyed) {
 			return;
 		}
 
-		// only apply damage if there's still a pending shot
-		if (this.hitIndex < this.typedIndex && this.pendingShots > 0) {
-			this.hitIndex++;
-			this.pendingShots--;
-			this.totalShotsHit++;
+		// only apply damage if there's pending damage to be applied
+		if (this.pendingDamage > 0) {
+			this.hitIndex += damage;
+			this.pendingDamage -= damage;
 
-			// slice off as many letters as have _actually_ hit
+			// clamp the hitIndex so damage greater than 1 does not go out of bounds
+			this.hitIndex = Math.min(this.hitIndex, this.word.length);
+
+			// adjust typedIndex to match the current display position
+			this.typedIndex = this.hitIndex;
+
+			// slice off as many letters as have actually hit
 			this.displayedWord = this.word.slice(this.hitIndex);
 			this.healthText.setText(this.displayedWord);
 
-			// flash + knockback…
+			// flash + knockback
 			this.setTint(0xff0000);
 			this.scene.time.delayedCall(100, () => {
 				if (!this.isDestroyed) {
