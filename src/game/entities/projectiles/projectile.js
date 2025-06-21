@@ -26,6 +26,13 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 		this.deactiveBuffer = 50;
 	}
 
+	hit(enemy) {
+		// Default behavior: apply damage to enemy and kill projectile
+		enemy.takeDamage(this.damage);
+		this.kill();
+		return true; // Return true to indicate hit was successful
+	}
+
 	kill() {
 		this.setActive(false);
 		this.setVisible(false);

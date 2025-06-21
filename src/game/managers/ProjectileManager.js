@@ -5,7 +5,7 @@ export default class ProjectileManager {
 	constructor(scene) {
 		this.scene = scene;
 		this.projectiles = null;
-		this.currentWeaponClass = BasicShot;
+		this.currentWeaponClass = HeavyRounds;
 
 		this.setupProjectiles();
 	}
@@ -19,7 +19,7 @@ export default class ProjectileManager {
 			classType: this.currentWeaponClass,
 			createCallback: (projectile) => {
 				projectile.scene = this.scene;
-			}
+			},
 		});
 	}
 
@@ -35,7 +35,6 @@ export default class ProjectileManager {
 		}
 		return projectile;
 	}
-
 
 	update() {
 		const projectiles = this.projectiles.getChildren();
