@@ -1,14 +1,32 @@
+/**
+ * Collision Detection and Response System
+ *
+ * Manages all collision detection between game entities and handles
+ * appropriate responses such as damage, scoring, and special effects.
+ */
 import gameState from '../core/gameState';
 
+/**
+ * Central collision management system for all game entities
+ * Handles player-enemy and projectile-enemy interactions
+ */
 export default class CollisionManager {
+	/**
+	 * Initialize collision detection system
+	 * @param {Phaser.Scene} scene - The scene to set up collisions for
+	 */
 	constructor(scene) {
 		this.scene = scene;
 
 		this.setupCollisions();
 	}
 
+	/**
+	 * Set up all collision detection pairs
+	 * Registers overlap callbacks for different entity interactions
+	 */
 	setupCollisions() {
-		// Player vs Enemy collision
+		// Player taking damage from enemies
 		this.scene.physics.add.overlap(
 			this.scene.player,
 			this.scene.enemyManager.getEnemies(),
@@ -17,7 +35,7 @@ export default class CollisionManager {
 			this.scene
 		);
 
-		// Projectile vs Enemy collision
+		// Projectiles hitting enemies for damage
 		this.scene.physics.add.overlap(
 			this.scene.enemyManager.getEnemies(),
 			this.scene.projectileManager.getProjectiles(),
@@ -27,41 +45,68 @@ export default class CollisionManager {
 		);
 	}
 
+	/**
+	 * Handle collision between player and enemy
+	 * @param {Player} player - The player sprite
+	 * @param {Enemy} enemy - The enemy that collided with player
+	 */
 	handlePlayerEnemyCollision(player, enemy) {
-		// Skip collision if player is immune
+		// Respect immunity frames to prevent rapid damage
 		if (gameState.getPlayerImmunity()) {
 			return;
 		}
 
-		// Apply damage and knockback
+		// Apply damage to game state and trigger visual feedback
 		gameState.playerHit(10);
 		player.takeDamage(enemy.damage);
+
+		// Push enemy away to prevent continuous collision
 		enemy.knockbackEnemy();
 	}
 
+	/**
+	 * Handle collision between projectile and enemy
+	 * @param {Enemy} enemy - The enemy hit by the projectile
+	 * @param {Projectile} projectile - The projectile that hit the enemy
+	 */
 	handleProjectileEnemyCollision(enemy, projectile) {
-		// Check if projectile is active and targeting this enemy
+		// Validate that projectile is active and correctly targeted
 		if (!projectile.active || projectile.targetEnemyId !== enemy.id) {
 			return;
 		}
 
-		// Let projectile handle the hit (allows for unique weapon effects)
+		// Delegate hit handling to projectile for weapon-specific effects
 		const hitSuccessful = projectile.hit(enemy);
+
+		// Award points for successful hits
 		if (hitSuccessful) {
 			gameState.updateScore(10);
 		}
 	}
 
-	// Utility methods for managing immunity
+	/**
+	 * Set player immunity status (for damage prevention)
+	 * @param {boolean} immune - Whether player should be immune to damage
+	 */
 	setPlayerImmunity(immune) {
 		this.playerImmunity = immune;
 	}
 
+	/**
+	 * Check if player is currently immune to damage
+	 * @returns {boolean} True if player is immune
+	 */
 	isPlayerImmune() {
 		return this.playerImmunity;
 	}
 
-	// Method to add new collision types in the future
+	/**
+	 * Add a new collision detection pair (for future expansion)
+	 * @param {Phaser.GameObjects.GameObject} objectA - First collision object/group
+	 * @param {Phaser.GameObjects.GameObject} objectB - Second collision object/group
+	 * @param {Function} callback - Function to call when collision occurs
+	 * @param {Function} processCallback - Optional pre-processing callback
+	 */
 	addCollision(objectA, objectB, callback, processCallback = null) {
 		this.scene.physics.add.overlap(
 			objectA,
@@ -72,7 +117,10 @@ export default class CollisionManager {
 		);
 	}
 
-	// Cleanup method
+	/**
+	 * Clean up collision manager resources
+	 * Called when scene ends or game resets
+	 */
 	destroy() {
 		this.playerImmunity = false;
 	}
