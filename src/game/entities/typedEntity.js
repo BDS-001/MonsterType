@@ -1,19 +1,39 @@
+/**
+ * Typed Entity Base Class
+ *
+ * Base class for game entities that can be targeted by typing their associated words.
+ * Handles word display, typing validation, damage tracking, and visual feedback.
+ */
 import Phaser from 'phaser';
 
+/**
+ * Interactive entity that responds to typed input
+ * Extends Phaser's Arcade Physics Image with word-based interaction system
+ */
 export default class TypedEntity extends Phaser.Physics.Arcade.Image {
+	/**
+	 * Create a new typed entity
+	 * @param {Phaser.Scene} scene - The scene this entity belongs to
+	 * @param {number} x - Initial X position
+	 * @param {number} y - Initial Y position
+	 * @param {string} texture - Sprite texture key
+	 * @param {string} word - Word that must be typed to target this entity
+	 */
 	constructor(scene, x, y, texture, word = '') {
 		super(scene, x, y, texture);
 
-		this.word = word;
-		this.typedIndex = 0;
-		this.hitIndex = 0;
-		this.pendingDamage = 0;
-		this.isDestroyed = false;
+		// Word-based interaction properties
+		this.word = word; // Complete word to type
+		this.typedIndex = 0; // Progress through typing the word
+		this.hitIndex = 0; // Progress through projectile hits
+		this.pendingDamage = 0; // Damage queued for application
+		this.isDestroyed = false; // Destruction state flag
 
+		// Register with scene systems
 		scene.add.existing(this);
 		scene.physics.add.existing(this);
 
-		// Create the text that displays the word
+		// Create text display for the word above the entity
 		const TEXT_STYLE = {
 			fontFamily: 'Arial',
 			fontSize: 28,
@@ -26,11 +46,11 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 			TEXT_STYLE
 		);
 
-		// Center the text on the sprite
+		// Center the word text above the sprite
 		this.healthText.setOrigin(0.5);
 		this.healthText.setPosition(this.x, this.y - 30);
 
-		// Create debug text display
+		// Create debug information display (for development)
 		const DEBUG_STYLE = {
 			fontFamily: 'Arial',
 			fontSize: 12,
@@ -43,6 +63,10 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		this.updateDebugDisplay();
 	}
 
+	/**
+	 * Update debug information display
+	 * Shows typing progress, damage state, and word status for development
+	 */
 	updateDebugDisplay() {
 		if (this.debugText && !this.isDestroyed) {
 			const debugInfo = [
@@ -57,14 +81,21 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		}
 	}
 
+	/**
+	 * Process a typed letter and check if it matches the next expected character
+	 * @param {string} letter - The letter that was typed
+	 */
 	updateWord(letter) {
 		if (this.isDestroyed) {
 			return;
 		}
 
+		// Check if the typed letter matches the next character in the word
 		if (this.typedIndex < this.word.length && letter === this.word[this.typedIndex]) {
+			// Fire a projectile towards this entity
 			const projectileDamage = this.scene.fireProjectile(this.scene.player, this);
 			if (projectileDamage > 0) {
+				// Advance typing progress and queue damage for when projectile hits
 				this.typedIndex++;
 				this.pendingDamage += projectileDamage;
 			}
@@ -72,29 +103,35 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		}
 	}
 
+	/**
+	 * Apply damage when projectile hits this entity
+	 * @param {number} damage - Amount of damage to apply
+	 */
 	takeDamage(damage) {
 		if (this.isDestroyed) {
 			return;
 		}
 
-		// only apply damage if there's pending damage to be applied
+		// Only apply damage if there's queued damage from successful typing
 		if (this.pendingDamage > 0) {
+			// Apply damage and reduce pending damage
 			this.hitIndex += damage;
 			this.pendingDamage -= damage;
 
-			// clamp the hitIndex so damage greater than 1 does not go out of bounds
+			// Prevent hit index from exceeding word length
 			this.hitIndex = Math.min(this.hitIndex, this.word.length);
 
-			// adjust typedIndex to match the current display position
+			// Synchronize typing progress with damage progress
 			this.typedIndex = this.hitIndex;
 
+			// Trigger visual damage effect
 			this.hitEffect();
 
-			// slice off as many letters as have actually hit
+			// Update displayed word by removing hit characters
 			this.displayedWord = this.word.slice(this.hitIndex);
 			this.healthText.setText(this.displayedWord);
 
-			// if we've removed the whole word, kill the enemy
+			// Destroy entity if entire word has been typed/hit
 			if (this.displayedWord.length === 0) {
 				this.destroy();
 			} else {
@@ -103,10 +140,18 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		}
 	}
 
+	/**
+	 * Override this method in subclasses to provide custom hit effects
+	 * Base implementation does nothing - meant to be extended
+	 */
 	hitEffect() {
 		return;
 	}
 
+	/**
+	 * Get the remaining portion of the word that still needs to be typed
+	 * @returns {string} The remaining untyped characters
+	 */
 	getCurrentWord() {
 		if (this.hitIndex >= this.word.length) {
 			return '';
@@ -114,27 +159,35 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		return this.word.substring(this.hitIndex);
 	}
 
+	/**
+	 * Override this method in subclasses to handle entity destruction
+	 * Called when the entity is about to be destroyed
+	 */
 	onKill() {
 		return;
 	}
 
+	/**
+	 * Clean up and destroy this entity and all associated display elements
+	 * @param {boolean} fromScene - Whether destruction was initiated by scene cleanup
+	 */
 	destroy(fromScene) {
 		this.isDestroyed = true;
 
-		// First destroy the text
+		// Clean up word display text
 		if (this.healthText) {
 			this.healthText.destroy();
 		}
 
-		// Destroy debug text
+		// Clean up debug information display
 		if (this.debugText) {
 			this.debugText.destroy();
 		}
 
-		//run kill effect
+		// Execute subclass-specific destruction logic
 		this.onKill();
 
-		// Then call parent's destroy to destroy the sprite itself
+		// Destroy the sprite itself using parent class method
 		super.destroy(fromScene);
 	}
 }

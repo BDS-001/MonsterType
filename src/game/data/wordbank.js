@@ -1,6 +1,18 @@
+/**
+ * Word Bank Database
+ *
+ * Collection of words organized by difficulty levels for enemy typing challenges.
+ * Words are categorized to provide progressive difficulty scaling throughout gameplay.
+ */
+
+/**
+ * Comprehensive word database organized by typing difficulty
+ * Used by enemies to select appropriate words based on their challenge level
+ */
 const wordBank = {
 	/**
-	 * Easy difficulty words (3-4 letters)
+	 * Very Easy difficulty words (single letters)
+	 * Used by fast enemies to provide quick, simple targets
 	 */
 	veryEasy: [
 		'a',
@@ -30,6 +42,11 @@ const wordBank = {
 		'y',
 		'z',
 	],
+
+	/**
+	 * Easy difficulty words (3-5 letters)
+	 * Common, short words for beginner-friendly gameplay
+	 */
 	easy: [
 		'cat',
 		'dog',
@@ -114,6 +131,7 @@ const wordBank = {
 
 	/**
 	 * Medium difficulty words (5-7 letters)
+	 * Moderate length words that require more typing skill and speed
 	 */
 	medium: [
 		'house',
@@ -182,6 +200,7 @@ const wordBank = {
 
 	/**
 	 * Hard difficulty words (8+ letters)
+	 * Complex, long words that challenge advanced players
 	 */
 	hard: [
 		'elephant',
@@ -248,4 +267,5 @@ const wordBank = {
 	],
 };
 
+// Export word bank for use by enemy entities and difficulty systems
 export default wordBank;
