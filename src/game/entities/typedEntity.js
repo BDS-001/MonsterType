@@ -115,7 +115,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	}
 
 	onKill() {
-		return
+		return;
 	}
 
 	destroy(fromScene) {
@@ -132,7 +132,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		}
 
 		//run kill effect
-		this.onKill()
+		this.onKill();
 
 		// Then call parent's destroy to destroy the sprite itself
 		super.destroy(fromScene);

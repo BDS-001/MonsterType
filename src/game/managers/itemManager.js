@@ -9,6 +9,6 @@ export default class ItemManager {
 	}
 
 	spawnItem(x, y, id) {
-		return
+		return;
 	}
 }
