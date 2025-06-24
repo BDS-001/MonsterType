@@ -42,6 +42,17 @@ class GameState {
 	}
 
 	/**
+	 * Handle player taking increasing Health
+	 * @param {number} healAmount - Amount of health to apply
+	 */
+	playerHeal(healAmount) {
+		if (!this.gameScene) return;
+
+		// Apply heal amount to player current health
+		this.player.health += healAmount
+	}
+
+	/**
 	 * Handle player taking damage with immunity frames
 	 * @param {number} damage - Amount of damage to apply
 	 */
