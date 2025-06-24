@@ -5,7 +5,7 @@
  * Provides immediate health recovery when used.
  */
 import Item from './item.js';
-import gameState from '../../core/gameState.js'
+import gameState from '../../core/gameState.js';
 
 /**
  * Health restoration consumable item
@@ -20,7 +20,7 @@ export default class Medkit extends Item {
 	 */
 	constructor(scene, x, y) {
 		super(scene, x, y, 'MEDKIT');
-		this.healAmount = 10
+		this.healAmount = 10;
 	}
 
 	/**
@@ -29,7 +29,7 @@ export default class Medkit extends Item {
 	 */
 	onKill() {
 		// Increase player health using gamestate playerHeal function
-		gameState.playerHeal(this.healAmount) // 
+		gameState.playerHeal(this.healAmount); //
 		return;
 	}
 }
