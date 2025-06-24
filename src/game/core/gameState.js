@@ -49,7 +49,7 @@ class GameState {
 		if (!this.gameScene) return;
 
 		// Apply heal amount to player current health
-		this.player.health += healAmount
+		this.player.health += healAmount;
 	}
 
 	/**
