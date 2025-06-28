@@ -16,8 +16,9 @@ export default class HeavyRoundsPickup extends Item {
 	 * @param {Phaser.Scene} scene - The scene this heavy rounds pickup belongs to
 	 * @param {number} x - X position for heavy rounds pickup placement
 	 * @param {number} y - Y position for heavy rounds pickup placement
+	 * @param {string} itemId - Unique compound ID for this item instance
 	 */
-	constructor(scene, x, y) {
-		super(scene, x, y, 'HEAVYROUNDS_PICKUP');
+	constructor(scene, x, y, itemId) {
+		super(scene, x, y, 'HEAVYROUNDS_PICKUP', itemId);
 	}
 }

@@ -65,14 +65,13 @@ export default class Enemy extends TypedEntity {
 		// Generate spawn position outside camera view
 		const { x: spawnX, y: spawnY } = calculateRandomPosition(scene.cameras.main);
 
-		// Initialize parent TypedEntity with position and word
-		super(scene, spawnX, spawnY, spriteImage, word);
+		// Initialize parent TypedEntity with position, word, and ID
+		super(scene, spawnX, spawnY, spriteImage, word, id);
 
 		// Face towards player (flip sprite if spawning on right side)
 		if (this.x > scene.player.x) this.flipX = true;
 
 		// Store enemy properties
-		this.id = id; // Unique identifier for targeting
 		this.moveSpeed = enemyOptions.moveSpeed; // Movement speed in pixels/second
 		this.knockback = enemyOptions.knockback; // Knockback distance when hit
 		this.damage = enemyOptions.damage; // Damage dealt to player

@@ -18,9 +18,13 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	 * @param {number} y - Initial Y position
 	 * @param {string} texture - Sprite texture key
 	 * @param {string} word - Word that must be typed to target this entity
+	 * @param {string} id - Unique identifier for this entity
 	 */
-	constructor(scene, x, y, texture, word = '') {
+	constructor(scene, x, y, texture, word = '', id = null) {
 		super(scene, x, y, texture);
+
+		// Entity identification
+		this.id = id; // Unique identifier for targeting and collision detection
 
 		// Word-based interaction properties
 		this.word = word; // Complete word to type

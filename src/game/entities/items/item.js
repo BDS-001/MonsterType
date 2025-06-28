@@ -17,22 +17,22 @@ export default class Item extends TypedEntity {
 	 * @param {Phaser.Scene} scene - The scene this item belongs to
 	 * @param {number} x - X position for item placement
 	 * @param {number} y - Y position for item placement
-	 * @param {string|number} itemId - Identifier for item type in ITEM_DATA
+	 * @param {string} itemType - Item type identifier from ITEM_DATA
+	 * @param {string} itemId - Unique compound ID for this item instance
 	 */
-	constructor(scene, x, y, itemId) {
+	constructor(scene, x, y, itemType, itemId) {
 		// Retrieve item configuration from data table
-		const itemData = ITEM_DATA[itemId];
+		const itemData = ITEM_DATA[itemType];
 		if (!itemData) {
-			throw new Error(`Item data not found for id: ${itemId}`);
+			throw new Error(`Item data not found for type: ${itemType}`);
 		}
 
-		// Initialize as TypedEntity with item sprite and word
-		super(scene, x, y, 'item-sprite', itemData.word);
+		// Initialize as TypedEntity with item sprite, word, and unique ID
+		super(scene, x, y, 'item-sprite', itemData.word, itemId);
 
 		// Store item properties from data configuration
-		this.id = itemData.id; // Unique item identifier
+		this.itemType = itemType; // Item type from ITEM_DATA
 		this.name = itemData.name; // Display name
-		this.word = itemData.word; // Word to type for collection
 		this.type = itemData.type; // Item category (weapon, health, etc.)
 		this.rarity = itemData.rarity; // Rarity level affecting spawn chance
 

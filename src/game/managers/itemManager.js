@@ -1,15 +1,18 @@
 /**
- * Item Management System (Work in Progress)
+ * Item Management System
  *
- * Placeholder for future item and power-up system.
- * Currently serves as a stub for planned functionality.
- *
- * TODO: Implement item spawning, collection, and effects
+ * Handles item spawning, collision detection, and management.
+ * Manages different item types with unique compound string IDs.
  */
+import Item from '../entities/items/item';
+import Medkit from '../entities/items/medkit';
+import Bomb from '../entities/items/bomb';
+import HeavyRoundsPickup from '../entities/items/heavyRoundsPickup';
+import HealthUp from '../entities/items/healthUp';
 
 /**
- * Manager for collectible items and power-ups
- * Currently a placeholder for future development
+ * Central manager for all item-related operations
+ * Controls spawning patterns, item lifecycle, and collision detection
  */
 export default class ItemManager {
 	/**
@@ -18,28 +21,93 @@ export default class ItemManager {
 	 */
 	constructor(scene) {
 		this.scene = scene;
-		this.items = null; // Future: will hold item group
+		this.items = null; // Phaser group containing all active items
+		this.currentItemId = 0; // Unique ID counter for item tracking
 
 		this.setupItems();
 	}
 
 	/**
-	 * Set up item system (placeholder)
-	 * TODO: Initialize item groups and pools
+	 * Initialize the item group container
+	 * Sets up a Phaser group to manage all active items
 	 */
 	setupItems() {
-		// Future implementation will create item groups here
+		// Create item group for collision detection and batch operations
+		this.items = this.scene.add.group();
 	}
 
 	/**
-	 * Spawn an item at specified coordinates (placeholder)
+	 * Spawn an item at specified coordinates
 	 * @param {number} x - X coordinate for item spawn
 	 * @param {number} y - Y coordinate for item spawn
-	 * @param {string|number} id - Item type identifier
-	 * TODO: Implement actual item spawning logic
+	 * @param {string} itemType - Item type identifier from ITEM_DATA
 	 */
-	spawnItem(x, y, id) {
-		// Future implementation will create and position items
-		return;
+	spawnItem(x, y, itemType) {
+		const itemId = `item${this.currentItemId}`;
+		let item;
+
+		// Create specific item class based on type
+		switch (itemType) {
+			case 'MEDKIT':
+				item = new Medkit(this.scene, x, y, itemId);
+				break;
+			case 'BOMB':
+				item = new Bomb(this.scene, x, y, itemId);
+				break;
+			case 'HEAVYROUNDS_PICKUP':
+				item = new HeavyRoundsPickup(this.scene, x, y, itemId);
+				break;
+			case 'HEALTH_UP':
+				item = new HealthUp(this.scene, x, y, itemId);
+				break;
+			default:
+				item = new Item(this.scene, x, y, itemType, itemId);
+		}
+
+		this.currentItemId++;
+		this.items.add(item);
+		return item;
+	}
+
+	/**
+	 * Update all items and handle input processing
+	 * @param {string|null} currentKey - The key currently being pressed
+	 */
+	update(currentKey) {
+		const currentItems = this.items.getChildren();
+
+		// Update each item (backwards iteration handles mid-loop removals safely)
+		for (let i = currentItems.length - 1; i >= 0; i--) {
+			const item = currentItems[i];
+			// Pass current input to item for word processing
+			item.update(currentKey);
+		}
+	}
+
+	/**
+	 * Get the item group for collision detection or other operations
+	 * @returns {Phaser.GameObjects.Group} The group containing all active items
+	 */
+	getItems() {
+		return this.items;
+	}
+
+	/**
+	 * Get the current number of active items
+	 * @returns {number} Count of items currently in the scene
+	 */
+	getItemCount() {
+		return this.items.getChildren().length;
+	}
+
+	/**
+	 * Clean up all items
+	 * Should be called when the scene ends or game resets
+	 */
+	destroy() {
+		if (this.items) {
+			// Remove all items from scene and destroy their objects
+			this.items.clear(true, true);
+		}
 	}
 }

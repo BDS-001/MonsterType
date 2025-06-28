@@ -43,6 +43,17 @@ export default class CollisionManager {
 			null,
 			this.scene
 		);
+
+		// Projectiles hitting items for collection
+		if (this.scene.itemManager) {
+			this.scene.physics.add.overlap(
+				this.scene.itemManager.getItems(),
+				this.scene.projectileManager.getProjectiles(),
+				this.handleProjectileItemCollision.bind(this),
+				null,
+				this.scene
+			);
+		}
 	}
 
 	/**
@@ -81,6 +92,26 @@ export default class CollisionManager {
 		// Award points for successful hits
 		if (hitSuccessful) {
 			gameState.updateScore(10);
+		}
+	}
+
+	/**
+	 * Handle collision between projectile and item
+	 * @param {Item} item - The item hit by the projectile
+	 * @param {Projectile} projectile - The projectile that hit the item
+	 */
+	handleProjectileItemCollision(item, projectile) {
+		// Validate that projectile is active and correctly targeted
+		if (!projectile.active || projectile.targetEnemyId !== item.id) {
+			return;
+		}
+
+		// Delegate hit handling to projectile for weapon-specific effects
+		const hitSuccessful = projectile.hit(item);
+
+		// Award points for successful item collection
+		if (hitSuccessful) {
+			gameState.updateScore(5);
 		}
 	}
 

@@ -44,7 +44,8 @@ export default class EnemyManager {
 	 */
 	spawnEnemyType(EnemyClass, count = 1) {
 		for (let i = 0; i < count; i++) {
-			const enemy = new EnemyClass(this.scene, this.currentEnemyId);
+			const enemyId = `enemy${this.currentEnemyId}`;
+			const enemy = new EnemyClass(this.scene, enemyId);
 			this.currentEnemyId++;
 			this.enemies.add(enemy);
 		}
