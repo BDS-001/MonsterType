@@ -17,9 +17,10 @@ export default class Medkit extends Item {
 	 * @param {Phaser.Scene} scene - The scene this medkit belongs to
 	 * @param {number} x - X position for medkit placement
 	 * @param {number} y - Y position for medkit placement
+	 * @param {string} itemId - Unique compound ID for this item instance
 	 */
-	constructor(scene, x, y) {
-		super(scene, x, y, 'MEDKIT');
+	constructor(scene, x, y, itemId) {
+		super(scene, x, y, 'MEDKIT', itemId);
 		this.healAmount = 10;
 	}
 

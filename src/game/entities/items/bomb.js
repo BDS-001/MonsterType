@@ -16,8 +16,9 @@ export default class Bomb extends Item {
 	 * @param {Phaser.Scene} scene - The scene this bomb belongs to
 	 * @param {number} x - X position for bomb placement
 	 * @param {number} y - Y position for bomb placement
+	 * @param {string} itemId - Unique compound ID for this item instance
 	 */
-	constructor(scene, x, y) {
-		super(scene, x, y, 'BOMB');
+	constructor(scene, x, y, itemId) {
+		super(scene, x, y, 'BOMB', itemId);
 	}
 }

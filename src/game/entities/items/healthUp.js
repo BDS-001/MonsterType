@@ -16,8 +16,9 @@ export default class HealthUp extends Item {
 	 * @param {Phaser.Scene} scene - The scene this health upgrade belongs to
 	 * @param {number} x - X position for health upgrade placement
 	 * @param {number} y - Y position for health upgrade placement
+	 * @param {string} itemId - Unique compound ID for this item instance
 	 */
-	constructor(scene, x, y) {
-		super(scene, x, y, 'HEALTH_UP');
+	constructor(scene, x, y, itemId) {
+		super(scene, x, y, 'HEALTH_UP', itemId);
 	}
 }
