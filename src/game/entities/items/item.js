@@ -32,6 +32,7 @@ export default class Item extends TypedEntity {
 		this.name = itemData.name;
 		this.type = itemData.type;
 		this.rarity = itemData.rarity;
+		this.baseValue = itemData.baseValue || null;
 
 		scene.add.existing(this);
 		scene.physics.add.existing(this);

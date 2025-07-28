@@ -41,6 +41,11 @@ class GameState {
 		this.gameOver = !this.gameOver;
 	}
 
+	increaseHealth(amount) {
+		this.player.maxHealth += amount;
+		this.player.health += amount;
+	}
+
 	/**
 	 * Handle player taking increasing Health
 	 * @param {number} healAmount - Amount of health to apply

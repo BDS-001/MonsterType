@@ -42,3 +42,16 @@ export const phaserConfig = {
 export const gameSettings = {
 	SPRITE_SCALE: 4,
 };
+
+/**
+ * Item configuration constants
+ * Defines base values and properties for different item types
+ */
+export const itemData = {
+	MEDKIT: {
+		baseValue: 10,
+	},
+	HEALTH_UP: {
+		baseValue: 10,
+	},
+};

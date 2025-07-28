@@ -30,6 +30,7 @@ export const ITEM_DATA = {
 		word: 'heal',
 		type: 'consumable',
 		rarity: 'common',
+		baseValue: 10,
 	},
 	HEALTH_UP: {
 		id: 'HEALTH_UP',
@@ -37,5 +38,6 @@ export const ITEM_DATA = {
 		word: 'endurance',
 		type: 'upgrade',
 		rarity: 'rare',
+		baseValue: 10,
 	},
 };

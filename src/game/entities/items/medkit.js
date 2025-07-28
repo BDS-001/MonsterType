@@ -21,7 +21,7 @@ export default class Medkit extends Item {
 	 */
 	constructor(scene, x, y, itemId) {
 		super(scene, x, y, 'MEDKIT', itemId);
-		this.healAmount = 10;
+		this.healAmount = this.baseValue;
 	}
 
 	/**
