@@ -21,8 +21,8 @@ export default class ItemManager {
 	 */
 	constructor(scene) {
 		this.scene = scene;
-		this.items = null; // Phaser group containing all active items
-		this.currentItemId = 0; // Unique ID counter for item tracking
+		this.items = null;
+		this.currentItemId = 0;
 
 		this.setupItems();
 	}
@@ -32,7 +32,6 @@ export default class ItemManager {
 	 * Sets up a Phaser group to manage all active items
 	 */
 	setupItems() {
-		// Create item group for collision detection and batch operations
 		this.items = this.scene.add.group();
 	}
 
@@ -46,7 +45,6 @@ export default class ItemManager {
 		const itemId = `item${this.currentItemId}`;
 		let item;
 
-		// Create specific item class based on type
 		switch (itemType) {
 			case 'MEDKIT':
 				item = new Medkit(this.scene, x, y, itemId);
@@ -76,10 +74,8 @@ export default class ItemManager {
 	update(currentKey) {
 		const currentItems = this.items.getChildren();
 
-		// Update each item (backwards iteration handles mid-loop removals safely)
 		for (let i = currentItems.length - 1; i >= 0; i--) {
 			const item = currentItems[i];
-			// Pass current input to item for word processing
 			item.update(currentKey);
 		}
 	}
@@ -106,7 +102,6 @@ export default class ItemManager {
 	 */
 	destroy() {
 		if (this.items) {
-			// Remove all items from scene and destroy their objects
 			this.items.clear(true, true);
 		}
 	}

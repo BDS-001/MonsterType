@@ -23,33 +23,22 @@ export class PauseScene extends Phaser.Scene {
 	 * Creates semi-transparent overlay and pause menu elements
 	 */
 	create() {
-		// Start hidden until pause is triggered
 		this.scene.setVisible(false);
-
-		// Semi-transparent background overlay for pause effect
 		this.cameras.main.setBackgroundColor('rgba(0,0,0,0.3)');
 
-		// Set up ESC key handler for pause toggle functionality
 		this.input.keyboard.on('keydown-ESC', () => {
-			// Prevent pause actions during game over state
 			if (gameState.gameOver) return;
 
-			// Target the main gameplay scene
 			const gameSceneKey = 'GameScene';
 
-			// Toggle between paused and resumed states
 			if (this.scene.isPaused(gameSceneKey)) {
-				// Resume gameplay and hide pause menu
 				this.scene.resume(gameSceneKey);
 				this.scene.setVisible(false);
 			} else {
-				// Pause gameplay and show pause menu
 				this.scene.pause(gameSceneKey);
 				this.scene.setVisible(true);
 			}
 		});
-		// Pause menu UI elements
-		// TODO: Add more sophisticated pause menu with resume/quit options
 		this.add
 			.text(
 				this.game.config.width / 2,

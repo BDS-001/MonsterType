@@ -11,7 +11,7 @@ export default class InputManager {
 	 */
 	constructor(scene) {
 		this.scene = scene;
-		this.currentKey = null; // Currently pressed key
+		this.currentKey = null;
 		this.setupKeyboardInput();
 	}
 
@@ -22,7 +22,6 @@ export default class InputManager {
 	setupKeyboardInput() {
 		this.scene.input.keyboard.on('keydown', (event) => {
 			this.currentKey = event.key;
-			// Debug output for development (consider removing in production)
 			console.log(event.key);
 		});
 	}

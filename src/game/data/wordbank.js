@@ -10,10 +10,6 @@
  * Used by enemies to select appropriate words based on their challenge level
  */
 const wordBank = {
-	/**
-	 * Very Easy difficulty words (single letters)
-	 * Used by fast enemies to provide quick, simple targets
-	 */
 	veryEasy: [
 		'a',
 		'b',
@@ -43,10 +39,6 @@ const wordBank = {
 		'z',
 	],
 
-	/**
-	 * Easy difficulty words (3-5 letters)
-	 * Common, short words for beginner-friendly gameplay
-	 */
 	easy: [
 		'cat',
 		'dog',
@@ -129,10 +121,6 @@ const wordBank = {
 		'sock',
 	],
 
-	/**
-	 * Medium difficulty words (5-7 letters)
-	 * Moderate length words that require more typing skill and speed
-	 */
 	medium: [
 		'house',
 		'chair',
@@ -198,10 +186,6 @@ const wordBank = {
 		'space',
 	],
 
-	/**
-	 * Hard difficulty words (8+ letters)
-	 * Complex, long words that challenge advanced players
-	 */
 	hard: [
 		'elephant',
 		'butterfly',
@@ -267,5 +251,4 @@ const wordBank = {
 	],
 };
 
-// Export word bank for use by enemy entities and difficulty systems
 export default wordBank;

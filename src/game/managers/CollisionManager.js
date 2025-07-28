@@ -26,7 +26,6 @@ export default class CollisionManager {
 	 * Registers overlap callbacks for different entity interactions
 	 */
 	setupCollisions() {
-		// Player taking damage from enemies
 		this.scene.physics.add.overlap(
 			this.scene.player,
 			this.scene.enemyManager.getEnemies(),
@@ -35,7 +34,6 @@ export default class CollisionManager {
 			this.scene
 		);
 
-		// Projectiles hitting enemies for damage
 		this.scene.physics.add.overlap(
 			this.scene.enemyManager.getEnemies(),
 			this.scene.projectileManager.getProjectiles(),
@@ -44,7 +42,6 @@ export default class CollisionManager {
 			this.scene
 		);
 
-		// Projectiles hitting items for collection
 		if (this.scene.itemManager) {
 			this.scene.physics.add.overlap(
 				this.scene.itemManager.getItems(),
@@ -62,16 +59,12 @@ export default class CollisionManager {
 	 * @param {Enemy} enemy - The enemy that collided with player
 	 */
 	handlePlayerEnemyCollision(player, enemy) {
-		// Respect immunity frames to prevent rapid damage
 		if (gameState.getPlayerImmunity()) {
 			return;
 		}
 
-		// Apply damage to game state and trigger visual feedback
 		gameState.playerHit(10);
 		player.takeDamage(enemy.damage);
-
-		// Push enemy away to prevent continuous collision
 		enemy.knockbackEnemy();
 	}
 
@@ -81,15 +74,12 @@ export default class CollisionManager {
 	 * @param {Projectile} projectile - The projectile that hit the enemy
 	 */
 	handleProjectileEnemyCollision(enemy, projectile) {
-		// Validate that projectile is active and correctly targeted
 		if (!projectile.active || projectile.targetEnemyId !== enemy.id) {
 			return;
 		}
 
-		// Delegate hit handling to projectile for weapon-specific effects
 		const hitSuccessful = projectile.hit(enemy);
 
-		// Award points for successful hits
 		if (hitSuccessful) {
 			gameState.updateScore(10);
 		}
@@ -101,15 +91,12 @@ export default class CollisionManager {
 	 * @param {Projectile} projectile - The projectile that hit the item
 	 */
 	handleProjectileItemCollision(item, projectile) {
-		// Validate that projectile is active and correctly targeted
 		if (!projectile.active || projectile.targetEnemyId !== item.id) {
 			return;
 		}
 
-		// Delegate hit handling to projectile for weapon-specific effects
 		const hitSuccessful = projectile.hit(item);
 
-		// Award points for successful item collection
 		if (hitSuccessful) {
 			gameState.updateScore(5);
 		}

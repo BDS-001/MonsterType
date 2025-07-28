@@ -18,7 +18,6 @@ export default class BasicShot extends Projectile {
 	 * @param {number} y - Initial Y position
 	 */
 	constructor(scene, x, y) {
-		// Initialize with standard projectile sprite and 1 damage
 		super(scene, x, y, 'projectile', 1);
 	}
 }

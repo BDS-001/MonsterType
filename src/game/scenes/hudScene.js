@@ -20,18 +20,16 @@ export class HudScene extends Phaser.Scene {
 	constructor() {
 		super({ key: 'HudScene', active: true });
 
-		// UI element references
-		this.scoreText = null; // Score display text
-		this.healthBar = null; // Visual health indicator
-		this.healthText = null; // Health label text
-		this.fpsDisplay = null; // Performance counter
+		this.scoreText = null;
+		this.healthBar = null;
+		this.healthText = null;
+		this.fpsDisplay = null;
 	}
 	/**
 	 * Create all HUD elements and position them on screen
 	 * Sets up score display, health bar, and development indicators
 	 */
 	create() {
-		// Development status indicator (remove in production)
 		const devText = this.add.text(this.game.config.width / 2, 20, '🚧 GAME UNDER DEVELOPMENT 🚧', {
 			fontSize: '24px',
 			fontFamily: 'Arial, sans-serif',
@@ -42,7 +40,6 @@ export class HudScene extends Phaser.Scene {
 		});
 		devText.setOrigin(0.5, 0);
 
-		// Main score display centered at top
 		this.scoreText = this.add.text(
 			this.game.config.width / 2,
 			60,
@@ -58,7 +55,6 @@ export class HudScene extends Phaser.Scene {
 		);
 		this.scoreText.setOrigin(0.5, 0);
 
-		// Health status display in bottom-left corner
 		this.healthText = this.add.text(20, this.game.config.height - 40, 'Health', {
 			fontSize: '18px',
 			fontFamily: 'Arial, sans-serif',
@@ -68,10 +64,7 @@ export class HudScene extends Phaser.Scene {
 			fontStyle: 'bold',
 		});
 
-		// Visual health bar positioned adjacent to label
 		this.healthBar = new HealthBar(this, 85, this.game.config.height - 50);
-
-		// Performance monitoring display (development tool)
 		this.fpsDisplay = new fpsCounter(this);
 	}
 
@@ -80,10 +73,7 @@ export class HudScene extends Phaser.Scene {
 	 * Refreshes dynamic content like score and performance metrics
 	 */
 	update() {
-		// Update score display with current value
 		this.scoreText.setText(`Score: ${gameState.getScore()}`);
-
-		// Refresh performance counter
 		this.fpsDisplay.updateFPS();
 	}
 

@@ -19,16 +19,12 @@ export default class fpsCounter extends Phaser.GameObjects.Text {
 	 * @param {string} text - Initial display text (default: 'FPS: 0')
 	 */
 	constructor(scene, x = 10, y = 10, text = 'FPS: 0') {
-		// Style configuration for FPS display
 		const FPS_TEXT_STYLE = {
 			font: '16px Arial',
-			fill: '#00ff00', // Bright green for visibility
+			fill: '#00ff00',
 		};
 
-		// Initialize as Phaser text object
 		super(scene, x, y, text, FPS_TEXT_STYLE);
-
-		// Add to scene display list
 		scene.add.existing(this);
 		this.scene = scene;
 	}
@@ -38,7 +34,6 @@ export default class fpsCounter extends Phaser.GameObjects.Text {
 	 * Should be called each frame to show real-time performance
 	 */
 	updateFPS() {
-		// Get actual FPS from Phaser's game loop and round to whole number
 		const currentFps = Math.round(this.scene.game.loop.actualFps);
 		this.setText('FPS: ' + currentFps);
 	}

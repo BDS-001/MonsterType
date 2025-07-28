@@ -25,12 +25,10 @@ export default class Medkit extends Item {
 	}
 
 	/**
-	 * Custom item destroy effect
-	 * On destroy apply the health amount to players current health
+	 * Apply healing effect when item is collected
 	 */
 	onKill() {
-		// Increase player health using gamestate playerHeal function
-		gameState.playerHeal(this.healAmount); //
+		gameState.playerHeal(this.healAmount);
 		return;
 	}
 }

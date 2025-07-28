@@ -10,36 +10,32 @@
  * Each item has typing word, effect type, and rarity for spawn balancing
  */
 export const ITEM_DATA = {
-	// Explosive consumable item
 	BOMB: {
-		id: 'BOMB', // Unique identifier
-		name: 'Bomb', // Display name
-		word: 'explode', // Word to type for collection
-		type: 'consumable', // Item category
-		rarity: 'common', // Spawn frequency modifier
+		id: 'BOMB',
+		name: 'Bomb',
+		word: 'explode',
+		type: 'consumable',
+		rarity: 'common',
 	},
-	// Weapon upgrade pickup
 	HEAVYROUNDS_PICKUP: {
-		id: 'HEAVYROUNDS_PICKUP', // Unique identifier
-		name: 'Heavy Rounds', // Display name
-		word: 'heavy', // Word to type for collection
-		type: 'weapon', // Weapon upgrade category
-		rarity: 'rare', // Higher rarity for weapon upgrades
+		id: 'HEAVYROUNDS_PICKUP',
+		name: 'Heavy Rounds',
+		word: 'heavy',
+		type: 'weapon',
+		rarity: 'rare',
 	},
-	// Health restoration item
 	MEDKIT: {
-		id: 'MEDKIT', // Unique identifier
-		name: 'Medkit', // Display name
-		word: 'heal', // Word to type for collection
-		type: 'consumable', // Consumable health item
-		rarity: 'common', // Common spawn for health management
+		id: 'MEDKIT',
+		name: 'Medkit',
+		word: 'heal',
+		type: 'consumable',
+		rarity: 'common',
 	},
-	// Permanent health increase upgrade
 	HEALTH_UP: {
-		id: 'HEALTH_UP', // Unique identifier
-		name: 'Max Health Upgrade', // Display name
-		word: 'endurance', // Complex word for powerful upgrade
-		type: 'upgrade', // Permanent upgrade category
-		rarity: 'rare', // Rare spawn for powerful effects
+		id: 'HEALTH_UP',
+		name: 'Max Health Upgrade',
+		word: 'endurance',
+		type: 'upgrade',
+		rarity: 'rare',
 	},
 };

@@ -19,15 +19,13 @@ export default class Weapon {
 		this.name = name;
 		this.description = description;
 
-		// Weapon firing characteristics
-		this.attackSpeed = options.attackSpeed || 1000; // Rate of fire in milliseconds
-		this.projectileCount = options.projectileCount || 1; // Projectiles per shot (shotgun-style)
-		this.projectileType = options.projectileType || 'basicShot'; // Projectile type identifier
-		this.spread = options.spread || 0; // Angular spread for multiple projectiles
+		this.attackSpeed = options.attackSpeed || 1000;
+		this.projectileCount = options.projectileCount || 1;
+		this.projectileType = options.projectileType || 'basicShot';
+		this.spread = options.spread || 0;
 
-		// Firing state management
-		this.lastFireTime = 0; // Timestamp of last shot fired
-		this.canFire = true; // Whether weapon is ready to fire
+		this.lastFireTime = 0;
+		this.canFire = true;
 	}
 
 	/**
@@ -49,23 +47,18 @@ export default class Weapon {
 	 * @returns {boolean} True if weapon fired successfully, false if on cooldown
 	 */
 	fire(scene, projectileManager, source, target, currentTime) {
-		// Check if weapon is ready to fire (rate limiting)
 		if (!this.canFireNow(currentTime)) {
 			return false;
 		}
 
-		// Update last fire time for next cooldown check
 		this.lastFireTime = currentTime;
 
-		// Fire all projectiles for this weapon (single shot or spread pattern)
 		for (let i = 0; i < this.projectileCount; i++) {
 			const projectile = projectileManager.getProjectile(this.projectileType);
 
 			if (this.projectileCount === 1) {
-				// Single projectile: fire directly at target
 				projectile.fire(source, target);
 			} else {
-				// Multiple projectiles: calculate spread pattern
 				const spreadOffset = this.calculateSpreadOffset(i, this.projectileCount, this.spread);
 				const adjustedTarget = this.applySpreadToTarget(target, source, spreadOffset);
 				projectile.fire(source, adjustedTarget);
@@ -85,8 +78,6 @@ export default class Weapon {
 	calculateSpreadOffset(index, totalCount, maxSpread) {
 		if (totalCount === 1) return 0;
 
-		// Distribute projectiles evenly across the spread angle
-		// Center the pattern around the original aim direction
 		const step = maxSpread / (totalCount - 1);
 		return index * step - maxSpread / 2;
 	}
@@ -99,18 +90,12 @@ export default class Weapon {
 	 * @returns {Object} New target coordinates {x, y}
 	 */
 	applySpreadToTarget(originalTarget, source, spreadOffset) {
-		// Calculate vector from source to original target
 		const dx = originalTarget.x - source.x;
 		const dy = originalTarget.y - source.y;
 		const distance = Math.sqrt(dx * dx + dy * dy);
-
-		// Get base firing angle
 		const currentAngle = Math.atan2(dy, dx);
-
-		// Apply spread offset to create new firing direction
 		const newAngle = currentAngle + spreadOffset;
 
-		// Calculate new target position at same distance but different angle
 		return {
 			x: source.x + Math.cos(newAngle) * distance,
 			y: source.y + Math.sin(newAngle) * distance,
@@ -128,7 +113,6 @@ export default class Weapon {
 			attackSpeed: this.attackSpeed,
 			projectileCount: this.projectileCount,
 			projectileType: this.projectileType,
-			// Calculate shots per minute for easy comparison
 			fireRate: Math.round(60000 / this.attackSpeed),
 		};
 	}

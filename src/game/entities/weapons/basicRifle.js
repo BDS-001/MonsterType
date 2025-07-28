@@ -12,15 +12,14 @@ import Weapon from './weapon.js';
  */
 export default class BasicRifle extends Weapon {
 	/**
-	 * Create a new basic rifle weapon
-	 * Configured with balanced stats for general-purpose combat
+	 * Create a basic rifle with balanced stats
 	 */
 	constructor() {
 		super('Basic Rifle', 'A standard rifle with moderate fire rate and basic projectiles.', {
-			attackSpeed: 800, // 800ms between shots (1.25 shots per second)
-			projectileCount: 1, // Single projectile per shot
-			projectileType: 'basicShot', // Uses standard damage projectiles
-			spread: 0, // No spread - perfectly accurate
+			attackSpeed: 800,
+			projectileCount: 1,
+			projectileType: 'basicShot',
+			spread: 0,
 		});
 	}
 }

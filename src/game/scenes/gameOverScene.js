@@ -24,7 +24,6 @@ export class GameOver extends Phaser.Scene {
 	 * Preloads UI elements and button graphics
 	 */
 	preload() {
-		// Load restart button graphic
 		this.load.image('playagain', 'assets/playagain.png');
 	}
 
@@ -33,13 +32,9 @@ export class GameOver extends Phaser.Scene {
 	 * Sets up game over message and restart button
 	 */
 	create() {
-		// Start hidden until player dies
 		this.scene.setVisible(false);
-
-		// Semi-transparent overlay to darken gameplay background
 		this.cameras.main.setBackgroundColor('rgba(0,0,0,0.3)');
 
-		// Main game over title text
 		this.add
 			.text(this.game.config.width / 2, this.game.config.height / 2 - 110, 'GAME OVER', {
 				fontSize: '48px',
@@ -50,7 +45,6 @@ export class GameOver extends Phaser.Scene {
 			})
 			.setOrigin(0.5);
 
-		// Interactive restart button
 		const playAgainButton = this.add.image(
 			this.game.config.width / 2,
 			this.game.config.height / 2,
@@ -59,10 +53,8 @@ export class GameOver extends Phaser.Scene {
 		playAgainButton.setScale(5);
 		playAgainButton.setInteractive();
 
-		// Set up click handler for restart functionality
 		playAgainButton.on('pointerdown', this.playAgain, this);
 
-		// Add hover effects for better user feedback
 		playAgainButton.on('pointerover', () => {
 			playAgainButton.setTint(0xcccccc);
 		});
@@ -76,13 +68,8 @@ export class GameOver extends Phaser.Scene {
 	 * Resets game state and returns to gameplay
 	 */
 	playAgain() {
-		// Reset all game variables to initial state
 		gameState.resetGameState();
-
-		// Hide game over screen
 		this.scene.setVisible(false);
-
-		// Restart the main gameplay scene
 		this.scene.start('GameScene');
 	}
 }

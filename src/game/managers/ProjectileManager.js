@@ -18,8 +18,8 @@ export default class ProjectileManager {
 	 */
 	constructor(scene) {
 		this.scene = scene;
-		this.projectiles = null; // Phaser group for object pooling
-		this.currentWeaponClass = BasicShot; // Default projectile type
+		this.projectiles = null;
+		this.currentWeaponClass = BasicShot;
 
 		this.setupProjectiles();
 	}
@@ -30,13 +30,12 @@ export default class ProjectileManager {
 	 */
 	setupProjectiles() {
 		this.projectiles = this.scene.physics.add.group({
-			maxSize: 100, // Maximum number of projectiles in pool
-			active: false, // New projectiles start inactive
-			visible: false, // New projectiles start invisible
-			runChildUpdate: true, // Enable update() calls on projectiles
-			classType: this.currentWeaponClass, // Default projectile class
+			maxSize: 100,
+			active: false,
+			visible: false,
+			runChildUpdate: true,
+			classType: this.currentWeaponClass,
 			createCallback: (projectile) => {
-				// Ensure projectile has scene reference
 				projectile.scene = this.scene;
 			},
 		});
@@ -56,10 +55,8 @@ export default class ProjectileManager {
 	 * @returns {Projectile} An available projectile object
 	 */
 	getProjectile() {
-		// Try to get an inactive projectile from the pool
 		let projectile = this.projectiles.get();
 
-		// If pool is empty, create a new projectile
 		if (!projectile) {
 			projectile = new this.currentWeaponClass(this.scene, 0, 0);
 			this.projectiles.add(projectile);
@@ -74,7 +71,6 @@ export default class ProjectileManager {
 	 */
 	update() {
 		const projectiles = this.projectiles.getChildren();
-		// Update only active projectiles for performance
 		for (let i = 0; i < projectiles.length; i++) {
 			const projectile = projectiles[i];
 			if (projectile.active) {
