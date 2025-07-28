@@ -21,14 +21,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 	constructor(scene, x, y) {
 		super(scene, x, y, 'player');
 
-		// Store reference to parent scene for communication
 		this.scene = scene;
-
-		// Register this sprite with the scene's display and physics systems
 		scene.add.existing(this);
 		scene.physics.add.existing(this);
-
-		// Apply consistent sprite scaling across all game entities
 		this.setScale(gameSettings.SPRITE_SCALE);
 	}
 
@@ -37,15 +32,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 	 * @param {number} amount - Amount of damage to apply
 	 */
 	takeDamage(amount) {
-		// Flash red to indicate damage taken
 		this.setTint(0xff0000);
 
-		// Remove red tint after brief flash duration
 		this.scene.time.delayedCall(100, () => {
 			this.clearTint();
 		});
 
-		// Delegate health management to the HUD scene
 		this.scene.scene.get('HudScene').decreaseHealth(amount);
 	}
 }

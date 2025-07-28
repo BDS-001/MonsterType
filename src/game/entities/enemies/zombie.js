@@ -17,14 +17,12 @@ export default class Zombie extends Enemy {
 	 * @param {number} id - Unique identifier for this zombie
 	 */
 	constructor(scene, id) {
-		// Zombie-specific configuration
 		const zombieOptions = {
-			moveSpeed: 40, // Moderate movement speed
-			knockback: 80, // Significant knockback when hit
-			wordCategory: 'easy', // Uses simple words for typing
+			moveSpeed: 40,
+			knockback: 80,
+			wordCategory: 'easy',
 		};
 
-		// Initialize with zombie sprite and configuration
 		super(id, scene, 'zombie', zombieOptions);
 	}
 }

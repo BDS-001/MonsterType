@@ -18,7 +18,6 @@ export default class HeavyRounds extends Projectile {
 	 * @param {number} y - Initial Y position
 	 */
 	constructor(scene, x, y) {
-		// Initialize with standard projectile sprite and 2 damage (double basic shot)
 		super(scene, x, y, 'projectile', 2);
 	}
 }

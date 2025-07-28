@@ -23,14 +23,14 @@ class GameState {
 	 * Called at game start and when restarting after game over
 	 */
 	resetGameState() {
-		this.gameScene = null; // Reference to main gameplay scene
+		this.gameScene = null;
 		this.player = {
-			maxHealth: 100, // Maximum player health
-			health: 100, // Current player health
-			immunity: false, // Temporary damage immunity flag
+			maxHealth: 100,
+			health: 100,
+			immunity: false,
 		};
-		this.score = 0; // Player's current score
-		this.gameOver = false; // Game over state flag
+		this.score = 0;
+		this.gameOver = false;
 	}
 
 	/**
@@ -48,7 +48,6 @@ class GameState {
 	playerHeal(healAmount) {
 		if (!this.gameScene) return;
 
-		// Apply heal amount to player current health
 		this.player.health += healAmount;
 	}
 
@@ -59,13 +58,9 @@ class GameState {
 	playerHit(damage) {
 		if (!this.gameScene) return;
 
-		// Apply damage to player health
 		this.player.health -= damage;
-
-		// Grant temporary immunity to prevent rapid damage
 		this.player.immunity = true;
 
-		// Remove immunity after 1 second
 		this.gameScene.time.delayedCall(1000, () => {
 			this.player.immunity = false;
 		});
@@ -104,5 +99,4 @@ class GameState {
 	}
 }
 
-// Export singleton instance for global access
 export default new GameState();

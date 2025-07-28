@@ -19,11 +19,11 @@ export default class EnemyManager {
 	 */
 	constructor(scene) {
 		this.scene = scene;
-		this.enemies = null; // Phaser group containing all active enemies
-		this.currentEnemyId = 0; // Unique ID counter for enemy tracking
-		this.spawnEvent = null; // Phaser timer event for spawning
-		this.currentTime = 0; // Current game time for difficulty scaling
-		this.wave = 1; // Current wave number
+		this.enemies = null;
+		this.currentEnemyId = 0;
+		this.spawnEvent = null;
+		this.currentTime = 0;
+		this.wave = 1;
 
 		this.setupEnemies();
 	}
@@ -33,7 +33,6 @@ export default class EnemyManager {
 	 * Sets up a Phaser group to manage all active enemies
 	 */
 	setupEnemies() {
-		// Create enemy group for collision detection and batch operations
 		this.enemies = this.scene.add.group();
 	}
 
@@ -56,25 +55,16 @@ export default class EnemyManager {
 	 * Uses complex wave patterns to create varied gameplay experiences
 	 */
 	spawnEnemiesWaves() {
-		// Difficulty scaling: increase enemy count every 20 seconds
 		const timeMultiplier = Math.floor(this.currentTime / 20000) + 1;
-
-		// Zombies spawn in 4 out of every 5 waves (basic enemies)
 		const zombieCount = this.wave % 5 > 0 ? Math.max(2, 1 + timeMultiplier) : 0;
-
-		// Ghosts spawn every 5th wave with increasing numbers
 		const ghostWaveMultiplier = Math.floor(this.wave / 5);
 		const ghostCount = this.wave % 5 === 0 ? 6 + ghostWaveMultiplier : 0;
-
-		// Mummies spawn every 7th wave starting from wave 7 (rare but challenging)
 		const mummyCount = this.wave >= 7 && this.wave % 7 === 0 ? 1 + Math.floor(this.wave / 14) : 0;
 
-		// Execute spawning for each enemy type
 		this.spawnEnemyType(Zombie, zombieCount);
 		this.spawnEnemyType(Ghost, ghostCount);
 		this.spawnEnemyType(Mummy, mummyCount);
 
-		// Advance to next wave
 		this.wave += 1;
 	}
 
@@ -85,18 +75,15 @@ export default class EnemyManager {
 	spawnEnemiesGradual() {
 		const gameplaySeconds = this.currentTime / 1000;
 
-		// Progressive zombie spawning based on elapsed time
 		let zombieCount = 1;
-		if (gameplaySeconds > 60) zombieCount = 2; // Double spawn after 1 minute
-		if (gameplaySeconds > 120) zombieCount = 3; // Triple spawn after 2 minutes
+		if (gameplaySeconds > 60) zombieCount = 2;
+		if (gameplaySeconds > 120) zombieCount = 3;
 
-		// Probabilistic ghost spawning for unpredictability
 		let ghostCount = 0;
 		if (gameplaySeconds > 30 && Math.random() < 0.2) {
-			ghostCount = 1; // 20% chance after 30 seconds
+			ghostCount = 1;
 		}
 
-		// Execute spawning
 		this.spawnEnemyType(Zombie, zombieCount);
 		this.spawnEnemyType(Ghost, ghostCount);
 	}
@@ -106,12 +93,10 @@ export default class EnemyManager {
 	 * @param {number} initialWaveDelay - Milliseconds between spawn waves (default: 5000)
 	 */
 	startSpawning(initialWaveDelay = 5000) {
-		// Prevent duplicate spawn timers
 		if (this.spawnEvent) {
 			return;
 		}
 
-		// Create repeating timer for wave-based spawning
 		this.spawnEvent = this.scene.time.addEvent({
 			delay: initialWaveDelay,
 			callback: this.spawnEnemiesWaves,
@@ -140,10 +125,8 @@ export default class EnemyManager {
 		this.currentTime = time;
 		const currentEnemies = this.enemies.getChildren();
 
-		// Update each enemy (backwards iteration handles mid-loop removals safely)
 		for (let i = currentEnemies.length - 1; i >= 0; i--) {
 			const enemy = currentEnemies[i];
-			// Pass current input to enemy for word processing
 			enemy.update(currentKey);
 		}
 	}
@@ -171,7 +154,6 @@ export default class EnemyManager {
 	destroy() {
 		this.stopSpawning();
 		if (this.enemies) {
-			// Remove all enemies from scene and destroy their objects
 			this.enemies.clear(true, true);
 		}
 	}

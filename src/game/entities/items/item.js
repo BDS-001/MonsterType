@@ -21,22 +21,18 @@ export default class Item extends TypedEntity {
 	 * @param {string} itemId - Unique compound ID for this item instance
 	 */
 	constructor(scene, x, y, itemType, itemId) {
-		// Retrieve item configuration from data table
 		const itemData = ITEM_DATA[itemType];
 		if (!itemData) {
 			throw new Error(`Item data not found for type: ${itemType}`);
 		}
 
-		// Initialize as TypedEntity with item sprite, word, and unique ID
 		super(scene, x, y, 'item-sprite', itemData.word, itemId);
 
-		// Store item properties from data configuration
-		this.itemType = itemType; // Item type from ITEM_DATA
-		this.name = itemData.name; // Display name
-		this.type = itemData.type; // Item category (weapon, health, etc.)
-		this.rarity = itemData.rarity; // Rarity level affecting spawn chance
+		this.itemType = itemType;
+		this.name = itemData.name;
+		this.type = itemData.type;
+		this.rarity = itemData.rarity;
 
-		// Register with scene systems
 		scene.add.existing(this);
 		scene.physics.add.existing(this);
 	}

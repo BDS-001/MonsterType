@@ -20,23 +20,17 @@ export default class Game {
 	 * @param {Object} gameConfig - Base Phaser configuration object
 	 */
 	constructor(gameConfig) {
-		// Adjust config to match current browser viewport dimensions
 		const viewportWidth = window.innerWidth;
 		const viewportHeight = window.innerHeight;
 
-		// Create final configuration by merging base config with viewport settings
 		const config = {
 			...gameConfig,
 			width: viewportWidth,
 			height: viewportHeight,
-			// Define scene loading order: Gameplay -> HUD overlay -> Pause -> Game Over
 			scene: [GameScene, HudScene, PauseScene, GameOver],
 		};
 
-		// Initialize Phaser game instance with final configuration
 		this.game = new Phaser.Game(config);
-
-		// Begin gameplay immediately
 		this.startGame();
 		return;
 	}
@@ -54,7 +48,6 @@ export default class Game {
 	 * TODO: Implement menu scene for game navigation
 	 */
 	goToMenu() {
-		// Placeholder for future menu implementation
-		// this.game.scene.start('MenuScene');
+		// TODO: this.game.scene.start('MenuScene');
 	}
 }

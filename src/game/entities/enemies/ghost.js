@@ -17,14 +17,12 @@ export default class Ghost extends Enemy {
 	 * @param {number} id - Unique identifier for this ghost
 	 */
 	constructor(scene, id) {
-		// Ghost-specific configuration
 		const ghostOptions = {
-			moveSpeed: 100, // Very fast movement speed
-			knockback: 0, // No knockback - ghost phases through impacts
-			wordCategory: 'veryEasy', // Simplest words to compensate for speed
+			moveSpeed: 100,
+			knockback: 0,
+			wordCategory: 'veryEasy',
 		};
 
-		// Initialize with ghost sprite and configuration
 		super(id, scene, 'ghost', ghostOptions);
 	}
 }
