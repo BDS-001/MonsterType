@@ -1,27 +1,9 @@
-/**
- * Pause Scene
- *
- * Overlay scene that handles game pausing functionality.
- * Provides pause menu interface and controls game pause/resume state.
- */
 import gameState from '../core/gameState';
 
-/**
- * Pause menu overlay scene with game state management
- * Toggles gameplay pause and displays pause interface
- */
 export class PauseScene extends Phaser.Scene {
-	/**
-	 * Initialize pause scene
-	 * Sets up the scene as an active overlay that starts hidden
-	 */
 	constructor() {
 		super({ key: 'PauseScene', active: true });
 	}
-	/**
-	 * Set up pause scene interface and controls
-	 * Creates semi-transparent overlay and pause menu elements
-	 */
 	create() {
 		this.scene.setVisible(false);
 		this.cameras.main.setBackgroundColor('rgba(0,0,0,0.3)');

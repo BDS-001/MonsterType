@@ -1,15 +1,5 @@
-/**
- * Game Configuration Constants
- *
- * Contains all core configuration settings for the KeyStrike game,
- * including Phaser.js engine settings and gameplay parameters.
- */
 import Phaser from 'phaser';
 
-/**
- * Phaser.js engine configuration
- * Defines rendering, physics, and performance settings for the game
- */
 export const phaserConfig = {
 	type: Phaser.AUTO,
 	width: 800,
@@ -35,23 +25,6 @@ export const phaserConfig = {
 	},
 };
 
-/**
- * Gameplay-specific settings and constants
- * Controls various aspects of game mechanics and visual scaling
- */
 export const gameSettings = {
 	SPRITE_SCALE: 4,
-};
-
-/**
- * Item configuration constants
- * Defines base values and properties for different item types
- */
-export const itemData = {
-	MEDKIT: {
-		baseValue: 10,
-	},
-	HEALTH_UP: {
-		baseValue: 10,
-	},
 };

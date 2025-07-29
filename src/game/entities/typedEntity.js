@@ -1,25 +1,6 @@
-/**
- * Typed Entity Base Class
- *
- * Base class for game entities that can be targeted by typing their associated words.
- * Handles word display, typing validation, damage tracking, and visual feedback.
- */
 import Phaser from 'phaser';
 
-/**
- * Interactive entity that responds to typed input
- * Extends Phaser's Arcade Physics Image with word-based interaction system
- */
 export default class TypedEntity extends Phaser.Physics.Arcade.Image {
-	/**
-	 * Create a new typed entity
-	 * @param {Phaser.Scene} scene - The scene this entity belongs to
-	 * @param {number} x - Initial X position
-	 * @param {number} y - Initial Y position
-	 * @param {string} texture - Sprite texture key
-	 * @param {string} word - Word that must be typed to target this entity
-	 * @param {string} id - Unique identifier for this entity
-	 */
 	constructor(scene, x, y, texture, word = '', id = null) {
 		super(scene, x, y, texture);
 
@@ -60,10 +41,6 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		this.updateDebugDisplay();
 	}
 
-	/**
-	 * Update debug information display
-	 * Shows typing progress, damage state, and word status for development
-	 */
 	updateDebugDisplay() {
 		if (this.debugText && !this.isDestroyed) {
 			const debugInfo = [
@@ -78,10 +55,6 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		}
 	}
 
-	/**
-	 * Process a typed letter and check if it matches the next expected character
-	 * @param {string} letter - The letter that was typed
-	 */
 	updateWord(letter) {
 		if (this.isDestroyed) {
 			return;
@@ -97,10 +70,6 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		}
 	}
 
-	/**
-	 * Apply damage when projectile hits this entity
-	 * @param {number} damage - Amount of damage to apply
-	 */
 	takeDamage(damage) {
 		if (this.isDestroyed) {
 			return;
@@ -125,18 +94,8 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		}
 	}
 
-	/**
-	 * Override this method in subclasses to provide custom hit effects
-	 * Base implementation does nothing - meant to be extended
-	 */
-	hitEffect() {
-		return;
-	}
+	hitEffect() {}
 
-	/**
-	 * Get the remaining portion of the word that still needs to be typed
-	 * @returns {string} The remaining untyped characters
-	 */
 	getCurrentWord() {
 		if (this.hitIndex >= this.word.length) {
 			return '';
@@ -144,18 +103,8 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		return this.word.substring(this.hitIndex);
 	}
 
-	/**
-	 * Override this method in subclasses to handle entity destruction
-	 * Called when the entity is about to be destroyed
-	 */
-	onKill() {
-		return;
-	}
+	onKill() {}
 
-	/**
-	 * Clean up and destroy this entity and all associated display elements
-	 * @param {boolean} fromScene - Whether destruction was initiated by scene cleanup
-	 */
 	destroy(fromScene) {
 		this.isDestroyed = true;
 

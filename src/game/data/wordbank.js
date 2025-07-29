@@ -1,14 +1,3 @@
-/**
- * Word Bank Database
- *
- * Collection of words organized by difficulty levels for enemy typing challenges.
- * Words are categorized to provide progressive difficulty scaling throughout gameplay.
- */
-
-/**
- * Comprehensive word database organized by typing difficulty
- * Used by enemies to select appropriate words based on their challenge level
- */
 const wordBank = {
 	veryEasy: [
 		'a',

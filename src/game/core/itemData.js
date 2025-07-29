@@ -1,14 +1,3 @@
-/**
- * Item Data Configuration
- *
- * Defines all collectible items with their properties, words, and rarity.
- * Used by the item system to create collectible objects with typing challenges.
- */
-
-/**
- * Central database of all collectible items in the game
- * Each item has typing word, effect type, and rarity for spawn balancing
- */
 export const ITEM_DATA = {
 	BOMB: {
 		id: 'BOMB',

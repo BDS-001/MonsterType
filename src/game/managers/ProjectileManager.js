@@ -1,21 +1,7 @@
-/**
- * Projectile Management System
- *
- * Handles projectile object pooling, spawning, and lifecycle management.
- * Uses Phaser's object pooling for efficient projectile reuse.
- */
 import BasicShot from '../entities/projectiles/basicShot';
 import HeavyRounds from '../entities/projectiles/heavyRounds';
 
-/**
- * Manager for all projectile objects in the game
- * Implements object pooling pattern for performance optimization
- */
 export default class ProjectileManager {
-	/**
-	 * Initialize projectile management system
-	 * @param {Phaser.Scene} scene - The scene to manage projectiles in
-	 */
 	constructor(scene) {
 		this.scene = scene;
 		this.projectiles = null;
@@ -24,10 +10,6 @@ export default class ProjectileManager {
 		this.setupProjectiles();
 	}
 
-	/**
-	 * Set up the projectile object pool
-	 * Creates a Phaser physics group with object pooling configuration
-	 */
 	setupProjectiles() {
 		this.projectiles = this.scene.physics.add.group({
 			maxSize: 100,
@@ -41,19 +23,10 @@ export default class ProjectileManager {
 		});
 	}
 
-	/**
-	 * Get the projectile group for collision detection and management
-	 * @returns {Phaser.Physics.Arcade.Group} The group containing all projectiles
-	 */
 	getProjectiles() {
 		return this.projectiles;
 	}
 
-	/**
-	 * Get a projectile from the object pool
-	 * Reuses inactive projectiles or creates new ones if pool is empty
-	 * @returns {Projectile} An available projectile object
-	 */
 	getProjectile() {
 		let projectile = this.projectiles.get();
 
@@ -65,10 +38,6 @@ export default class ProjectileManager {
 		return projectile;
 	}
 
-	/**
-	 * Update all active projectiles
-	 * Called each frame to handle projectile movement and cleanup
-	 */
 	update() {
 		const projectiles = this.projectiles.getChildren();
 		for (let i = 0; i < projectiles.length; i++) {
