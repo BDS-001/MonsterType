@@ -1,18 +1,7 @@
-/**
- * Base Enemy Class
- *
- * Core enemy entity that extends TypedEntity with movement, positioning, and combat mechanics.
- * Provides foundation for all enemy types with shared behaviors like movement AI and damage handling.
- */
 import TypedEntity from '../typedEntity';
 import wordBank from '../../data/wordbank';
 import { gameSettings } from '../../core/constants';
 
-/**
- * Calculate a random spawn position outside the camera view
- * @param {Phaser.Camera} camera - The main game camera
- * @returns {Object} Position coordinates {x, y} outside screen bounds
- */
 function calculateRandomPosition(camera) {
 	const width = camera.width;
 	const height = camera.height;
@@ -35,18 +24,7 @@ const defaultOptions = {
 	damage: 10,
 };
 
-/**
- * Base enemy class with AI movement and word-typing mechanics
- * Extends TypedEntity to provide combat and movement behaviors
- */
 export default class Enemy extends TypedEntity {
-	/**
-	 * Create a new enemy instance
-	 * @param {number} id - Unique identifier for this enemy
-	 * @param {Phaser.Scene} scene - The scene this enemy belongs to
-	 * @param {string} spriteImage - Texture key for enemy sprite
-	 * @param {Object} options - Enemy configuration options
-	 */
 	constructor(id, scene, spriteImage, options = {}) {
 		const enemyOptions = { ...defaultOptions, ...options };
 
@@ -67,11 +45,6 @@ export default class Enemy extends TypedEntity {
 		this.setScale(gameSettings.SPRITE_SCALE);
 	}
 
-	/**
-	 * Check if enemy is currently visible on screen
-	 * Used to optimize input processing - only on-screen enemies respond to typing
-	 * @returns {boolean} True if enemy is within camera bounds (with margin)
-	 */
 	isEnemyOnScreen() {
 		const camera = this.scene.cameras.main;
 		const margin = 50;
@@ -84,10 +57,6 @@ export default class Enemy extends TypedEntity {
 		);
 	}
 
-	/**
-	 * Move enemy towards the player using normalized direction vector
-	 * Provides consistent movement speed regardless of distance to player
-	 */
 	moveEnemy() {
 		if (this.isDestroyed) return;
 
@@ -103,10 +72,6 @@ export default class Enemy extends TypedEntity {
 		}
 	}
 
-	/**
-	 * Push enemy away from player when hit or on collision
-	 * Provides visual feedback and prevents enemy stacking
-	 */
 	knockbackEnemy() {
 		if (this.isDestroyed || this.knockback === 0) return;
 
@@ -123,10 +88,6 @@ export default class Enemy extends TypedEntity {
 		}
 	}
 
-	/**
-	 * Visual and physical feedback when enemy takes damage
-	 * Provides red flash effect and knockback for impact feedback
-	 */
 	hitEffect() {
 		this.setTint(0xff0000);
 
@@ -139,11 +100,6 @@ export default class Enemy extends TypedEntity {
 		this.knockbackEnemy();
 	}
 
-	/**
-	 * Main enemy update loop called each frame
-	 * Handles input processing, movement, and UI element positioning
-	 * @param {string|null} letter - The letter currently being typed by player
-	 */
 	update(letter) {
 		if (this.isDestroyed) return;
 
