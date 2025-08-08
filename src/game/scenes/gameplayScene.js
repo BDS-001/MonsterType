@@ -75,9 +75,12 @@ export default class GameScene extends Phaser.Scene {
 			this.scene.setVisible(true, 'GameOver');
 		}
 
-		this.waveManager.update(time);
 		this.enemyManager.update(this.inputManager.getCurrentKey());
 		this.projectileManager.update();
 		this.inputManager.update();
+
+		if (this.enemyManager.getEnemyCount() <= 0) {
+			this.waveManager.onWaveComplete();
+		}
 	}
 }

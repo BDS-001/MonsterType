@@ -2,8 +2,8 @@ export default class WaveManager {
 	constructor(scene) {
 		this.scene = scene;
 		this.wave = 1;
-		this.currentTime = 0;
 		this.spawnEvent = null;
+		this.onWaveSpawn;
 	}
 
 	calculateEnemyCounts() {
@@ -15,25 +15,23 @@ export default class WaveManager {
 		return { zombieCount, ghostCount, mummyCount };
 	}
 
-	onWaveComplete() {
-		this.wave += 1;
+	handleEnemiesSpawn() {
+		const enemyCounts = this.calculateEnemyCounts();
+		this.onWaveSpawn(enemyCounts);
 	}
 
-	startWaves(initialWaveDelay = 5000, onWaveSpawn) {
+	onWaveComplete() {
+		this.wave += 1;
+		this.handleEnemiesSpawn();
+	}
+
+	startWaves(waveDelay, onWaveSpawn) {
 		if (this.spawnEvent) {
 			return;
 		}
 
-		this.spawnEvent = this.scene.time.addEvent({
-			delay: initialWaveDelay,
-			callback: () => {
-				const enemyCounts = this.calculateEnemyCounts();
-				onWaveSpawn(enemyCounts);
-				this.onWaveComplete();
-			},
-			callbackScope: this,
-			loop: true,
-		});
+		this.onWaveSpawn = onWaveSpawn;
+		this.handleEnemiesSpawn();
 	}
 
 	stopWaves() {
@@ -41,10 +39,6 @@ export default class WaveManager {
 			this.spawnEvent.remove();
 			this.spawnEvent = null;
 		}
-	}
-
-	update(time) {
-		this.currentTime = time;
 	}
 
 	destroy() {
