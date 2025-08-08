@@ -7,8 +7,7 @@ export default class WaveManager {
 	}
 
 	calculateEnemyCounts() {
-		const timeMultiplier = Math.floor(this.currentTime / 20000) + 1;
-		const zombieCount = this.wave % 5 > 0 ? Math.max(2, 1 + timeMultiplier) : 0;
+		const zombieCount = this.wave % 5 > 0 ? Math.max(2, 1 + this.wave) : 0;
 		const ghostWaveMultiplier = Math.floor(this.wave / 5);
 		const ghostCount = this.wave % 5 === 0 ? 6 + ghostWaveMultiplier : 0;
 		const mummyCount = this.wave >= 7 && this.wave % 7 === 0 ? 1 + Math.floor(this.wave / 14) : 0;
