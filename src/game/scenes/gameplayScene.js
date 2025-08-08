@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Player from '../entities/player';
 import EnemyManager from '../managers/EnemyManager';
+import WaveManager from '../managers/WaveManager';
 import ProjectileManager from '../managers/ProjectileManager';
 import InputManager from '../managers/InputManager';
 import CollisionManager from '../managers/CollisionManager';
@@ -31,9 +32,12 @@ export default class GameScene extends Phaser.Scene {
 		this.inputManager = new InputManager(this);
 		this.createPlayer();
 		this.enemyManager = new EnemyManager(this);
+		this.waveManager = new WaveManager(this);
 		this.projectileManager = new ProjectileManager(this);
 		this.collisionManager = new CollisionManager(this);
-		this.enemyManager.startSpawning();
+		this.waveManager.startWaves(5000, (enemyCounts) => {
+			this.enemyManager.spawnEnemiesFromCounts(enemyCounts);
+		});
 	}
 
 	setupBackground() {
@@ -71,7 +75,8 @@ export default class GameScene extends Phaser.Scene {
 			this.scene.setVisible(true, 'GameOver');
 		}
 
-		this.enemyManager.update(time, this.inputManager.getCurrentKey());
+		this.waveManager.update(time);
+		this.enemyManager.update(this.inputManager.getCurrentKey());
 		this.projectileManager.update();
 		this.inputManager.update();
 	}
