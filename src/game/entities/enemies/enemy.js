@@ -5,14 +5,29 @@ import { gameSettings } from '../../core/constants';
 function calculateRandomPosition(camera) {
 	const width = camera.width;
 	const height = camera.height;
+	const margin = 100;
 
-	const centerX = width / 2;
-	const centerY = height / 2;
-	const angle = Math.random() * Math.PI * 2;
-	const maxRadius = Math.sqrt(width * width + height * height) / 2 + 50;
-
-	let x = centerX + Math.cos(angle) * maxRadius;
-	let y = centerY + Math.sin(angle) * maxRadius;
+	const side = Math.floor(Math.random() * 4);
+	
+	let x, y;
+	switch (side) {
+		case 0: // Top
+			x = Math.random() * width;
+			y = -margin;
+			break;
+		case 1: // Right
+			x = width + margin;
+			y = Math.random() * height;
+			break;
+		case 2: // Bottom
+			x = Math.random() * width;
+			y = height + margin;
+			break;
+		case 3: // Left
+			x = -margin;
+			y = Math.random() * height;
+			break;
+	}
 
 	return { x, y };
 }
