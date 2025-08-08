@@ -7,9 +7,6 @@ export default class EnemyManager {
 		this.scene = scene;
 		this.enemies = null;
 		this.currentEnemyId = 0;
-		this.spawnEvent = null;
-		this.currentTime = 0;
-		this.wave = 1;
 
 		this.setupEnemies();
 	}
@@ -27,18 +24,10 @@ export default class EnemyManager {
 		}
 	}
 
-	spawnEnemiesWaves() {
-		const timeMultiplier = Math.floor(this.currentTime / 20000) + 1;
-		const zombieCount = this.wave % 5 > 0 ? Math.max(2, 1 + timeMultiplier) : 0;
-		const ghostWaveMultiplier = Math.floor(this.wave / 5);
-		const ghostCount = this.wave % 5 === 0 ? 6 + ghostWaveMultiplier : 0;
-		const mummyCount = this.wave >= 7 && this.wave % 7 === 0 ? 1 + Math.floor(this.wave / 14) : 0;
-
+	spawnEnemiesFromCounts({ zombieCount, ghostCount, mummyCount }) {
 		this.spawnEnemyType(Zombie, zombieCount);
 		this.spawnEnemyType(Ghost, ghostCount);
 		this.spawnEnemyType(Mummy, mummyCount);
-
-		this.wave += 1;
 	}
 
 	spawnEnemiesGradual() {
@@ -57,28 +46,7 @@ export default class EnemyManager {
 		this.spawnEnemyType(Ghost, ghostCount);
 	}
 
-	startSpawning(initialWaveDelay = 5000) {
-		if (this.spawnEvent) {
-			return;
-		}
-
-		this.spawnEvent = this.scene.time.addEvent({
-			delay: initialWaveDelay,
-			callback: this.spawnEnemiesWaves,
-			callbackScope: this,
-			loop: true,
-		});
-	}
-
-	stopSpawning() {
-		if (this.spawnEvent) {
-			this.spawnEvent.remove();
-			this.spawnEvent = null;
-		}
-	}
-
-	update(time, currentKey) {
-		this.currentTime = time;
+	update(currentKey) {
 		const currentEnemies = this.enemies.getChildren();
 
 		for (let i = currentEnemies.length - 1; i >= 0; i--) {
@@ -96,7 +64,6 @@ export default class EnemyManager {
 	}
 
 	destroy() {
-		this.stopSpawning();
 		if (this.enemies) {
 			this.enemies.clear(true, true);
 		}
