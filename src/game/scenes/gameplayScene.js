@@ -35,7 +35,7 @@ export default class GameScene extends Phaser.Scene {
 		this.waveManager = new WaveManager(this);
 		this.projectileManager = new ProjectileManager(this);
 		this.collisionManager = new CollisionManager(this);
-		this.waveManager.startWaves(1000, (enemyCounts) => {
+		this.waveManager.startWaves((enemyCounts) => {
 			this.enemyManager.spawnEnemiesFromCounts(enemyCounts);
 		});
 	}

@@ -4,7 +4,7 @@ export default class WaveManager {
 	constructor(scene) {
 		this.scene = scene;
 		this.spawnEvent = null;
-		this.onWaveSpawn;
+		this.onWaveSpawnEnemy;
 	}
 
 	calculateEnemyCounts() {
@@ -19,20 +19,25 @@ export default class WaveManager {
 
 	handleEnemiesSpawn() {
 		const enemyCounts = this.calculateEnemyCounts();
-		this.onWaveSpawn(enemyCounts);
+		this.onWaveSpawnEnemy(enemyCounts);
+	}
+
+	handleItemSpawn() {
+		return;
 	}
 
 	onWaveComplete() {
 		gameState.updateWave(gameState.getWave() + 1);
 		this.handleEnemiesSpawn();
+		this.handleItemSpawn();
 	}
 
-	startWaves(waveDelay, onWaveSpawn) {
+	startWaves(onWaveSpawnEnemy) {
 		if (this.spawnEvent) {
 			return;
 		}
 
-		this.onWaveSpawn = onWaveSpawn;
+		this.onWaveSpawnEnemy = onWaveSpawnEnemy;
 		this.handleEnemiesSpawn();
 	}
 
