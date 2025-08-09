@@ -3,7 +3,6 @@ import gameState from '../core/gameState';
 export default class WaveManager {
 	constructor(scene) {
 		this.scene = scene;
-		this.spawnEvent = null;
 		this.onWaveSpawnEnemy;
 	}
 
@@ -33,22 +32,7 @@ export default class WaveManager {
 	}
 
 	startWaves(onWaveSpawnEnemy) {
-		if (this.spawnEvent) {
-			return;
-		}
-
 		this.onWaveSpawnEnemy = onWaveSpawnEnemy;
 		this.handleEnemiesSpawn();
-	}
-
-	stopWaves() {
-		if (this.spawnEvent) {
-			this.spawnEvent.remove();
-			this.spawnEvent = null;
-		}
-	}
-
-	destroy() {
-		this.stopWaves();
 	}
 }
