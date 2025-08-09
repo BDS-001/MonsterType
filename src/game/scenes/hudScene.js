@@ -7,18 +7,23 @@ export class HudScene extends Phaser.Scene {
 		super({ key: 'HudScene', active: true });
 
 		this.scoreText = null;
+		this.waveText = null;
 		this.healthBar = null;
 		this.healthText = null;
 		this.fpsDisplay = null;
 	}
 	create() {
-		const devText = this.add.text(this.game.config.width / 2, 20, '🚧 GAME UNDER DEVELOPMENT 🚧', {
-			fontSize: '24px',
+		const textStyle = {
 			fontFamily: 'Arial, sans-serif',
 			fill: '#ffffff',
 			stroke: '#000000',
 			strokeThickness: 2,
 			fontStyle: 'bold',
+		};
+
+		const devText = this.add.text(this.game.config.width / 2, 20, '🚧 GAME UNDER DEVELOPMENT 🚧', {
+			...textStyle,
+			fontSize: '24px',
 		});
 		devText.setOrigin(0.5, 0);
 
@@ -27,23 +32,21 @@ export class HudScene extends Phaser.Scene {
 			60,
 			`Score: ${gameState.getScore()}`,
 			{
+				...textStyle,
 				fontSize: '24px',
-				fontFamily: 'Arial, sans-serif',
-				fill: '#ffffff',
-				stroke: '#000000',
-				strokeThickness: 2,
-				fontStyle: 'bold',
 			}
 		);
 		this.scoreText.setOrigin(0.5, 0);
 
+		this.waveText = this.add.text(this.game.config.width / 2, 95, `Wave: ${gameState.getWave()}`, {
+			...textStyle,
+			fontSize: '20px',
+		});
+		this.waveText.setOrigin(0.5, 0);
+
 		this.healthText = this.add.text(20, this.game.config.height - 40, 'Health', {
+			...textStyle,
 			fontSize: '18px',
-			fontFamily: 'Arial, sans-serif',
-			fill: '#ffffff',
-			stroke: '#000000',
-			strokeThickness: 2,
-			fontStyle: 'bold',
 		});
 
 		this.healthBar = new HealthBar(this, 85, this.game.config.height - 50);
@@ -52,6 +55,7 @@ export class HudScene extends Phaser.Scene {
 
 	update() {
 		this.scoreText.setText(`Score: ${gameState.getScore()}`);
+		this.waveText.setText(`Wave: ${gameState.getWave()}`);
 		this.fpsDisplay.updateFPS();
 	}
 

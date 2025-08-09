@@ -8,7 +8,7 @@ function calculateRandomPosition(camera) {
 	const margin = 100;
 
 	const side = Math.floor(Math.random() * 4);
-	
+
 	let x, y;
 	switch (side) {
 		case 0: // Top

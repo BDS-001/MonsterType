@@ -11,6 +11,7 @@ class GameState {
 			immunity: false,
 		};
 		this.score = 0;
+		this.wave = 1;
 		this.gameOver = false;
 	}
 
@@ -50,6 +51,14 @@ class GameState {
 
 	getScore() {
 		return this.score;
+	}
+
+	getWave() {
+		return this.wave;
+	}
+
+	updateWave(waveNumber) {
+		this.wave = waveNumber;
 	}
 
 	getPlayerImmunity() {
