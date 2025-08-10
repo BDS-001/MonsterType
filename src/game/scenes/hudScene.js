@@ -1,6 +1,6 @@
-import gameState from '../core/gameState';
 import HealthBar from '../util/healthBar';
 import fpsCounter from '../util/fpsCounter';
+import { GAME_EVENTS } from '../core/GameEvents.js';
 
 export class HudScene extends Phaser.Scene {
 	constructor() {
@@ -11,8 +11,27 @@ export class HudScene extends Phaser.Scene {
 		this.healthBar = null;
 		this.healthText = null;
 		this.fpsDisplay = null;
+
+		// Game state tracking
+		this.currentScore = 0;
+		this.currentWave = 1;
+		this.currentHealth = 100;
+		this.maxHealth = 100;
 	}
 	create() {
+		this.setupUI();
+		this.setupEventListeners();
+		this.healthBar = new HealthBar(
+			this,
+			85,
+			this.game.config.height - 50,
+			this.currentHealth,
+			this.maxHealth
+		);
+		this.fpsDisplay = new fpsCounter(this);
+	}
+
+	setupUI() {
 		const textStyle = {
 			fontFamily: 'Arial, sans-serif',
 			fill: '#ffffff',
@@ -27,18 +46,13 @@ export class HudScene extends Phaser.Scene {
 		});
 		devText.setOrigin(0.5, 0);
 
-		this.scoreText = this.add.text(
-			this.game.config.width / 2,
-			60,
-			`Score: ${gameState.getScore()}`,
-			{
-				...textStyle,
-				fontSize: '24px',
-			}
-		);
+		this.scoreText = this.add.text(this.game.config.width / 2, 60, `Score: ${this.currentScore}`, {
+			...textStyle,
+			fontSize: '24px',
+		});
 		this.scoreText.setOrigin(0.5, 0);
 
-		this.waveText = this.add.text(this.game.config.width / 2, 95, `Wave: ${gameState.getWave()}`, {
+		this.waveText = this.add.text(this.game.config.width / 2, 95, `Wave: ${this.currentWave}`, {
 			...textStyle,
 			fontSize: '20px',
 		});
@@ -47,26 +61,60 @@ export class HudScene extends Phaser.Scene {
 		this.healthText = this.add.text(
 			20,
 			this.game.config.height - 80,
-			`Health: ${gameState.player.health}`,
+			`Health: ${this.currentHealth}`,
 			{
 				...textStyle,
 				fontSize: '18px',
 			}
 		);
 		this.healthText.setDepth(1000);
+	}
 
-		this.healthBar = new HealthBar(this, 85, this.game.config.height - 50);
-		this.fpsDisplay = new fpsCounter(this);
+	setupEventListeners() {
+		const gameScene = this.scene.get('GameScene');
+		if (gameScene) {
+			gameScene.events.on(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
+			gameScene.events.on(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
+			gameScene.events.on(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
+			gameScene.events.on(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
+			gameScene.events.on(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
+		}
 	}
 
 	update() {
-		this.scoreText.setText(`Score: ${gameState.getScore()}`);
-		this.waveText.setText(`Wave: ${gameState.getWave()}`);
-		this.healthText.setText(`Health: ${gameState.player.health}`);
 		this.fpsDisplay.updateFPS();
 	}
 
-	decreaseHealth(amount) {
-		return this.healthBar.decrease(amount);
+	updateScore(data) {
+		this.currentScore = data.newScore || this.currentScore + (data.amount || 0);
+		this.scoreText.setText(`Score: ${this.currentScore}`);
+	}
+
+	updateWave(data) {
+		this.currentWave = data.waveNumber;
+		this.waveText.setText(`Wave: ${this.currentWave}`);
+	}
+
+	handlePlayerHit(data) {
+		this.currentHealth -= data.damage;
+		if (this.currentHealth < 0) this.currentHealth = 0;
+		this.healthText.setText(`Health: ${this.currentHealth}`);
+		this.healthBar.decrease(data.damage);
+	}
+
+	handlePlayerHealed(data) {
+		this.currentHealth += data.amount;
+		if (this.currentHealth > this.maxHealth) this.currentHealth = this.maxHealth;
+		this.healthText.setText(`Health: ${this.currentHealth}`);
+		this.healthBar.heal(data.amount);
+	}
+
+	handleHealthChanged(data) {
+		if (data.maxHealthIncrease) {
+			this.maxHealth += data.maxHealthIncrease;
+			this.currentHealth += data.healthIncrease;
+			this.healthText.setText(`Health: ${this.currentHealth}`);
+			this.healthBar.increaseMax(data.maxHealthIncrease, data.healthIncrease);
+		}
 	}
 }

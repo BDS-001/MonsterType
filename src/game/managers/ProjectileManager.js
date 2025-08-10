@@ -1,13 +1,20 @@
 import BasicShot from '../entities/projectiles/basicShot';
 import HeavyRounds from '../entities/projectiles/heavyRounds';
+import BaseManager from '../core/BaseManager.js';
+import { GAME_EVENTS } from '../core/GameEvents.js';
 
-export default class ProjectileManager {
+export default class ProjectileManager extends BaseManager {
 	constructor(scene) {
-		this.scene = scene;
+		super(scene);
 		this.projectiles = null;
 		this.currentWeaponClass = BasicShot;
 
 		this.setupProjectiles();
+		this.setupEventListeners();
+	}
+
+	setupEventListeners() {
+		this.subscribe(GAME_EVENTS.LETTER_TYPED, this.handleLetterTyped);
 	}
 
 	setupProjectiles() {
@@ -21,6 +28,23 @@ export default class ProjectileManager {
 				projectile.scene = this.scene;
 			},
 		});
+	}
+
+	handleLetterTyped(data) {
+		const { source, target, damage } = data;
+		this.fireProjectile(source, target, damage);
+	}
+
+	fireProjectile(source, target, damage = 1) {
+		const projectile = this.getProjectile();
+
+		if (projectile) {
+			projectile.fire(source, target);
+			projectile.damage = damage;
+			this.emit(GAME_EVENTS.PROJECTILE_FIRED, { projectile, source, target, damage });
+			return damage;
+		}
+		return 0;
 	}
 
 	getProjectiles() {

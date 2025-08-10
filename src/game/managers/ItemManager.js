@@ -3,18 +3,39 @@ import Medkit from '../entities/items/medkit';
 import Bomb from '../entities/items/bomb';
 import HeavyRoundsPickup from '../entities/items/heavyRoundsPickup';
 import HealthUp from '../entities/items/healthUp';
+import BaseManager from '../core/BaseManager.js';
+import { GAME_EVENTS } from '../core/GameEvents.js';
 
-export default class ItemManager {
+export default class ItemManager extends BaseManager {
 	constructor(scene) {
-		this.scene = scene;
+		super(scene);
 		this.items = null;
 		this.currentItemId = 0;
 
 		this.setupItems();
+		this.setupEventListeners();
+	}
+
+	setupEventListeners() {
+		this.subscribe(GAME_EVENTS.KEY_PRESSED, this.handleKeyPressed);
 	}
 
 	setupItems() {
 		this.items = this.scene.add.group();
+	}
+
+	handleKeyPressed(key) {
+		const currentItems = this.items.getChildren();
+		for (let i = currentItems.length - 1; i >= 0; i--) {
+			currentItems[i].update(key);
+		}
+	}
+
+	updateMovement() {
+		const currentItems = this.items.getChildren();
+		for (let i = currentItems.length - 1; i >= 0; i--) {
+			currentItems[i].update(); // Update without key for movement/positioning
+		}
 	}
 
 	spawnItemsFromCounts({ healthUp }) {
@@ -49,15 +70,6 @@ export default class ItemManager {
 		this.currentItemId++;
 		this.items.add(item);
 		return item;
-	}
-
-	update(currentKey) {
-		const currentItems = this.items.getChildren();
-
-		for (let i = currentItems.length - 1; i >= 0; i--) {
-			const item = currentItems[i];
-			item.update(currentKey);
-		}
 	}
 
 	getItems() {

@@ -1,16 +1,15 @@
-import gameState from '../core/gameState';
-
 export default class HealthBar {
-	constructor(scene, x, y, width = 150, height = 30) {
+	constructor(scene, x, y, initialHealth = 100, maxHealth = 100, width = 150, height = 30) {
 		this.bar = new Phaser.GameObjects.Graphics(scene);
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.value = gameState.player.health;
+		this.value = initialHealth;
+		this.maxValue = maxHealth;
 		this.borderThickness = 8;
 		this.borderOffset = this.borderThickness / 2;
-		this.p = (this.width - this.borderThickness) / gameState.player.maxHealth;
+		this.p = (this.width - this.borderThickness) / this.maxValue;
 
 		this.draw();
 		scene.add.existing(this.bar);
@@ -25,6 +24,21 @@ export default class HealthBar {
 
 		this.draw();
 		return this.value === 0;
+	}
+
+	heal(amount) {
+		this.value += amount;
+		if (this.value > this.maxValue) {
+			this.value = this.maxValue;
+		}
+		this.draw();
+	}
+
+	increaseMax(maxIncrease, healthIncrease) {
+		this.maxValue += maxIncrease;
+		this.value += healthIncrease;
+		this.p = (this.width - this.borderThickness) / this.maxValue;
+		this.draw();
 	}
 
 	draw() {
