@@ -21,6 +21,7 @@ export default class WaveManager {
 		const wave = gameState.getWave();
 
 		let healthUp = wave % 10 === 0 ? 1 : 0;
+		healthUp = 1;
 		return { healthUp };
 	}
 

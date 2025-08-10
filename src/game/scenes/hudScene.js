@@ -44,10 +44,16 @@ export class HudScene extends Phaser.Scene {
 		});
 		this.waveText.setOrigin(0.5, 0);
 
-		this.healthText = this.add.text(20, this.game.config.height - 40, 'Health', {
-			...textStyle,
-			fontSize: '18px',
-		});
+		this.healthText = this.add.text(
+			20,
+			this.game.config.height - 80,
+			`Health: ${gameState.player.health}`,
+			{
+				...textStyle,
+				fontSize: '18px',
+			}
+		);
+		this.healthText.setDepth(1000);
 
 		this.healthBar = new HealthBar(this, 85, this.game.config.height - 50);
 		this.fpsDisplay = new fpsCounter(this);
@@ -56,6 +62,7 @@ export class HudScene extends Phaser.Scene {
 	update() {
 		this.scoreText.setText(`Score: ${gameState.getScore()}`);
 		this.waveText.setText(`Wave: ${gameState.getWave()}`);
+		this.healthText.setText(`Health: ${gameState.player.health}`);
 		this.fpsDisplay.updateFPS();
 	}
 
