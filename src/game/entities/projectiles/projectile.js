@@ -28,13 +28,23 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 	kill() {
 		this.setActive(false);
 		this.setVisible(false);
-		this.body.enable = false;
+
+		// Safely disable physics body
+		if (this.body) {
+			this.body.enable = false;
+		}
+
 		this.targetEnemyId = null;
 	}
 
 	fire(source, target) {
 		this.targetEnemyId = target.id;
-		this.body.enable = true;
+
+		// Safely enable physics body
+		if (this.body) {
+			this.body.enable = true;
+		}
+
 		this.setActive(true);
 		this.setVisible(true);
 		this.setPosition(source.x, source.y);

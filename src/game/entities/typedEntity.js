@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { GAME_EVENTS } from '../core/GameEvents.js';
 
 export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	constructor(scene, x, y, texture, word = '', id = null) {
@@ -44,8 +45,20 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	update(letter) {
 		if (this.isDestroyed) return;
 
+		// Update text positions to follow the entity
+		this.updateTextPositions();
+
 		if (letter) {
 			this.updateWord(letter);
+		}
+	}
+
+	updateTextPositions() {
+		if (this.healthText) {
+			this.healthText.setPosition(this.x, this.y - 30);
+		}
+		if (this.debugText) {
+			this.debugText.setPosition(this.x, this.y + 40);
 		}
 	}
 
@@ -69,11 +82,16 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		}
 
 		if (this.typedIndex < this.word.length && letter === this.word[this.typedIndex]) {
-			const projectileDamage = this.scene.fireProjectile(this.scene.player, this);
-			if (projectileDamage > 0) {
-				this.typedIndex++;
-				this.pendingDamage += projectileDamage;
-			}
+			this.scene.events.emit(GAME_EVENTS.LETTER_TYPED, {
+				source: this.scene.player,
+				target: this,
+				damage: 1,
+				letter: letter,
+				entityId: this.id,
+			});
+
+			this.typedIndex++;
+			this.pendingDamage += 1;
 			this.updateDebugDisplay();
 		}
 	}
@@ -86,6 +104,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		if (this.pendingDamage > 0) {
 			this.hitIndex += damage;
 			this.pendingDamage -= damage;
+			this.pendingDamage = Math.max(0, this.pendingDamage); // Prevent negative
 			this.hitIndex = Math.min(this.hitIndex, this.word.length);
 			this.typedIndex = this.hitIndex;
 

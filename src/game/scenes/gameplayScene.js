@@ -6,7 +6,8 @@ import WaveManager from '../managers/WaveManager';
 import ProjectileManager from '../managers/ProjectileManager';
 import InputManager from '../managers/InputManager';
 import CollisionManager from '../managers/CollisionManager';
-import gameState from '../core/gameState';
+import StateManager from '../managers/StateManager';
+import { GAME_EVENTS } from '../core/GameEvents';
 import { gameSettings } from '../core/constants';
 
 export default class GameScene extends Phaser.Scene {
@@ -27,26 +28,44 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	create() {
-		gameState.setGameScene(this);
 		this.setupBackground();
+		this.setupEventListeners();
+
 		this.inputManager = new InputManager(this);
-		this.createPlayer();
+		this.stateManager = new StateManager(this);
 		this.enemyManager = new EnemyManager(this);
 		this.itemManager = new ItemManager(this);
-		this.waveManager = new WaveManager(this);
 		this.projectileManager = new ProjectileManager(this);
 		this.collisionManager = new CollisionManager(this);
+		this.waveManager = new WaveManager(this);
 
-		const spawnHandlers = {
-			enemies: (enemyCounts) => {
-				this.enemyManager.spawnEnemiesFromCounts(enemyCounts);
-			},
-			items: (itemCounts) => {
-				this.itemManager.spawnItemsFromCounts(itemCounts);
-			},
-		};
+		this.createPlayer();
+		this.waveManager.startWaves();
+		this.events.emit(GAME_EVENTS.SCENE_READY);
+	}
 
-		this.waveManager.startWaves(spawnHandlers);
+	setupEventListeners() {
+		this.events.on(GAME_EVENTS.GAME_OVER, this.handleGameOver, this);
+		this.events.on(GAME_EVENTS.WAVE_COMPLETED, this.handleWaveComplete, this);
+		this.events.on(GAME_EVENTS.WAVE_SPAWN_ENEMIES, this.handleSpawnEnemies, this);
+		this.events.on(GAME_EVENTS.WAVE_SPAWN_ITEMS, this.handleSpawnItems, this);
+	}
+
+	handleSpawnEnemies(enemyCounts) {
+		this.enemyManager.spawnEnemiesFromCounts(enemyCounts);
+	}
+
+	handleSpawnItems(itemCounts) {
+		this.itemManager.spawnItemsFromCounts(itemCounts);
+	}
+
+	handleGameOver() {
+		this.scene.pause();
+		this.scene.setVisible(true, 'GameOver');
+	}
+
+	handleWaveComplete() {
+		// Wave completion handled by WaveManager
 	}
 
 	setupBackground() {
@@ -67,30 +86,9 @@ export default class GameScene extends Phaser.Scene {
 		this.player = new Player(this, centerX, centerY);
 	}
 
-	fireProjectile(source, targetEnemy) {
-		const projectile = this.projectileManager.getProjectile();
-
-		if (projectile) {
-			projectile.fire(source, targetEnemy);
-			return projectile.damage;
-		}
-		return 0;
-	}
-
 	update() {
-		if (gameState.player.health <= 0) {
-			gameState.toggleGameOver();
-			this.scene.pause();
-			this.scene.setVisible(true, 'GameOver');
-		}
-
-		this.enemyManager.update(this.inputManager.getCurrentKey());
-		this.itemManager.update(this.inputManager.getCurrentKey());
 		this.projectileManager.update();
-		this.inputManager.update();
-
-		if (this.enemyManager.getEnemyCount() <= 0) {
-			this.waveManager.onWaveComplete();
-		}
+		this.enemyManager.updateMovement();
+		this.itemManager.updateMovement();
 	}
 }

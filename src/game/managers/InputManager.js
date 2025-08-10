@@ -1,21 +1,14 @@
-export default class InputManager {
+import BaseManager from '../core/BaseManager.js';
+import { GAME_EVENTS } from '../core/GameEvents.js';
+
+export default class InputManager extends BaseManager {
 	constructor(scene) {
-		this.scene = scene;
-		this.currentKey = null;
-		this.setupKeyboardInput();
-	}
-
-	setupKeyboardInput() {
+		super(scene);
 		this.scene.input.keyboard.on('keydown', (event) => {
-			this.currentKey = event.key;
+			const key = event.key.toLowerCase();
+			if (key.length === 1 && key.match(/[a-z]/)) {
+				this.emit(GAME_EVENTS.KEY_PRESSED, key);
+			}
 		});
-	}
-
-	getCurrentKey() {
-		return this.currentKey;
-	}
-
-	update() {
-		this.currentKey = null;
 	}
 }

@@ -1,5 +1,5 @@
 import Item from './item.js';
-import gameState from '../../core/gameState.js';
+import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class Medkit extends Item {
 	constructor(scene, x, y, itemId) {
@@ -8,6 +8,6 @@ export default class Medkit extends Item {
 	}
 
 	onKill() {
-		gameState.playerHeal(this.healAmount);
+		this.scene.events.emit(GAME_EVENTS.PLAYER_HEALED, { amount: this.healAmount });
 	}
 }

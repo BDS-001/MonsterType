@@ -1,5 +1,3 @@
-import gameState from '../core/gameState';
-
 export class PauseScene extends Phaser.Scene {
 	constructor() {
 		super({ key: 'PauseScene', active: true });
@@ -9,8 +7,6 @@ export class PauseScene extends Phaser.Scene {
 		this.cameras.main.setBackgroundColor('rgba(0,0,0,0.3)');
 
 		this.input.keyboard.on('keydown-ESC', () => {
-			if (gameState.gameOver) return;
-
 			const gameSceneKey = 'GameScene';
 
 			if (this.scene.isPaused(gameSceneKey)) {

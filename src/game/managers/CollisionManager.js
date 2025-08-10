@@ -1,47 +1,60 @@
-import gameState from '../core/gameState';
+import BaseManager from '../core/BaseManager.js';
+import { GAME_EVENTS } from '../core/GameEvents.js';
 
-export default class CollisionManager {
+export default class CollisionManager extends BaseManager {
 	constructor(scene) {
-		this.scene = scene;
-
-		this.setupCollisions();
+		super(scene);
+		this.subscribe(GAME_EVENTS.SCENE_READY, this.setupCollisions);
 	}
 
 	setupCollisions() {
+		// Safety checks to ensure all managers and their groups exist
+		if (!this.scene.player || !this.scene.enemyManager || !this.scene.projectileManager) {
+			console.warn('CollisionManager: Required managers not ready, skipping collision setup');
+			return;
+		}
+
+		const enemies = this.scene.enemyManager.getEnemies();
+		const projectiles = this.scene.projectileManager.getProjectiles();
+
+		if (!enemies || !projectiles) {
+			console.warn('CollisionManager: Required groups not ready, skipping collision setup');
+			return;
+		}
+
 		this.scene.physics.add.overlap(
 			this.scene.player,
-			this.scene.enemyManager.getEnemies(),
+			enemies,
 			this.handlePlayerEnemyCollision.bind(this),
 			null,
 			this.scene
 		);
 
 		this.scene.physics.add.overlap(
-			this.scene.enemyManager.getEnemies(),
-			this.scene.projectileManager.getProjectiles(),
+			enemies,
+			projectiles,
 			this.handleProjectileEnemyCollision.bind(this),
 			null,
 			this.scene
 		);
 
 		if (this.scene.itemManager) {
-			this.scene.physics.add.overlap(
-				this.scene.itemManager.getItems(),
-				this.scene.projectileManager.getProjectiles(),
-				this.handleProjectileItemCollision.bind(this),
-				null,
-				this.scene
-			);
+			const items = this.scene.itemManager.getItems();
+			if (items) {
+				this.scene.physics.add.overlap(
+					items,
+					projectiles,
+					this.handleProjectileItemCollision.bind(this),
+					null,
+					this.scene
+				);
+			}
 		}
 	}
 
 	handlePlayerEnemyCollision(player, enemy) {
-		if (gameState.getPlayerImmunity()) {
-			return;
-		}
-
-		gameState.playerHit(10);
-		player.takeDamage(enemy.damage);
+		this.emit(GAME_EVENTS.PLAYER_HIT, { player, enemy, damage: enemy.damage || 10 });
+		player.takeDamage(enemy.damage || 10);
 		enemy.knockbackEnemy();
 	}
 
@@ -51,9 +64,13 @@ export default class CollisionManager {
 		}
 
 		const hitSuccessful = projectile.hit(enemy);
-
 		if (hitSuccessful) {
-			gameState.updateScore(10);
+			this.emit(GAME_EVENTS.PROJECTILE_HIT, {
+				projectile,
+				enemy,
+				damage: projectile.damage,
+				points: 10,
+			});
 		}
 	}
 
@@ -63,9 +80,8 @@ export default class CollisionManager {
 		}
 
 		const hitSuccessful = projectile.hit(item);
-
 		if (hitSuccessful) {
-			gameState.updateScore(5);
+			this.emit(GAME_EVENTS.ITEM_COLLECTED, { item, projectile, points: 5 });
 		}
 	}
 

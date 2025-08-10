@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { gameSettings } from '../core/constants';
+import { GAME_EVENTS } from '../core/GameEvents.js';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
 	constructor(scene, x, y) {
@@ -18,6 +19,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 			this.clearTint();
 		});
 
-		this.scene.scene.get('HudScene').decreaseHealth(amount);
+		this.scene.events.emit(GAME_EVENTS.PLAYER_HIT, { damage: amount });
 	}
 }
