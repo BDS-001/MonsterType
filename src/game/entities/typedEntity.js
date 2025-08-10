@@ -41,6 +41,14 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		this.updateDebugDisplay();
 	}
 
+	update(letter) {
+		if (this.isDestroyed) return;
+
+		if (letter) {
+			this.updateWord(letter);
+		}
+	}
+
 	updateDebugDisplay() {
 		if (this.debugText && !this.isDestroyed) {
 			const debugInfo = [

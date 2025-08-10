@@ -118,8 +118,8 @@ export default class Enemy extends TypedEntity {
 	update(letter) {
 		if (this.isDestroyed) return;
 
-		if (this.isEnemyOnScreen() && letter) {
-			this.updateWord(letter);
+		if (this.isEnemyOnScreen()) {
+			super.update(letter);
 		}
 
 		this.moveEnemy();
