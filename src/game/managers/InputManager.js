@@ -8,7 +8,6 @@ export default class InputManager {
 	setupKeyboardInput() {
 		this.scene.input.keyboard.on('keydown', (event) => {
 			this.currentKey = event.key;
-			console.log(event.key);
 		});
 	}
 

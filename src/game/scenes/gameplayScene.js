@@ -14,7 +14,6 @@ export default class GameScene extends Phaser.Scene {
 
 		this.player = null;
 		this.grassBackground = null;
-		this.gameStartTime;
 	}
 
 	preload() {
@@ -68,7 +67,7 @@ export default class GameScene extends Phaser.Scene {
 		return 0;
 	}
 
-	update(time) {
+	update() {
 		if (gameState.player.health <= 0) {
 			gameState.toggleGameOver();
 			this.scene.pause();
