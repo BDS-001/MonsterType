@@ -17,6 +17,14 @@ export default class ItemManager {
 		this.items = this.scene.add.group();
 	}
 
+	spawnItemsFromCounts({ healthUp }) {
+		for (let i = 0; i < healthUp; i++) {
+			const x = Math.random() * this.scene.game.config.width;
+			const y = Math.random() * this.scene.game.config.height;
+			this.spawnItem(x, y, 'HEALTH_UP');
+		}
+	}
+
 	spawnItem(x, y, itemType) {
 		const itemId = `item${this.currentItemId}`;
 		let item;

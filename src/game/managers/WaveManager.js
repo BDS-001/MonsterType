@@ -4,6 +4,7 @@ export default class WaveManager {
 	constructor(scene) {
 		this.scene = scene;
 		this.onWaveSpawnEnemy;
+		this.onWaveSpawnItem;
 	}
 
 	calculateEnemyCounts() {
@@ -16,13 +17,21 @@ export default class WaveManager {
 		return { zombieCount, ghostCount, mummyCount };
 	}
 
+	calculateItemCounts() {
+		const wave = gameState.getWave();
+
+		let healthUp = wave % 10 === 0 ? 1 : 0;
+		return { healthUp };
+	}
+
 	handleEnemiesSpawn() {
 		const enemyCounts = this.calculateEnemyCounts();
 		this.onWaveSpawnEnemy(enemyCounts);
 	}
 
 	handleItemSpawn() {
-		return;
+		const itemSpawns = this.calculateItemCounts();
+		this.onWaveSpawnItem(itemSpawns);
 	}
 
 	onWaveComplete() {
@@ -31,8 +40,9 @@ export default class WaveManager {
 		this.handleItemSpawn();
 	}
 
-	startWaves(onWaveSpawnEnemy) {
-		this.onWaveSpawnEnemy = onWaveSpawnEnemy;
+	startWaves(spawnHandlers) {
+		this.onWaveSpawnEnemy = spawnHandlers.enemies;
+		this.onWaveSpawnItem = spawnHandlers.items;
 		this.handleEnemiesSpawn();
 	}
 }
