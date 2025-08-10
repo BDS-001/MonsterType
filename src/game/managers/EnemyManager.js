@@ -30,21 +30,6 @@ export default class EnemyManager {
 		this.spawnEnemyType(Mummy, mummyCount);
 	}
 
-	spawnEnemiesGradual(currentTime) {
-		const gameplaySeconds = currentTime / 1000;
-
-		let zombieCount = 1;
-		if (gameplaySeconds > 60) zombieCount = 2;
-		if (gameplaySeconds > 120) zombieCount = 3;
-
-		let ghostCount = 0;
-		if (gameplaySeconds > 30 && Math.random() < 0.2) {
-			ghostCount = 1;
-		}
-
-		this.spawnEnemyType(Zombie, zombieCount);
-		this.spawnEnemyType(Ghost, ghostCount);
-	}
 
 	update(currentKey) {
 		const currentEnemies = this.enemies.getChildren();
