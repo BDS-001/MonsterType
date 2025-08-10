@@ -30,7 +30,6 @@ export default class EnemyManager {
 		this.spawnEnemyType(Mummy, mummyCount);
 	}
 
-
 	update(currentKey) {
 		const currentEnemies = this.enemies.getChildren();
 
