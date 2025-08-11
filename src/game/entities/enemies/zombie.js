@@ -13,9 +13,9 @@ export default class Zombie extends Enemy {
 	}
 
 	onKill() {
-		const val = Math.floor(Math.random() * 10);
+		const val = Math.floor(Math.random() * 100);
 		console.log(val);
-		if (val === 0) {
+		if (val < 5) {
 			this.scene.events.emit(GAME_EVENTS.ITEM_SPAWNED, {
 				x: this.x,
 				y: this.y,
