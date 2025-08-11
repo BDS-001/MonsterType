@@ -24,6 +24,7 @@ export default class EnemyManager extends BaseManager {
 	}
 
 	handleKeyPressed(key) {
+		if (!this.enemies) return;
 		const currentEnemies = this.enemies.getChildren();
 		for (let i = currentEnemies.length - 1; i >= 0; i--) {
 			currentEnemies[i].update(key);
