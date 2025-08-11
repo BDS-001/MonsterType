@@ -58,6 +58,7 @@ export default class StateManager extends BaseManager {
 			this.state.player.maxHealth,
 			this.state.player.health + amount
 		);
+		this.emitGame(GAME_EVENTS.PLAYER_HEALED, data);
 	}
 
 	handleWaveStarted(data) {
