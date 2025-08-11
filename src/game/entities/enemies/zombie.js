@@ -5,7 +5,7 @@ export default class Zombie extends Enemy {
 	constructor(scene, id) {
 		const zombieOptions = {
 			moveSpeed: 40,
-			knockback: 80,
+			knockback: 40,
 			wordCategory: 'easy',
 		};
 
