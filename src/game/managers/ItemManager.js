@@ -18,6 +18,7 @@ export default class ItemManager extends BaseManager {
 
 	setupEventListeners() {
 		this.subscribe(GAME_EVENTS.KEY_PRESSED, this.handleKeyPressed);
+		this.subscribe(GAME_EVENTS.ITEM_SPAWNED, this.spawnItem);
 	}
 
 	setupItems() {
@@ -42,11 +43,11 @@ export default class ItemManager extends BaseManager {
 		for (let i = 0; i < healthUp; i++) {
 			const x = Math.random() * this.scene.game.config.width;
 			const y = Math.random() * this.scene.game.config.height;
-			this.spawnItem(x, y, 'HEALTH_UP');
+			this.spawnItem({ x, y, itemType: 'HEALTH_UP' });
 		}
 	}
 
-	spawnItem(x, y, itemType) {
+	spawnItem({ x, y, itemType }) {
 		const itemId = `item${this.currentItemId}`;
 		let item;
 

@@ -54,7 +54,10 @@ export default class StateManager extends BaseManager {
 
 	handlePlayerHealed(data) {
 		const { amount } = data;
-		this.playerHeal(amount);
+		this.state.player.health = Math.min(
+			this.state.player.maxHealth,
+			this.state.player.health + amount
+		);
 	}
 
 	handleWaveStarted(data) {
