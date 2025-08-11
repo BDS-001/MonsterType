@@ -66,8 +66,6 @@ export default class StateManager extends BaseManager {
 		if (data.maxHealthIncrease) {
 			this.state.player.maxHealth += data.maxHealthIncrease;
 			this.state.player.health += data.healthIncrease;
-			this.emit(GAME_EVENTS.HEALTH_CHANGED, data);
-			this.emitGame(GAME_EVENTS.HEALTH_CHANGED, data);
 		}
 	}
 
