@@ -42,10 +42,7 @@ export class GameOver extends Phaser.Scene {
 	}
 
 	playAgain() {
-		const gameScene = this.scene.get('GameScene');
-		if (gameScene) {
-			gameScene.events.emit(GAME_EVENTS.GAME_OVER, { reset: true });
-		}
+		this.game.events.emit(GAME_EVENTS.GAME_OVER, { reset: true });
 		this.scene.setVisible(false);
 		this.scene.start('GameScene');
 	}

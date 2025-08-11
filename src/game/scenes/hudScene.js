@@ -71,14 +71,11 @@ export class HudScene extends Phaser.Scene {
 	}
 
 	setupEventListeners() {
-		const gameScene = this.scene.get('GameScene');
-		if (gameScene) {
-			gameScene.events.on(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
-			gameScene.events.on(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
-			gameScene.events.on(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
-			gameScene.events.on(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
-			gameScene.events.on(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
-		}
+		this.game.events.on(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
+		this.game.events.on(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
+		this.game.events.on(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
+		this.game.events.on(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
+		this.game.events.on(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
 	}
 
 	update() {
@@ -116,5 +113,14 @@ export class HudScene extends Phaser.Scene {
 			this.healthText.setText(`Health: ${this.currentHealth}`);
 			this.healthBar.increaseMax(data.maxHealthIncrease, data.healthIncrease);
 		}
+	}
+
+	destroy() {
+		this.game.events.off(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
+		this.game.events.off(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
+		this.game.events.off(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
+		this.game.events.off(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
+		this.game.events.off(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
+		super.destroy();
 	}
 }
