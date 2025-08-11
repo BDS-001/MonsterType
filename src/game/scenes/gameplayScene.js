@@ -46,7 +46,6 @@ export default class GameScene extends Phaser.Scene {
 
 	setupEventListeners() {
 		this.events.on(GAME_EVENTS.GAME_OVER, this.handleGameOver, this);
-		this.events.on(GAME_EVENTS.WAVE_COMPLETED, this.handleWaveComplete, this);
 		this.events.on(GAME_EVENTS.WAVE_SPAWN_ENEMIES, this.handleSpawnEnemies, this);
 		this.events.on(GAME_EVENTS.WAVE_SPAWN_ITEMS, this.handleSpawnItems, this);
 	}
@@ -62,10 +61,6 @@ export default class GameScene extends Phaser.Scene {
 	handleGameOver() {
 		this.scene.pause();
 		this.scene.setVisible(true, 'GameOver');
-	}
-
-	handleWaveComplete() {
-		// Wave completion handled by WaveManager
 	}
 
 	setupBackground() {
