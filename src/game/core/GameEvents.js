@@ -19,6 +19,7 @@ export const GAME_EVENTS = {
 	WAVE_SPAWN_ITEMS: 'wave:spawn_items',
 	GAME_OVER: 'game:game_over',
 
+	ITEM_SPAWNED: 'item:item_spawn',
 	ITEM_COLLECTED: 'item:collected',
 	SCENE_READY: 'system:scene_ready',
 };
