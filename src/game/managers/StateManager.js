@@ -25,6 +25,7 @@ export default class StateManager extends BaseManager {
 		this.subscribe(GAME_EVENTS.ITEM_COLLECTED, this.handleItemCollected);
 		this.subscribe(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit);
 		this.subscribe(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed);
+		this.subscribe(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged);
 		this.subscribe(GAME_EVENTS.WAVE_STARTED, this.handleWaveStarted);
 	}
 
@@ -52,8 +53,8 @@ export default class StateManager extends BaseManager {
 	}
 
 	handlePlayerHealed(data) {
-		const { healAmount } = data;
-		this.playerHeal(healAmount);
+		const { amount } = data;
+		this.playerHeal(amount);
 	}
 
 	handleWaveStarted(data) {
@@ -61,10 +62,19 @@ export default class StateManager extends BaseManager {
 		this.updateWave(waveNumber);
 	}
 
+	handleHealthChanged(data) {
+		if (data.maxHealthIncrease) {
+			this.state.player.maxHealth += data.maxHealthIncrease;
+			this.state.player.health += data.healthIncrease;
+			this.emit(GAME_EVENTS.HEALTH_CHANGED, data);
+			this.emitGame(GAME_EVENTS.HEALTH_CHANGED, data);
+		}
+	}
+
 	updateScore(points) {
 		this.state.score += points;
-		this.emit(GAME_EVENTS.SCORE_CHANGED, this.state.score);
-		this.emitGame(GAME_EVENTS.SCORE_CHANGED, this.state.score);
+		this.emit(GAME_EVENTS.SCORE_CHANGED, { amount: points, newScore: this.state.score });
+		this.emitGame(GAME_EVENTS.SCORE_CHANGED, { amount: points, newScore: this.state.score });
 	}
 
 	playerHit(damage) {
@@ -77,8 +87,8 @@ export default class StateManager extends BaseManager {
 			this.state.player.immunity = false;
 		});
 
-		this.emit(GAME_EVENTS.HEALTH_CHANGED, this.state.player.health);
-		this.emitGame(GAME_EVENTS.HEALTH_CHANGED, this.state.player.health);
+		this.emit(GAME_EVENTS.PLAYER_HIT, { damage });
+		this.emitGame(GAME_EVENTS.PLAYER_HIT, { damage });
 
 		if (this.state.player.health <= 0) {
 			this.handleGameOver();
@@ -90,8 +100,8 @@ export default class StateManager extends BaseManager {
 			this.state.player.maxHealth,
 			this.state.player.health + healAmount
 		);
-		this.emit(GAME_EVENTS.HEALTH_CHANGED, this.state.player.health);
-		this.emitGame(GAME_EVENTS.HEALTH_CHANGED, this.state.player.health);
+		this.emit(GAME_EVENTS.PLAYER_HEALED, { amount: healAmount });
+		this.emitGame(GAME_EVENTS.PLAYER_HEALED, { amount: healAmount });
 	}
 
 	handleGameOver() {
