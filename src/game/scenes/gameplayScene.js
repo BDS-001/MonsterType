@@ -83,7 +83,5 @@ export default class GameScene extends Phaser.Scene {
 
 	update() {
 		this.projectileManager.update();
-		this.enemyManager.updateMovement();
-		this.itemManager.updateMovement();
 	}
 }

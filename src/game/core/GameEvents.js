@@ -8,6 +8,7 @@ export const GAME_EVENTS = {
 	ENEMY_KILLED: 'combat:enemy_killed',
 
 	LETTER_TYPED: 'typing:letter_typed',
+	TYPING_INPUT: 'typing:input',
 
 	SCORE_CHANGED: 'game:score_changed',
 	HEALTH_CHANGED: 'game:health_changed',

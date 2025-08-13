@@ -22,21 +22,13 @@ export default class ItemManager extends BaseManager {
 	}
 
 	setupItems() {
-		this.items = this.scene.add.group();
+		this.items = this.scene.add.group({
+			runChildUpdate: true,
+		});
 	}
 
 	handleKeyPressed(key) {
-		const currentItems = this.items.getChildren();
-		for (let i = currentItems.length - 1; i >= 0; i--) {
-			currentItems[i].update(key);
-		}
-	}
-
-	updateMovement() {
-		const currentItems = this.items.getChildren();
-		for (let i = currentItems.length - 1; i >= 0; i--) {
-			currentItems[i].update(); // Update without key for movement/positioning
-		}
+		this.emit(GAME_EVENTS.TYPING_INPUT, { key });
 	}
 
 	spawnItemsFromCounts({ healthUp }) {

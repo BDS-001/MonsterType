@@ -1,6 +1,7 @@
 import TypedEntity from '../typedEntity';
 import wordBank from '../../data/wordbank';
 import { gameSettings } from '../../core/constants';
+import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 function calculateRandomPosition(camera) {
 	const width = camera.width;
@@ -56,9 +57,12 @@ export default class Enemy extends TypedEntity {
 		this.knockback = enemyOptions.knockback;
 		this.damage = enemyOptions.damage;
 		this.displayedWord = this.word;
+		this.isKnockedBack = false;
 
 		this.setScale(gameSettings.SPRITE_SCALE);
 		this.scene.physics.add.existing(this);
+
+		this.scene.events.on(GAME_EVENTS.TYPING_INPUT, this.handleTypingInput, this);
 	}
 
 	isEnemyOnScreen() {
@@ -85,6 +89,11 @@ export default class Enemy extends TypedEntity {
 			const normalizedX = directionX / length;
 			const normalizedY = directionY / length;
 			this.setVelocity(-normalizedX * this.knockback, -normalizedY * this.knockback);
+
+			this.isKnockedBack = true;
+			this.scene.time.delayedCall(200, () => {
+				this.isKnockedBack = false;
+			});
 		}
 	}
 
@@ -101,24 +110,33 @@ export default class Enemy extends TypedEntity {
 	}
 
 	moveEnemy() {
-		if (this.isDestroyed) return;
+		if (this.isDestroyed || this.isKnockedBack) return;
 		this.scene.physics.moveToObject(this, this.scene.player, this.moveSpeed);
 	}
 
-	update(letter) {
+	handleTypingInput(data) {
+		if (this.isDestroyed || !this.isEnemyOnScreen()) return;
+		super.update(data.key);
+	}
+
+	update() {
 		if (this.isDestroyed) return;
 
-		if (this.isEnemyOnScreen()) {
-			super.update(letter);
-		}
-
 		this.moveEnemy();
+		this.updateTextPositions();
+	}
 
+	updateTextPositions() {
 		if (this.healthText) {
 			this.healthText.setPosition(this.x, this.y - this.displayHeight / 2 - 10);
 		}
 		if (this.debugText) {
 			this.debugText.setPosition(this.x, this.y + 40);
 		}
+	}
+
+	destroy(fromScene) {
+		this.scene.events.off(GAME_EVENTS.TYPING_INPUT, this.handleTypingInput, this);
+		super.destroy(fromScene);
 	}
 }

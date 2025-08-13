@@ -46,15 +46,19 @@ export default class Weapon {
 	}
 
 	applySpreadToTarget(originalTarget, source, spreadOffset) {
-		const dx = originalTarget.x - source.x;
-		const dy = originalTarget.y - source.y;
-		const distance = Math.sqrt(dx * dx + dy * dy);
-		const currentAngle = Math.atan2(dy, dx);
-		const newAngle = currentAngle + spreadOffset;
+		const distance = Phaser.Math.Distance.Between(
+			source.x,
+			source.y,
+			originalTarget.x,
+			originalTarget.y
+		);
+		const angle =
+			Phaser.Math.Angle.Between(source.x, source.y, originalTarget.x, originalTarget.y) +
+			spreadOffset;
 
 		return {
-			x: source.x + Math.cos(newAngle) * distance,
-			y: source.y + Math.sin(newAngle) * distance,
+			x: source.x + Math.cos(angle) * distance,
+			y: source.y + Math.sin(angle) * distance,
 		};
 	}
 

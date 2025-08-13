@@ -13,10 +13,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	takeDamage(amount) {
-		this.setTint(0xff0000);
-
-		this.scene.time.delayedCall(100, () => {
-			this.clearTint();
+		this.scene.tweens.add({
+			targets: this,
+			tint: 0xff0000,
+			duration: 50,
+			yoyo: true,
+			onComplete: () => this.clearTint(),
 		});
 
 		this.scene.events.emit(GAME_EVENTS.PLAYER_HIT, { damage: amount });
