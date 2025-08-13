@@ -58,7 +58,7 @@ export default class CollisionManager extends BaseManager {
 	}
 
 	handleProjectileEnemyCollision(enemy, projectile) {
-		if (!projectile.active || projectile.targetEnemyId !== enemy.id) {
+		if (!projectile.active) {
 			return;
 		}
 
@@ -74,7 +74,7 @@ export default class CollisionManager extends BaseManager {
 	}
 
 	handleProjectileItemCollision(item, projectile) {
-		if (!projectile.active || projectile.targetEnemyId !== item.id) {
+		if (!projectile.active) {
 			return;
 		}
 
