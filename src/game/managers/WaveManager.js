@@ -49,8 +49,6 @@ export default class WaveManager extends BaseManager {
 		const enemyCounts = this.calculateEnemyCounts(this.currentWave);
 		const itemCounts = this.calculateItemCounts(this.currentWave);
 
-		console.log(`Wave ${waveNumber} spawning:`, enemyCounts);
-
 		this.emit(GAME_EVENTS.WAVE_SPAWN_ENEMIES, enemyCounts);
 		this.emit(GAME_EVENTS.WAVE_SPAWN_ITEMS, itemCounts);
 	}

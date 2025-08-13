@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 export default class Weapon {
 	constructor(name, description, options = {}) {
 		this.name = name;
@@ -9,57 +11,46 @@ export default class Weapon {
 		this.spread = options.spread || 0;
 
 		this.lastFireTime = 0;
-		this.canFire = true;
 	}
 
 	canFireNow(currentTime) {
 		return currentTime - this.lastFireTime >= this.attackSpeed;
 	}
 
-	fire(scene, projectileManager, source, target, currentTime) {
-		if (!this.canFireNow(currentTime)) {
-			return false;
-		}
+	fire(projectileManager, source, target, currentTime) {
+		if (!this.canFireNow(currentTime)) return false;
 
 		this.lastFireTime = currentTime;
 
 		for (let i = 0; i < this.projectileCount; i++) {
 			const projectile = projectileManager.getProjectile(this.projectileType);
+			if (!projectile) continue;
 
-			if (this.projectileCount === 1) {
-				projectile.fire(source, target);
-			} else {
-				const spreadOffset = this.calculateSpreadOffset(i, this.projectileCount, this.spread);
-				const adjustedTarget = this.applySpreadToTarget(target, source, spreadOffset);
-				projectile.fire(source, adjustedTarget);
-			}
+			const firingTarget =
+				this.projectileCount === 1 ? target : this.calculateSpreadTarget(target, source, i);
+
+			projectile.fire(source, firingTarget);
 		}
 
 		return true;
 	}
 
-	calculateSpreadOffset(index, totalCount, maxSpread) {
-		if (totalCount === 1) return 0;
-
-		const step = maxSpread / (totalCount - 1);
-		return index * step - maxSpread / 2;
-	}
-
-	applySpreadToTarget(originalTarget, source, spreadOffset) {
-		const distance = Phaser.Math.Distance.Between(
-			source.x,
-			source.y,
-			originalTarget.x,
-			originalTarget.y
-		);
-		const angle =
-			Phaser.Math.Angle.Between(source.x, source.y, originalTarget.x, originalTarget.y) +
-			spreadOffset;
+	calculateSpreadTarget(target, source, index) {
+		const spreadOffset = this.getSpreadAngle(index);
+		const distance = Phaser.Math.Distance.Between(source.x, source.y, target.x, target.y);
+		const baseAngle = Phaser.Math.Angle.Between(source.x, source.y, target.x, target.y);
+		const finalAngle = baseAngle + spreadOffset;
 
 		return {
-			x: source.x + Math.cos(angle) * distance,
-			y: source.y + Math.sin(angle) * distance,
+			x: source.x + Math.cos(finalAngle) * distance,
+			y: source.y + Math.sin(finalAngle) * distance,
 		};
+	}
+
+	getSpreadAngle(index) {
+		if (this.projectileCount === 1) return 0;
+		const step = this.spread / (this.projectileCount - 1);
+		return index * step - this.spread / 2;
 	}
 
 	getStats() {
