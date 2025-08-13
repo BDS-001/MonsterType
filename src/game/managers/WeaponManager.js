@@ -1,6 +1,7 @@
 import BasicRifle from '../entities/weapons/basicRifle.js';
 import Shotgun from '../entities/weapons/shotgun.js';
 import HeavyGun from '../entities/weapons/heavyGun.js';
+import Minigun from '../entities/weapons/miniGun.js';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
@@ -12,10 +13,11 @@ export default class WeaponManager extends BaseManager {
 			['basicRifle', BasicRifle],
 			['shotgun', Shotgun],
 			['heavyGun', HeavyGun],
+			['minigun', Minigun],
 		]);
 
 		this.setupEventListeners();
-		this.equipWeapon('basicRifle');
+		this.equipWeapon('shotgun');
 	}
 
 	setupEventListeners() {
