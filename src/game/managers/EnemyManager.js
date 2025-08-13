@@ -20,7 +20,9 @@ export default class EnemyManager extends BaseManager {
 	}
 
 	setupEnemies() {
-		this.enemies = this.scene.add.group();
+		this.enemies = this.scene.add.group({
+			runChildUpdate: true,
+		});
 	}
 
 	handleKeyPressed(key) {
@@ -34,7 +36,7 @@ export default class EnemyManager extends BaseManager {
 	updateMovement() {
 		const currentEnemies = this.enemies.getChildren();
 		for (let i = currentEnemies.length - 1; i >= 0; i--) {
-			currentEnemies[i].update(); // Update without key for movement/positioning
+			currentEnemies[i].update();
 		}
 	}
 

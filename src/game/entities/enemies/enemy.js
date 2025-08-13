@@ -58,6 +58,7 @@ export default class Enemy extends TypedEntity {
 		this.displayedWord = this.word;
 
 		this.setScale(gameSettings.SPRITE_SCALE);
+		this.scene.physics.add.existing(this);
 	}
 
 	isEnemyOnScreen() {
@@ -72,21 +73,6 @@ export default class Enemy extends TypedEntity {
 		);
 	}
 
-	moveEnemy() {
-		if (this.isDestroyed) return;
-
-		const player = this.scene.player;
-		const directionX = player.x - this.x;
-		const directionY = player.y - this.y;
-		const length = Math.sqrt(directionX * directionX + directionY * directionY);
-
-		if (length > 0) {
-			const normalizedX = directionX / length;
-			const normalizedY = directionY / length;
-			this.setVelocity(normalizedX * this.moveSpeed, normalizedY * this.moveSpeed);
-		}
-	}
-
 	knockbackEnemy() {
 		if (this.isDestroyed || this.knockback === 0) return;
 
@@ -98,21 +84,25 @@ export default class Enemy extends TypedEntity {
 		if (length > 0) {
 			const normalizedX = directionX / length;
 			const normalizedY = directionY / length;
-			this.x -= normalizedX * this.knockback;
-			this.y -= normalizedY * this.knockback;
+			this.setVelocity(-normalizedX * this.knockback, -normalizedY * this.knockback);
 		}
 	}
 
 	hitEffect() {
-		this.setTint(0xff0000);
-
-		this.scene.time.delayedCall(100, () => {
-			if (!this.isDestroyed) {
-				this.clearTint();
-			}
+		this.scene.tweens.add({
+			targets: this,
+			tint: 0xff0000,
+			duration: 50,
+			yoyo: true,
+			onComplete: () => this.clearTint(),
 		});
 
 		this.knockbackEnemy();
+	}
+
+	moveEnemy() {
+		if (this.isDestroyed) return;
+		this.scene.physics.moveToObject(this, this.scene.player, this.moveSpeed);
 	}
 
 	update(letter) {
