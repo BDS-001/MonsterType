@@ -76,6 +76,14 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		}
 	}
 
+	handleLetterAccepted() {
+		if (this.isDestroyed) return;
+
+		this.typedIndex++;
+		this.pendingDamage += 1;
+		this.updateDebugDisplay();
+	}
+
 	updateWord(letter) {
 		if (this.isDestroyed) {
 			return;
@@ -89,10 +97,6 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 				letter: letter,
 				entityId: this.id,
 			});
-
-			this.typedIndex++;
-			this.pendingDamage += 1;
-			this.updateDebugDisplay();
 		}
 	}
 

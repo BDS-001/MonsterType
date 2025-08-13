@@ -4,6 +4,7 @@ import EnemyManager from '../managers/EnemyManager';
 import ItemManager from '../managers/ItemManager';
 import WaveManager from '../managers/WaveManager';
 import ProjectileManager from '../managers/ProjectileManager';
+import WeaponManager from '../managers/WeaponManager';
 import InputManager from '../managers/InputManager';
 import CollisionManager from '../managers/CollisionManager';
 import StateManager from '../managers/StateManager';
@@ -36,6 +37,7 @@ export default class GameScene extends Phaser.Scene {
 		this.enemyManager = new EnemyManager(this);
 		this.itemManager = new ItemManager(this);
 		this.projectileManager = new ProjectileManager(this);
+		this.weaponManager = new WeaponManager(this);
 		this.collisionManager = new CollisionManager(this);
 		this.waveManager = new WaveManager(this);
 

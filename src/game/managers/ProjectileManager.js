@@ -9,12 +9,7 @@ export default class ProjectileManager extends BaseManager {
 		this.projectiles = null;
 		this.currentWeaponClass = BasicShot;
 
-		this.setupEventListeners();
 		this.subscribe(GAME_EVENTS.SCENE_READY, this.setupProjectiles);
-	}
-
-	setupEventListeners() {
-		this.subscribe(GAME_EVENTS.LETTER_TYPED, this.handleLetterTyped);
 	}
 
 	setupProjectiles() {
@@ -28,23 +23,8 @@ export default class ProjectileManager extends BaseManager {
 				projectile.scene = this.scene;
 			},
 		});
-	}
 
-	handleLetterTyped(data) {
-		const { source, target, damage } = data;
-		this.fireProjectile(source, target, damage);
-	}
-
-	fireProjectile(source, target, damage = 1) {
-		const projectile = this.getProjectile();
-
-		if (projectile) {
-			projectile.fire(source, target);
-			projectile.damage = damage;
-			this.emit(GAME_EVENTS.PROJECTILE_FIRED, { projectile, source, target, damage });
-			return damage;
-		}
-		return 0;
+		this.emit(GAME_EVENTS.PROJECTILES_READY);
 	}
 
 	getProjectiles() {

@@ -4,11 +4,10 @@ import { GAME_EVENTS } from '../core/GameEvents.js';
 export default class CollisionManager extends BaseManager {
 	constructor(scene) {
 		super(scene);
-		this.subscribe(GAME_EVENTS.SCENE_READY, this.setupCollisions);
+		this.subscribe(GAME_EVENTS.PROJECTILES_READY, this.setupCollisions);
 	}
 
 	setupCollisions() {
-		// Safety checks to ensure all managers and their groups exist
 		if (!this.scene.player || !this.scene.enemyManager || !this.scene.projectileManager) {
 			console.warn('CollisionManager: Required managers not ready, skipping collision setup');
 			return;
