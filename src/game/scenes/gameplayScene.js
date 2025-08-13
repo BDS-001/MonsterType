@@ -81,7 +81,5 @@ export default class GameScene extends Phaser.Scene {
 		this.player = new Player(this, centerX, centerY);
 	}
 
-	update() {
-		this.projectileManager.update();
-	}
+	update() {}
 }

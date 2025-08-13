@@ -66,14 +66,4 @@ export default class ProjectileManager extends BaseManager {
 
 		return projectile;
 	}
-
-	update() {
-		const projectiles = this.projectiles.getChildren();
-		for (let i = 0; i < projectiles.length; i++) {
-			const projectile = projectiles[i];
-			if (projectile.active) {
-				projectile.update();
-			}
-		}
-	}
 }
