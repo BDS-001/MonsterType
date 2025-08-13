@@ -9,8 +9,8 @@ export default class ProjectileManager extends BaseManager {
 		this.projectiles = null;
 		this.currentWeaponClass = BasicShot;
 
-		this.setupProjectiles();
 		this.setupEventListeners();
+		this.subscribe(GAME_EVENTS.SCENE_READY, this.setupProjectiles);
 	}
 
 	setupEventListeners() {
@@ -52,6 +52,11 @@ export default class ProjectileManager extends BaseManager {
 	}
 
 	getProjectile() {
+		if (!this.projectiles) {
+			console.warn('ProjectileManager: projectiles not initialized yet');
+			return null;
+		}
+
 		let projectile = this.projectiles.get();
 
 		if (!projectile) {

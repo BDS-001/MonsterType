@@ -49,14 +49,8 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 		this.setVisible(true);
 		this.setPosition(source.x, source.y);
 
-		const directionX = target.x - source.x;
-		const directionY = target.y - source.y;
-		const length = Math.sqrt(directionX * directionX + directionY * directionY);
-		const normalizedX = directionX / length;
-		const normalizedY = directionY / length;
-
-		this.setVelocity(normalizedX * this.speed, normalizedY * this.speed);
-		this.rotation = Math.atan2(directionY, directionX);
+		this.scene.physics.moveToObject(this, target, this.speed);
+		this.rotation = Phaser.Math.Angle.Between(source.x, source.y, target.x, target.y);
 	}
 
 	update() {
