@@ -5,7 +5,7 @@ export default class Weapon {
 		this.name = name;
 		this.description = description;
 
-		this.attackSpeed = options.attackSpeed || 1000;
+		this.cooldown = options.cooldown || 1000;
 		this.projectileCount = options.projectileCount || 1;
 		this.projectileType = options.projectileType || 'basicShot';
 		this.spread = options.spread || 0;
@@ -14,7 +14,7 @@ export default class Weapon {
 	}
 
 	canFireNow(currentTime) {
-		return currentTime - this.lastFireTime >= this.attackSpeed;
+		return currentTime - this.lastFireTime >= this.cooldown;
 	}
 
 	fire(projectileManager, source, target, currentTime) {
@@ -57,10 +57,10 @@ export default class Weapon {
 		return {
 			name: this.name,
 			description: this.description,
-			attackSpeed: this.attackSpeed,
+			cooldown: this.cooldown,
 			projectileCount: this.projectileCount,
 			projectileType: this.projectileType,
-			fireRate: Math.round(60000 / this.attackSpeed),
+			fireRate: Math.round(60000 / this.cooldown),
 		};
 	}
 }
