@@ -8,46 +8,31 @@ export default class CollisionManager extends BaseManager {
 	}
 
 	setupCollisions() {
-		if (!this.scene.player || !this.scene.enemyManager || !this.scene.projectileManager) {
-			console.warn('CollisionManager: Required managers not ready, skipping collision setup');
-			return;
-		}
+		const { physics, player, enemyManager, projectileManager, itemManager } = this.scene;
 
-		const enemies = this.scene.enemyManager.getEnemies();
-		const projectiles = this.scene.projectileManager.getProjectiles();
-
-		if (!enemies || !projectiles) {
-			console.warn('CollisionManager: Required groups not ready, skipping collision setup');
-			return;
-		}
-
-		this.scene.physics.add.overlap(
-			this.scene.player,
-			enemies,
-			this.handlePlayerEnemyCollision.bind(this),
+		physics.add.overlap(
+			player,
+			enemyManager.getEnemies(),
+			this.handlePlayerEnemyCollision,
 			null,
-			this.scene
+			this
+		);
+		physics.add.overlap(
+			enemyManager.getEnemies(),
+			projectileManager.getProjectiles(),
+			this.handleProjectileEnemyCollision,
+			null,
+			this
 		);
 
-		this.scene.physics.add.overlap(
-			enemies,
-			projectiles,
-			this.handleProjectileEnemyCollision.bind(this),
-			null,
-			this.scene
-		);
-
-		if (this.scene.itemManager) {
-			const items = this.scene.itemManager.getItems();
-			if (items) {
-				this.scene.physics.add.overlap(
-					items,
-					projectiles,
-					this.handleProjectileItemCollision.bind(this),
-					null,
-					this.scene
-				);
-			}
+		if (itemManager?.getItems()) {
+			physics.add.overlap(
+				itemManager.getItems(),
+				projectileManager.getProjectiles(),
+				this.handleProjectileItemCollision,
+				null,
+				this
+			);
 		}
 	}
 
@@ -58,30 +43,19 @@ export default class CollisionManager extends BaseManager {
 	}
 
 	handleProjectileEnemyCollision(enemy, projectile) {
-		if (!projectile.active) {
-			return;
-		}
+		if (!projectile.active || enemy.isDestroyed) return;
+		if (projectile.targetEnemyId && projectile.targetEnemyId !== enemy.id) return;
 
-		const hitSuccessful = projectile.hit(enemy);
-		if (hitSuccessful) {
-			this.emit(GAME_EVENTS.PROJECTILE_HIT, {
-				projectile,
-				enemy,
-				damage: projectile.damage,
-				points: 10,
-			});
-		}
+		if (projectile.damageType === 'projectile') enemy.takeDamage(projectile.damage);
+		enemy.hitEffect();
+		projectile.kill();
 	}
 
 	handleProjectileItemCollision(item, projectile) {
-		if (!projectile.active) {
-			return;
-		}
+		if (!projectile.active) return;
 
-		const hitSuccessful = projectile.hit(item);
-		if (hitSuccessful) {
-			this.emit(GAME_EVENTS.ITEM_COLLECTED, { item, projectile, points: 5 });
-		}
+		projectile.kill();
+		this.emit(GAME_EVENTS.ITEM_COLLECTED, { item, projectile, points: 5 });
 	}
 
 	setPlayerImmunity(immune) {

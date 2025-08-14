@@ -1,10 +1,10 @@
 import Projectile from './projectile.js';
 
-export default class BasicShot extends Projectile {
+export default class InstantShot extends Projectile {
 	constructor(scene, x, y) {
 		super(scene, x, y, 'projectile', 1);
 
-		this.speed = 3500;
-		this.damageType = 'projectile';
+		this.speed = 6000;
+		this.damageType = 'typing';
 	}
 }

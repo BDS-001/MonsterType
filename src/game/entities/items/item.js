@@ -25,7 +25,11 @@ export default class Item extends TypedEntity {
 
 	handleTypingInput(data) {
 		if (this.isDestroyed) return;
-		super.update(data.key);
+
+		const { key } = data;
+		if (this.typedIndex < this.word.length && key === this.word[this.typedIndex]) {
+			this.handleLetterAccepted();
+		}
 	}
 
 	update() {
