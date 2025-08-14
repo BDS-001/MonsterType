@@ -98,6 +98,10 @@ export default class Enemy extends TypedEntity {
 	}
 
 	hitEffect() {
+		if (this.isDestroyed || !this.scene || !this.scene.tweens) {
+			return;
+		}
+
 		this.scene.tweens.add({
 			targets: this,
 			tint: 0xff0000,
@@ -114,9 +118,9 @@ export default class Enemy extends TypedEntity {
 		this.scene.physics.moveToObject(this, this.scene.player, this.moveSpeed);
 	}
 
-	handleTypingInput(data) {
+	handleTypingInput() {
 		if (this.isDestroyed || !this.isEnemyOnScreen()) return;
-		super.update(data.key);
+		super.update();
 	}
 
 	update() {

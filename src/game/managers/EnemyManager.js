@@ -60,6 +60,21 @@ export default class EnemyManager extends BaseManager {
 		return this.enemies.getChildren().length;
 	}
 
+	findValidTargets(letter) {
+		return this.enemies.getChildren().filter((enemy) => {
+			if (enemy.isDestroyed || !enemy.isEnemyOnScreen()) return false;
+			return enemy.typedIndex < enemy.word.length && letter === enemy.word[enemy.typedIndex];
+		});
+	}
+
+	sortTargetsByDistance(targets, player) {
+		return targets.sort((a, b) => {
+			const distanceA = Phaser.Math.Distance.Between(player.x, player.y, a.x, a.y);
+			const distanceB = Phaser.Math.Distance.Between(player.x, player.y, b.x, b.y);
+			return distanceA - distanceB;
+		});
+	}
+
 	destroy() {
 		if (this.enemies) {
 			this.enemies.clear(true, true);

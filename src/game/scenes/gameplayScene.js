@@ -38,11 +38,12 @@ export default class GameScene extends Phaser.Scene {
 		this.itemManager = new ItemManager(this);
 		this.projectileManager = new ProjectileManager(this);
 		this.weaponManager = new WeaponManager(this);
-		this.collisionManager = new CollisionManager(this);
 		this.waveManager = new WaveManager(this);
 
 		this.createPlayer();
 		this.waveManager.startWaves();
+
+		this.collisionManager = new CollisionManager(this);
 		this.events.emit(GAME_EVENTS.SCENE_READY);
 	}
 

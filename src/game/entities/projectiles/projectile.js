@@ -15,13 +15,8 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 		this.speed = 3500;
 		this.damage = damage;
 		this.targetEnemyId = null;
+		this.damageType = 'projectile';
 		this.deactiveBuffer = 50;
-	}
-
-	hit(enemy) {
-		enemy.takeDamage(this.damage);
-		this.kill();
-		return true;
 	}
 
 	kill() {
@@ -35,13 +30,13 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 		this.targetEnemyId = null;
 	}
 
-	fire(source, target) {
-		this.activate(source, target);
+	fire(source, target, actualTarget = null) {
+		this.activate(source, target, actualTarget);
 		this.setMovement(source, target);
 	}
 
-	activate(source, target) {
-		this.targetEnemyId = target.id;
+	activate(source, target, actualTarget = null) {
+		this.targetEnemyId = actualTarget?.id || null;
 		this.setPosition(source.x, source.y);
 		this.setActive(true);
 		this.setVisible(true);
@@ -61,14 +56,12 @@ export default class Projectile extends Phaser.Physics.Arcade.Image {
 	}
 
 	isOutOfBounds() {
-		const bounds = this.scene.physics.world.bounds;
-		const expandedBounds = new Phaser.Geom.Rectangle(
-			bounds.x - this.deactiveBuffer,
-			bounds.y - this.deactiveBuffer,
-			bounds.width + this.deactiveBuffer * 2,
-			bounds.height + this.deactiveBuffer * 2
+		const { x, y, width, height } = this.scene.physics.world.bounds;
+		return (
+			this.x < x - this.deactiveBuffer ||
+			this.x > x + width + this.deactiveBuffer ||
+			this.y < y - this.deactiveBuffer ||
+			this.y > y + height + this.deactiveBuffer
 		);
-
-		return !Phaser.Geom.Rectangle.Contains(expandedBounds, this.x, this.y);
 	}
 }

@@ -5,34 +5,44 @@ export default class Weapon {
 		this.name = name;
 		this.description = description;
 
-		this.cooldown = options.cooldown || 1000;
-		this.projectileCount = options.projectileCount || 1;
+		this.cooldown = options.cooldown ?? 1000;
 		this.projectileType = options.projectileType || 'basicShot';
+		this.projectileDamage = options.projectileDamage || 1;
 		this.spread = options.spread || 0;
+		this.maxTargets = options.maxTargets || 1;
+		this.projectilesPerTarget = options.projectilesPerTarget || 1;
 
 		this.lastFireTime = 0;
 	}
 
 	canFireNow(currentTime) {
-		return currentTime - this.lastFireTime >= this.cooldown;
+		return this.cooldown === 0 || currentTime - this.lastFireTime >= this.cooldown;
 	}
 
-	fire(projectileManager, source, target, currentTime) {
+	fire(projectileManager, source, targets, currentTime) {
 		if (!this.canFireNow(currentTime)) return false;
 
 		this.lastFireTime = currentTime;
+		let projectilesFired = 0;
 
-		for (let i = 0; i < this.projectileCount; i++) {
-			const projectile = projectileManager.getProjectile(this.projectileType);
-			if (!projectile) continue;
+		for (const target of targets) {
+			for (let i = 0; i < this.projectilesPerTarget; i++) {
+				const projectile = projectileManager.getProjectile(this.projectileType);
+				if (!projectile) continue;
 
-			const firingTarget =
-				this.projectileCount === 1 ? target : this.calculateSpreadTarget(target, source, i);
+				projectile.damage = this.projectileDamage;
 
-			projectile.fire(source, firingTarget);
+				const firingTarget =
+					this.projectilesPerTarget === 1 ? target : this.calculateSpreadTarget(target, source, i);
+
+				const actualTarget = i === 0 ? target : null;
+
+				projectile.fire(source, firingTarget, actualTarget);
+				projectilesFired++;
+			}
 		}
 
-		return true;
+		return projectilesFired > 0;
 	}
 
 	calculateSpreadTarget(target, source, index) {
@@ -48,8 +58,8 @@ export default class Weapon {
 	}
 
 	getSpreadAngle(index) {
-		if (this.projectileCount === 1) return 0;
-		const step = this.spread / (this.projectileCount - 1);
+		if (this.projectilesPerTarget === 1) return 0;
+		const step = this.spread / (this.projectilesPerTarget - 1);
 		return index * step - this.spread / 2;
 	}
 
@@ -58,9 +68,9 @@ export default class Weapon {
 			name: this.name,
 			description: this.description,
 			cooldown: this.cooldown,
-			projectileCount: this.projectileCount,
+			projectilesPerTarget: this.projectilesPerTarget,
 			projectileType: this.projectileType,
-			fireRate: Math.round(60000 / this.cooldown),
+			fireRate: this.cooldown > 0 ? Math.round(60000 / this.cooldown) : Infinity,
 		};
 	}
 }

@@ -5,7 +5,6 @@ export const GAME_EVENTS = {
 	ENEMY_SPAWNED: 'combat:enemy_spawned',
 	ENEMY_KILLED: 'combat:enemy_killed',
 
-	LETTER_TYPED: 'typing:letter_typed',
 	TYPING_INPUT: 'typing:input',
 
 	SCORE_CHANGED: 'game:score_changed',
@@ -19,7 +18,7 @@ export const GAME_EVENTS = {
 	GAME_OVER: 'game:game_over',
 
 	WEAPON_SWITCH: 'weapon:switch',
-	WEAPON_FIRE: 'weapon:fire',
+	WEAPON_READY_TO_FIRE: 'weapon:ready_to_fire',
 	WEAPON_FIRED: 'weapon:fired',
 	WEAPON_EQUIPPED: 'weapon:equipped',
 

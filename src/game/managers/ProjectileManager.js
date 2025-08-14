@@ -1,4 +1,5 @@
 import BasicShot from '../entities/projectiles/basicShot';
+import InstantShot from '../entities/projectiles/instantShot';
 import HeavyRounds from '../entities/projectiles/heavyRounds';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
@@ -31,19 +32,29 @@ export default class ProjectileManager extends BaseManager {
 		return this.projectiles;
 	}
 
-	getProjectile() {
+	getProjectile(projectileType = 'basicShot') {
 		if (!this.projectiles) {
 			console.warn('ProjectileManager: projectiles not initialized yet');
 			return null;
 		}
 
-		let projectile = this.projectiles.get();
-
-		if (!projectile) {
-			projectile = new this.currentWeaponClass(this.scene, 0, 0);
-			this.projectiles.add(projectile);
-		}
+		const ProjectileClass = this.getProjectileClass(projectileType);
+		const projectile = new ProjectileClass(this.scene, 0, 0);
+		this.projectiles.add(projectile);
 
 		return projectile;
+	}
+
+	getProjectileClass(projectileType) {
+		switch (projectileType) {
+			case 'basicShot':
+				return BasicShot;
+			case 'instantShot':
+				return InstantShot;
+			case 'heavyRounds':
+				return HeavyRounds;
+			default:
+				return BasicShot;
+		}
 	}
 }

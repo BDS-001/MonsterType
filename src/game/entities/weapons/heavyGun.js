@@ -7,9 +7,8 @@ export default class HeavyGun extends Weapon {
 			'A powerful weapon that fires heavy rounds with high damage but slower fire rate.',
 			{
 				cooldown: 1200,
-				projectileCount: 1,
-				projectileType: 'heavyRounds',
-				spread: 0,
+				projectileType: 'instantShot',
+				projectileDamage: 2,
 			}
 		);
 	}
