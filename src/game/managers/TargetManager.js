@@ -20,7 +20,7 @@ export default class TargetManager extends BaseManager {
 				.getChildren()
 				.filter((enemy) => {
 					if (enemy.isDestroyed || !enemy.isEnemyOnScreen()) return false;
-					return enemy.typedIndex < enemy.word.length && letter === enemy.word[enemy.typedIndex];
+					return enemy.hitIndex < enemy.word.length && letter === enemy.word[enemy.hitIndex];
 				});
 			validTargets.push(...enemies);
 		}
@@ -31,7 +31,7 @@ export default class TargetManager extends BaseManager {
 				.getChildren()
 				.filter((item) => {
 					if (item.isDestroyed) return false;
-					return item.typedIndex < item.word.length && letter === item.word[item.typedIndex];
+					return item.hitIndex < item.word.length && letter === item.word[item.hitIndex];
 				});
 			validTargets.push(...items);
 		}
