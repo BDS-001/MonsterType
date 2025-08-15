@@ -20,18 +20,12 @@ export default class StateManager extends BaseManager {
 	}
 
 	setupEventListeners() {
-		this.subscribe(GAME_EVENTS.PROJECTILE_HIT, this.handleProjectileHit);
 		this.subscribe(GAME_EVENTS.ENEMY_KILLED, this.handleEnemyKilled);
 		this.subscribe(GAME_EVENTS.ITEM_COLLECTED, this.handleItemCollected);
 		this.subscribe(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit);
 		this.subscribe(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed);
 		this.subscribe(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged);
 		this.subscribe(GAME_EVENTS.WAVE_STARTED, this.handleWaveStarted);
-	}
-
-	handleProjectileHit(data) {
-		const { points } = data;
-		this.updateScore(points);
 	}
 
 	handleEnemyKilled(data) {

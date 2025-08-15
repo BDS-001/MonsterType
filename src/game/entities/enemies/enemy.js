@@ -1,7 +1,6 @@
 import TypedEntity from '../typedEntity';
 import wordBank from '../../data/wordbank';
 import { gameSettings } from '../../core/constants';
-import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 function calculateRandomPosition(camera) {
 	const width = camera.width;
@@ -61,8 +60,6 @@ export default class Enemy extends TypedEntity {
 
 		this.setScale(gameSettings.SPRITE_SCALE);
 		this.scene.physics.add.existing(this);
-
-		this.scene.events.on(GAME_EVENTS.TYPING_INPUT, this.handleTypingInput, this);
 	}
 
 	isEnemyOnScreen() {
@@ -118,11 +115,6 @@ export default class Enemy extends TypedEntity {
 		this.scene.physics.moveToObject(this, this.scene.player, this.moveSpeed);
 	}
 
-	handleTypingInput() {
-		if (this.isDestroyed || !this.isEnemyOnScreen()) return;
-		super.update();
-	}
-
 	update() {
 		if (this.isDestroyed) return;
 
@@ -134,13 +126,9 @@ export default class Enemy extends TypedEntity {
 		if (this.healthText) {
 			this.healthText.setPosition(this.x, this.y - this.displayHeight / 2 - 10);
 		}
-		if (this.debugText) {
-			this.debugText.setPosition(this.x, this.y + 40);
-		}
 	}
 
 	destroy(fromScene) {
-		this.scene.events.off(GAME_EVENTS.TYPING_INPUT, this.handleTypingInput, this);
 		super.destroy(fromScene);
 	}
 }
