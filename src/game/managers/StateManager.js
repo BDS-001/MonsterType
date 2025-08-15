@@ -10,9 +10,9 @@ export default class StateManager extends BaseManager {
 				maxHealth: 100,
 				health: 100,
 				immunity: false,
+				immunityLength: 1000,
 			},
 			score: 0,
-			wave: 1,
 			gameOver: false,
 		};
 
@@ -22,10 +22,9 @@ export default class StateManager extends BaseManager {
 	setupEventListeners() {
 		this.subscribe(GAME_EVENTS.ENEMY_KILLED, this.handleEnemyKilled);
 		this.subscribe(GAME_EVENTS.ITEM_COLLECTED, this.handleItemCollected);
-		this.subscribe(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit);
-		this.subscribe(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed);
+		this.subscribe(GAME_EVENTS.PLAYER_HIT, this.playerHit);
+		this.subscribe(GAME_EVENTS.PLAYER_HEALED, this.playerHeal);
 		this.subscribe(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged);
-		this.subscribe(GAME_EVENTS.WAVE_STARTED, this.handleWaveStarted);
 	}
 
 	handleEnemyKilled(data) {
@@ -41,25 +40,6 @@ export default class StateManager extends BaseManager {
 		}
 	}
 
-	handlePlayerHit(data) {
-		const { damage } = data;
-		this.playerHit(damage);
-	}
-
-	handlePlayerHealed(data) {
-		const { amount } = data;
-		this.state.player.health = Math.min(
-			this.state.player.maxHealth,
-			this.state.player.health + amount
-		);
-		this.emitGame(GAME_EVENTS.PLAYER_HEALED, data);
-	}
-
-	handleWaveStarted(data) {
-		const { waveNumber } = data;
-		this.updateWave(waveNumber);
-	}
-
 	handleHealthChanged(data) {
 		if (data.maxHealthIncrease) {
 			this.state.player.maxHealth += data.maxHealthIncrease;
@@ -73,44 +53,45 @@ export default class StateManager extends BaseManager {
 		this.emitGame(GAME_EVENTS.SCORE_CHANGED, { amount: points, newScore: this.state.score });
 	}
 
-	playerHit(damage) {
+	playerHit(data) {
+		const { damage, player } = data;
 		if (this.state.player.immunity) return;
 
 		this.state.player.health = Math.max(0, this.state.player.health - damage);
 		this.state.player.immunity = true;
 
-		this.scene.time.delayedCall(1000, () => {
+		this.scene.time.delayedCall(this.state.player.immunityLength, () => {
 			this.state.player.immunity = false;
 		});
 
+		if (player) {
+			player.takeDamage(damage, this.state.player.immunityLength);
+		}
+
 		this.emit(GAME_EVENTS.PLAYER_HIT, { damage });
-		this.emitGame(GAME_EVENTS.PLAYER_HIT, { damage });
+		this.emitGame(GAME_EVENTS.PLAYER_HIT, {
+			damage,
+			immunityLength: this.state.player.immunityLength,
+		});
 
 		if (this.state.player.health <= 0) {
 			this.handleGameOver();
 		}
 	}
 
-	playerHeal(healAmount) {
+	playerHeal(data) {
+		const { amount } = data;
 		this.state.player.health = Math.min(
 			this.state.player.maxHealth,
-			this.state.player.health + healAmount
+			this.state.player.health + amount
 		);
-		this.emit(GAME_EVENTS.PLAYER_HEALED, { amount: healAmount });
-		this.emitGame(GAME_EVENTS.PLAYER_HEALED, { amount: healAmount });
+		this.emit(GAME_EVENTS.PLAYER_HEALED, { amount });
+		this.emitGame(GAME_EVENTS.PLAYER_HEALED, { amount });
 	}
 
 	handleGameOver() {
 		this.state.gameOver = true;
 		this.emit(GAME_EVENTS.GAME_OVER);
 		this.emitGame(GAME_EVENTS.GAME_OVER);
-	}
-
-	updateWave(waveNumber) {
-		this.state.wave = waveNumber;
-	}
-
-	getPlayerImmunity() {
-		return this.state.player.immunity;
 	}
 }
