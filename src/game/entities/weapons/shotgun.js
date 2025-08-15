@@ -8,6 +8,7 @@ export default class Shotgun extends Weapon {
 			cooldown: 999999, // Effectively disabled
 			damage: 1,
 			maxTargets: 1,
+			projectileSprite: 'basicShot',
 		});
 	}
 }

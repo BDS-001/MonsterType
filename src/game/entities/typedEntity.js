@@ -8,7 +8,6 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		this.id = id;
 		this.word = word;
 		this.hitIndex = 0;
-		this.typedIndex = 0;
 		this.isDestroyed = false;
 		this.isDying = false;
 
@@ -38,7 +37,6 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		if (this.isDestroyed) return;
 
 		this.hitIndex = Math.min(this.hitIndex + damage, this.word.length);
-		this.typedIndex = this.hitIndex; // Keep typing position in sync
 		this.hitEffect();
 		this.updateDisplay();
 	}

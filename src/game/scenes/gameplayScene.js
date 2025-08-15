@@ -8,6 +8,7 @@ import WeaponManager from '../managers/WeaponManager';
 import InputManager from '../managers/InputManager';
 import CollisionManager from '../managers/CollisionManager';
 import StateManager from '../managers/StateManager';
+import AttackAnimationManager from '../managers/AttackAnimationManager';
 import { GAME_EVENTS } from '../core/GameEvents';
 import { gameSettings } from '../core/constants';
 
@@ -25,6 +26,7 @@ export default class GameScene extends Phaser.Scene {
 		this.load.image('ghost', 'assets/ghost.png');
 		this.load.image('mummy', 'assets/mummy.png');
 		this.load.image('grass', 'assets/grass.png');
+		this.load.image('basicShot', 'assets/basicShot.png');
 	}
 
 	create() {
@@ -37,6 +39,7 @@ export default class GameScene extends Phaser.Scene {
 		this.itemManager = new ItemManager(this);
 		this.targetManager = new TargetManager(this);
 		this.weaponManager = new WeaponManager(this);
+		this.attackAnimationManager = new AttackAnimationManager(this);
 		this.waveManager = new WaveManager(this);
 
 		this.createPlayer();

@@ -5,8 +5,9 @@ export default class Weapon {
 		this.cooldown = options.cooldown ?? 1000;
 		this.damage = options.damage || 1;
 		this.maxTargets = options.maxTargets || 1;
+		this.projectileSprite = options.projectileSprite || null;
 		this.lastFireTime = 0;
-		this.scene = null; // Will be set when equipped
+		this.scene = null;
 	}
 
 	setScene(scene) {
@@ -42,16 +43,10 @@ export default class Weapon {
 	}
 
 	performFiring(data) {
-		const { targets, timestamp } = data;
-		targets.forEach((target) => target.takeDamage(this.damage));
-
-		if (this.scene) {
-			this.scene.events.emit('weapon:fired', {
-				weapon: this,
-				source: this.scene.player,
-				targets,
-				timestamp,
-			});
-		}
+		const { targets } = data;
+		targets.forEach((target) => {
+			target.takeDamage(this.damage);
+			this.scene.events.emit('weapon:fired', { target, projectileSprite: this.projectileSprite });
+		});
 	}
 }
