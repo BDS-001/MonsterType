@@ -12,13 +12,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		this.setScale(gameSettings.SPRITE_SCALE);
 	}
 
-	takeDamage(amount) {
+	takeDamage(amount, immunityLength) {
+		const flashDuration = 100;
 		this.scene.tweens.add({
 			targets: this,
-			tint: 0xff0000,
-			duration: 50,
+			alpha: 0.3,
+			duration: flashDuration,
 			yoyo: true,
-			onComplete: () => this.clearTint(),
+			repeat: Math.max(Math.floor(immunityLength / (flashDuration * 2)) - 1, 0),
+			onComplete: () => this.setAlpha(1),
 		});
 
 		this.scene.events.emit(GAME_EVENTS.PLAYER_HIT, { damage: amount });
