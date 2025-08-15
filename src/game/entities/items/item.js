@@ -1,5 +1,6 @@
 import TypedEntity from '../typedEntity';
 import { ITEM_DATA } from '../../core/itemData.js';
+import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class Item extends TypedEntity {
 	constructor(scene, x, y, itemType, itemId) {
@@ -23,6 +24,10 @@ export default class Item extends TypedEntity {
 	update() {
 		if (this.isDestroyed) return;
 		this.updateTextPositions();
+	}
+
+	onKill() {
+		this.scene.events.emit(GAME_EVENTS.ITEM_DESTROYED, { item: this });
 	}
 
 	destroy(fromScene) {

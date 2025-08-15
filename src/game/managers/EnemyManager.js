@@ -20,6 +20,7 @@ export default class EnemyManager extends BaseManager {
 	}
 
 	spawnEnemyType(EnemyClass, count = 1) {
+		console.log(`EnemyManager: spawning ${count} ${EnemyClass.name}s`);
 		for (let i = 0; i < count; i++) {
 			const enemyId = `enemy${this.currentEnemyId}`;
 			const enemy = new EnemyClass(this.scene, enemyId);
@@ -44,8 +45,11 @@ export default class EnemyManager extends BaseManager {
 	}
 
 	destroy() {
+		console.log('EnemyManager.destroy() called');
 		if (this.enemies) {
 			this.enemies.clear(true, true);
+			this.enemies = null;
 		}
+		super.destroy();
 	}
 }

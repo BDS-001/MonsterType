@@ -22,5 +22,6 @@ export const GAME_EVENTS = {
 
 	ITEM_SPAWNED: 'item:item_spawn',
 	ITEM_COLLECTED: 'item:collected',
+	ITEM_DESTROYED: 'item:destroyed',
 	SCENE_READY: 'system:scene_ready',
 };

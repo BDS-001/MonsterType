@@ -17,7 +17,10 @@ export default class ItemManager extends BaseManager {
 	}
 
 	setupEventListeners() {
-		this.subscribe(GAME_EVENTS.ITEM_SPAWNED, this.spawnItem);
+		this.subscribe(GAME_EVENTS.ITEM_SPAWNED, (data) => {
+			console.log('ItemManager received ITEM_SPAWNED event:', data);
+			this.spawnItem(data);
+		});
 	}
 
 	setupItems() {
@@ -35,7 +38,11 @@ export default class ItemManager extends BaseManager {
 	}
 
 	spawnItem({ x, y, itemType }) {
-		if (!this.items || !this.scene) return null;
+		console.log('ItemManager.spawnItem called:', { x, y, itemType });
+		if (!this.items || !this.scene) {
+			console.error('ItemManager.spawnItem: invalid state');
+			return null;
+		}
 
 		const itemId = `item${this.currentItemId}`;
 		let item;
@@ -59,6 +66,7 @@ export default class ItemManager extends BaseManager {
 
 		this.currentItemId++;
 		this.items.add(item);
+		console.log('ItemManager: item added successfully');
 		return item;
 	}
 
@@ -71,6 +79,7 @@ export default class ItemManager extends BaseManager {
 	}
 
 	destroy() {
+		console.log('ItemManager.destroy called');
 		this.unsubscribeAll();
 		if (this.items) {
 			this.items.clear(true, true);

@@ -30,6 +30,8 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	create() {
+		console.log('GameScene.create() - initializing scene');
+
 		this.setupBackground();
 		this.setupEventListeners();
 
@@ -87,4 +89,20 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	update() {}
+
+	destroy() {
+		console.log('GameScene.destroy() - cleaning up managers');
+
+		this.inputManager?.destroy?.();
+		this.stateManager?.destroy?.();
+		this.enemyManager?.destroy?.();
+		this.itemManager?.destroy?.();
+		this.targetManager?.destroy?.();
+		this.weaponManager?.destroy?.();
+		this.attackAnimationManager?.destroy?.();
+		this.waveManager?.destroy?.();
+		this.collisionManager?.destroy?.();
+
+		super.destroy();
+	}
 }

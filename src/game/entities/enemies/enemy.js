@@ -128,6 +128,10 @@ export default class Enemy extends TypedEntity {
 		}
 	}
 
+	onKill() {
+		this.scene.events.emit('combat:enemy_killed', { enemy: this, points: 10 });
+	}
+
 	destroy(fromScene) {
 		super.destroy(fromScene);
 	}
