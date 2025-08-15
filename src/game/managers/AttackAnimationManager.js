@@ -15,9 +15,9 @@ export default class AttackAnimationManager extends BaseManager {
 		const angle = Phaser.Math.Angle.Between(player.x, player.y, target.x, target.y);
 		sprite.setRotation(angle);
 
-		const speed = 5000;
+		const speed = 5;
 		const distance = Phaser.Math.Distance.Between(player.x, player.y, target.x, target.y);
-		const duration = (distance / speed) * 1000;
+		const duration = distance / speed;
 
 		this.scene.tweens.add({
 			targets: sprite,
