@@ -17,7 +17,6 @@ export default class ItemManager extends BaseManager {
 	}
 
 	setupEventListeners() {
-		this.subscribe(GAME_EVENTS.KEY_PRESSED, this.handleKeyPressed);
 		this.subscribe(GAME_EVENTS.ITEM_SPAWNED, this.spawnItem);
 	}
 
@@ -25,10 +24,6 @@ export default class ItemManager extends BaseManager {
 		this.items = this.scene.add.group({
 			runChildUpdate: true,
 		});
-	}
-
-	handleKeyPressed(key) {
-		this.emit(GAME_EVENTS.TYPING_INPUT, { key });
 	}
 
 	spawnItemsFromCounts({ healthUp }) {
@@ -40,6 +35,8 @@ export default class ItemManager extends BaseManager {
 	}
 
 	spawnItem({ x, y, itemType }) {
+		if (!this.items || !this.scene) return null;
+
 		const itemId = `item${this.currentItemId}`;
 		let item;
 
@@ -74,8 +71,10 @@ export default class ItemManager extends BaseManager {
 	}
 
 	destroy() {
+		this.unsubscribeAll();
 		if (this.items) {
 			this.items.clear(true, true);
+			this.items = null;
 		}
 	}
 }

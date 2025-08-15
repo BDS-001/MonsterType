@@ -2,12 +2,12 @@ import Weapon from './weapon.js';
 
 export default class Shotgun extends Weapon {
 	constructor() {
-		super('Shotgun', 'Fires multiple basic projectiles in a spread pattern.', {
-			cooldown: 500,
-			projectileType: 'basicShot',
-			spread: Math.PI / 6,
+		// TODO: Implement spread-based area damage
+		// Should use raycast to find enemies in cone pattern and apply damage
+		super('Shotgun', 'DISABLED - Needs spread implementation', {
+			cooldown: 999999, // Effectively disabled
+			damage: 1,
 			maxTargets: 1,
-			projectilesPerTarget: 3,
 		});
 	}
 }
