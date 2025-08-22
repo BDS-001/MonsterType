@@ -23,7 +23,6 @@ export default class StateManager extends BaseManager {
 		this.subscribe(GAME_EVENTS.ENEMY_KILLED, this.handleEnemyKilled);
 		this.subscribe(GAME_EVENTS.ITEM_COLLECTED, this.handleItemCollected);
 		this.subscribe(GAME_EVENTS.PLAYER_HIT, this.playerHit);
-		this.subscribe(GAME_EVENTS.PLAYER_HEALED, this.playerHeal);
 		this.subscribe(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged);
 	}
 
@@ -36,7 +35,7 @@ export default class StateManager extends BaseManager {
 		const { points, item } = data;
 		this.updateScore(points);
 		if (item.type === 'health') {
-			this.playerHeal(item.healAmount || 20);
+			this.playerHeal({ amount: item.healAmount || 20 });
 		}
 	}
 

@@ -15,12 +15,14 @@ export class HudScene extends Phaser.Scene {
 		// Game state tracking
 		this.currentScore = 0;
 		this.currentWave = 1;
-		this.currentHealth = 100;
-		this.maxHealth = 100;
 	}
 	create() {
+		this.currentHealth = 100;
+		this.maxHealth = 100;
+
 		this.setupUI();
 		this.setupEventListeners();
+
 		this.healthBar = new HealthBar(
 			this,
 			85,
