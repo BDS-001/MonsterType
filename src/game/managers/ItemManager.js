@@ -9,10 +9,8 @@ import { GAME_EVENTS } from '../core/GameEvents.js';
 export default class ItemManager extends BaseManager {
 	constructor(scene) {
 		super(scene);
-		this.items = null;
+		this.items = scene.add.group({ runChildUpdate: true });
 		this.currentItemId = 0;
-
-		this.setupItems();
 		this.setupEventListeners();
 	}
 
@@ -20,12 +18,6 @@ export default class ItemManager extends BaseManager {
 		this.subscribe(GAME_EVENTS.ITEM_SPAWNED, (data) => {
 			console.log('ItemManager received ITEM_SPAWNED event:', data);
 			this.spawnItem(data);
-		});
-	}
-
-	setupItems() {
-		this.items = this.scene.add.group({
-			runChildUpdate: true,
 		});
 	}
 
@@ -40,7 +32,15 @@ export default class ItemManager extends BaseManager {
 	spawnItem({ x, y, itemType }) {
 		console.log('ItemManager.spawnItem called:', { x, y, itemType });
 		if (!this.items || !this.scene) {
-			console.error('ItemManager.spawnItem: invalid state');
+			console.error('ItemManager.spawnItem: invalid state', {
+				items: this.items,
+				scene: this.scene,
+			});
+			return null;
+		}
+
+		if (!this.items.add) {
+			console.error('ItemManager.spawnItem: items group missing add method', this.items);
 			return null;
 		}
 
