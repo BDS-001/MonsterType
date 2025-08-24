@@ -1,5 +1,5 @@
 /**
- * KeyStrike Game Entry Point
+ * MonsterType Game Entry Point
  *
  * A typing-based action game built with Phaser.js where players type words
  * to eliminate enemies and survive waves of attacks.
