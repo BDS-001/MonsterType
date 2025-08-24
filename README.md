@@ -1,10 +1,10 @@
-# KeyStrike
+# MonsterType
 
 A typing-based survival game where your keyboard skills determine your fate.
 
 ## About
 
-KeyStrike is currently in early development. It starts as a Vite template but will evolve into an action-packed typing game where players must type quickly and accurately to survive waves of enemies.
+MonsterType is currently in early development. It starts as a Vite template but will evolve into an action-packed typing game where players must type quickly and accurately to survive waves of enemies.
 
 ## Current Status
 
