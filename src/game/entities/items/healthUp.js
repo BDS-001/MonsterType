@@ -3,7 +3,7 @@ import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class HealthUp extends Item {
 	constructor(scene, x, y, itemId) {
-		super(scene, x, y, 'HEALTH_UP', itemId);
+		super(scene, x, y, 'HEALTH_UP', itemId, 'healthUp');
 		this.healthIncreaseValue = this.baseValue;
 	}
 

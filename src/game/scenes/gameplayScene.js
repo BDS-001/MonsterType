@@ -21,12 +21,17 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	preload() {
-		this.load.image('player', 'assets/player.png');
-		this.load.image('zombie', 'assets/zombie.png');
-		this.load.image('ghost', 'assets/ghost.png');
-		this.load.image('mummy', 'assets/mummy.png');
-		this.load.image('grass', 'assets/grass.png');
-		this.load.image('basicShot', 'assets/basicShot.png');
+		this.load.image('player', 'assets/players/player.png');
+		this.load.image('zombie', 'assets/enemies/zombie.png');
+		this.load.image('ghost', 'assets/enemies/ghost.png');
+		this.load.image('mummy', 'assets/enemies/mummy.png');
+		this.load.image('grass', 'assets/environment/grass.png');
+		this.load.image('basicShot', 'assets/weapons/basicShot.png');
+		
+		// Load item sprites
+		this.load.image('bomb', 'assets/items/bomb.png');
+		this.load.image('medkit', 'assets/items/medkit.png');
+		this.load.image('healthUp', 'assets/items/healthUp.png');
 	}
 
 	create() {
