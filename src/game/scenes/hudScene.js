@@ -15,22 +15,26 @@ export class HudScene extends Phaser.Scene {
 		// Game state tracking
 		this.currentScore = 0;
 		this.currentWave = 1;
+
+		// UI Constants
+		this.HEALTH_BAR_X = 85;
+		this.HEALTH_BAR_Y_OFFSET = 50;
+		this.HEALTH_TEXT_Y_OFFSET = 80;
+		this.INITIAL_HEALTH = 100;
 	}
 	create() {
-		this.currentHealth = 100;
-		this.maxHealth = 100;
-
 		this.setupUI();
 		this.setupEventListeners();
 
 		this.healthBar = new HealthBar(
 			this,
-			85,
-			this.game.config.height - 50,
-			this.currentHealth,
-			this.maxHealth
+			this.HEALTH_BAR_X,
+			this.game.config.height - this.HEALTH_BAR_Y_OFFSET,
+			this.INITIAL_HEALTH,
+			this.INITIAL_HEALTH
 		);
 		this.fpsDisplay = new fpsCounter(this);
+		this.updateHealthText();
 	}
 
 	setupUI() {
@@ -61,12 +65,16 @@ export class HudScene extends Phaser.Scene {
 		this.waveText.setOrigin(0.5, 0);
 
 		this.healthText = this.add.text(
-			20,
-			this.game.config.height - 80,
-			`Health: ${this.currentHealth}`,
+			this.HEALTH_BAR_X,
+			this.game.config.height - this.HEALTH_TEXT_Y_OFFSET,
+			`${this.INITIAL_HEALTH}/${this.INITIAL_HEALTH}`,
 			{
-				...textStyle,
-				fontSize: '18px',
+				fontFamily: 'Arial, sans-serif',
+				fontSize: '20px',
+				fill: '#ffffff',
+				stroke: '#000000',
+				strokeThickness: 2,
+				fontStyle: 'bold',
 			}
 		);
 		this.healthText.setDepth(1000);
@@ -95,26 +103,58 @@ export class HudScene extends Phaser.Scene {
 	}
 
 	handlePlayerHit(data) {
-		this.currentHealth -= data.damage;
-		if (this.currentHealth < 0) this.currentHealth = 0;
-		this.healthText.setText(`Health: ${this.currentHealth}`);
 		this.healthBar.decrease(data.damage);
+		this.updateHealthText();
 	}
 
 	handlePlayerHealed(data) {
-		this.currentHealth += data.amount;
-		if (this.currentHealth > this.maxHealth) this.currentHealth = this.maxHealth;
-		this.healthText.setText(`Health: ${this.currentHealth}`);
 		this.healthBar.heal(data.amount);
+		this.updateHealthText();
+		this.showHealNumber(data.amount);
 	}
 
 	handleHealthChanged(data) {
 		if (data.maxHealthIncrease) {
-			this.maxHealth += data.maxHealthIncrease;
-			this.currentHealth += data.healthIncrease;
-			this.healthText.setText(`Health: ${this.currentHealth}`);
 			this.healthBar.increaseMax(data.maxHealthIncrease, data.healthIncrease);
+			this.updateHealthText();
+			this.showHealNumber(data.healthIncrease);
 		}
+	}
+
+	showHealNumber(amount) {
+		const healText = this.add.text(
+			this.healthBar.x + this.healthBar.width / 2,
+			this.healthBar.y - 10,
+			`+${amount}`,
+			{
+				fontSize: '20px',
+				fill: '#4CAF50',
+				stroke: '#000000',
+				strokeThickness: 2,
+				fontStyle: 'bold',
+			}
+		);
+
+		healText.setOrigin(0.5, 1);
+		healText.setDepth(2000);
+
+		this.tweens.add({
+			targets: healText,
+			y: healText.y - 40,
+			alpha: 0,
+			scale: 1.2,
+			duration: 1200,
+			ease: 'Power2',
+			onComplete: () => {
+				healText.destroy();
+			},
+		});
+	}
+
+	updateHealthText() {
+		const currentHealth = Math.floor(this.healthBar.value);
+		const maxHealth = Math.floor(this.healthBar.maxValue);
+		this.healthText.setText(`${currentHealth}/${maxHealth}`);
 	}
 
 	destroy() {
