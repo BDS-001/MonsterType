@@ -10,7 +10,7 @@ export default class Item extends TypedEntity {
 		}
 
 		super(scene, x, y, spriteKey, itemData.word, itemId);
-		
+
 		this.setScale(2);
 
 		this.itemType = itemType;
