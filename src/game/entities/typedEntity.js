@@ -55,8 +55,6 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	markForDestruction() {
 		if (this.isDying) return;
 
-		console.log('TypedEntity.markForDestruction called:', { id: this.id });
-
 		this.isDying = true;
 		this.onKill();
 		this.scene.time.delayedCall(0, () => this.destroy());
