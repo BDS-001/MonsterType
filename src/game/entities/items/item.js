@@ -3,13 +3,15 @@ import { ITEM_DATA } from '../../core/itemData.js';
 import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class Item extends TypedEntity {
-	constructor(scene, x, y, itemType, itemId) {
+	constructor(scene, x, y, itemType, itemId, spriteKey = 'item-sprite') {
 		const itemData = ITEM_DATA[itemType];
 		if (!itemData) {
 			throw new Error(`Item data not found for type: ${itemType}`);
 		}
 
-		super(scene, x, y, 'item-sprite', itemData.word, itemId);
+		super(scene, x, y, spriteKey, itemData.word, itemId);
+		
+		this.setScale(2);
 
 		this.itemType = itemType;
 		this.name = itemData.name;

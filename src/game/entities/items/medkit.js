@@ -2,7 +2,7 @@ import Item from './item.js';
 
 export default class Medkit extends Item {
 	constructor(scene, x, y, itemId) {
-		super(scene, x, y, 'MEDKIT', itemId);
+		super(scene, x, y, 'MEDKIT', itemId, 'medkit');
 		this.healAmount = this.baseValue;
 	}
 
