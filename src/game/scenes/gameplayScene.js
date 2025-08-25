@@ -27,7 +27,7 @@ export default class GameScene extends Phaser.Scene {
 		this.load.image('mummy', 'assets/enemies/mummy.png');
 		this.load.image('grass', 'assets/environment/grass.png');
 		this.load.image('basicShot', 'assets/weapons/basicShot.png');
-		
+
 		// Load item sprites
 		this.load.image('bomb', 'assets/items/bomb.png');
 		this.load.image('medkit', 'assets/items/medkit.png');
