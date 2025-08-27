@@ -12,6 +12,7 @@ export default class AttackAnimationManager extends BaseManager {
 		const player = this.scene.player;
 
 		const sprite = this.scene.add.sprite(player.x, player.y, projectileSprite);
+		sprite.setScale(2);
 		const angle = Phaser.Math.Angle.Between(player.x, player.y, target.x, target.y);
 		sprite.setRotation(angle);
 
