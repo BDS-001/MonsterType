@@ -37,9 +37,14 @@ export default class WaveManager extends BaseManager {
 	}
 
 	calculateItemCounts(wave) {
-		let healthUp = wave % 10 === 0 ? 1 : 0;
+		let healthUpCount = wave % 10 === 0 ? 1 : 0;
+		let bombCount = 1;
 
-		return { healthUp };
+		const itemCounts = {};
+		if (healthUpCount > 0) itemCounts['HEALTH_UP'] = healthUpCount;
+		if (bombCount > 0) itemCounts['BOMB'] = bombCount;
+
+		return itemCounts;
 	}
 
 	startWave(waveNumber) {
