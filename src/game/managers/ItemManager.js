@@ -21,12 +21,14 @@ export default class ItemManager extends BaseManager {
 		});
 	}
 
-	spawnItemsFromCounts({ healthUp }) {
-		for (let i = 0; i < healthUp; i++) {
-			const x = Math.random() * this.scene.game.config.width;
-			const y = Math.random() * this.scene.game.config.height;
-			this.spawnItem({ x, y, itemType: 'HEALTH_UP' });
-		}
+	spawnItemsFromCounts(itemCounts) {
+		Object.entries(itemCounts).forEach(([itemType, count]) => {
+			for (let i = 0; i < count; i++) {
+				const x = Math.random() * this.scene.game.config.width;
+				const y = Math.random() * this.scene.game.config.height;
+				this.spawnItem({ x, y, itemType });
+			}
+		});
 	}
 
 	spawnItem({ x, y, itemType }) {
