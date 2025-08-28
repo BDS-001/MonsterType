@@ -13,6 +13,7 @@ export default class Item extends TypedEntity {
 
 		this.setScale(2);
 
+		this.entityType = 'item';
 		this.itemType = itemType;
 		this.name = itemData.name;
 		this.type = itemData.type;

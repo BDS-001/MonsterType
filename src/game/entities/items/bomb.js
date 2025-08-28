@@ -5,13 +5,43 @@ export default class Bomb extends Item {
 		super(scene, x, y, 'BOMB', itemId, 'bomb');
 		this.damage = this.baseValue;
 		this.radius = this.config.radius;
+		this.validTargets = ['item', 'enemy'];
 	}
 
 	onKill() {
+		this.createBlastEffect();
+		this.damageTargetsInRadius();
+	}
+
+	createBlastEffect() {
+		const blastCircle = this.scene.add.graphics();
+		blastCircle.setPosition(this.x, this.y);
+		blastCircle.lineStyle(3, 0xff0000, 0.8);
+		blastCircle.fillStyle(0xff0000, 0.3);
+		blastCircle.fillCircle(0, 0, this.radius);
+		blastCircle.strokeCircle(0, 0, this.radius);
+
+		this.scene.tweens.add({
+			targets: blastCircle,
+			alpha: 0,
+			scaleX: 1.5,
+			scaleY: 1.5,
+			duration: 300,
+			ease: 'Power2',
+			onComplete: () => blastCircle.destroy(),
+		});
+	}
+
+	damageTargetsInRadius() {
 		const bodies = this.scene.physics.overlapCirc(this.x, this.y, this.radius, true, false);
 		console.log(
 			`Bomb exploded at (${this.x}, ${this.y}) with radius ${this.radius}, found ${bodies.length} bodies:`,
 			bodies
 		);
+
+		const validTargets = bodies.filter((body) => this.validTargets.includes(body?.entityType));
+		validTargets.forEach((target) => {
+			target.takeDamage(this.damage);
+		});
 	}
 }
