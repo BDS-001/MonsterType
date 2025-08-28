@@ -5,8 +5,8 @@ export const ITEM_DATA = {
 		word: 'explode',
 		type: 'consumable',
 		rarity: 'common',
-		baseValue: 3,
-		radius: 100,
+		baseValue: 2,
+		radius: 200,
 	},
 	HEAVYROUNDS_PICKUP: {
 		id: 'HEAVYROUNDS_PICKUP',
