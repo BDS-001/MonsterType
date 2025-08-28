@@ -33,10 +33,12 @@ export default class ItemManager extends BaseManager {
 
 	spawnItem({ x, y, itemType }) {
 		console.log('ItemManager.spawnItem called:', { x, y, itemType });
-		if (!this.items || !this.scene) {
+		if (!this.items || !this.scene || !this.scene.add || !this.scene.add.existing) {
 			console.error('ItemManager.spawnItem: invalid state', {
 				items: this.items,
 				scene: this.scene,
+				sceneAdd: this.scene?.add,
+				sceneAddExisting: this.scene?.add?.existing,
 			});
 			return null;
 		}
