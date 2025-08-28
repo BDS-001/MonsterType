@@ -52,6 +52,7 @@ export default class Enemy extends TypedEntity {
 
 		if (this.x > scene.player.x) this.flipX = true;
 
+		this.entityType = 'enemy';
 		this.moveSpeed = enemyOptions.moveSpeed;
 		this.knockback = enemyOptions.knockback;
 		this.damage = enemyOptions.damage;
