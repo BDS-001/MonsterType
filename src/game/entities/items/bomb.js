@@ -24,8 +24,6 @@ export default class Bomb extends Item {
 		this.scene.tweens.add({
 			targets: blastCircle,
 			alpha: 0,
-			scaleX: 1.5,
-			scaleY: 1.5,
 			duration: 300,
 			ease: 'Power2',
 			onComplete: () => blastCircle.destroy(),
@@ -34,13 +32,11 @@ export default class Bomb extends Item {
 
 	damageTargetsInRadius() {
 		const bodies = this.scene.physics.overlapCirc(this.x, this.y, this.radius, true, false);
-		console.log(
-			`Bomb exploded at (${this.x}, ${this.y}) with radius ${this.radius}, found ${bodies.length} bodies:`,
-			bodies
+		const validTargets = bodies.filter((body) =>
+			this.validTargets.includes(body?.gameObject?.entityType)
 		);
-
-		const validTargets = bodies.filter((body) => this.validTargets.includes(body?.entityType));
-		validTargets.forEach((target) => {
+		validTargets.forEach((body) => {
+			const target = body.gameObject;
 			target.takeDamage(this.damage);
 		});
 	}
