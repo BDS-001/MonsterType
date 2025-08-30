@@ -10,7 +10,7 @@ export default class Shield extends Item {
 	onKill() {
 		this.scene.stateManager.applyShield({
 			amount: this.shieldAmount,
-			duration: this.duration
+			duration: this.duration,
 		});
 	}
 }
