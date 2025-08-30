@@ -31,4 +31,13 @@ export const ITEM_DATA = {
 		rarity: 'rare',
 		baseValue: 10,
 	},
+	SHIELD: {
+		id: 'SHIELD',
+		name: 'Shield',
+		word: 'protect',
+		type: 'consumable',
+		rarity: 'uncommon',
+		baseValue: 5,
+		duration: 10000,
+	},
 };
