@@ -45,8 +45,12 @@ export default class Weapon {
 	performFiring(data) {
 		const { targets } = data;
 		targets.forEach((target) => {
-			target.takeDamage(this.damage);
+			this.shotEffect(target, data);
 			this.scene.events.emit('weapon:fired', { target, projectileSprite: this.projectileSprite });
 		});
+	}
+
+	shotEffect(target, data) {
+		target.takeDamage(this.damage);
 	}
 }
