@@ -17,7 +17,7 @@ export default class WeaponManager extends BaseManager {
 		]);
 
 		this.setupEventListeners();
-		this.equipWeapon('minigun');
+		this.equipWeapon('shotgun');
 	}
 
 	setupEventListeners() {
