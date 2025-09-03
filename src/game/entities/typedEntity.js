@@ -16,8 +16,8 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 
 		this.healthText = scene.add
 			.text(this.x, this.y - 30, this.word, {
-				fontFamily: 'Arial',
-				fontSize: 28,
+				fontFamily: '"Press Start 2P", monospace',
+				fontSize: '28px',
 				color: '#ffffff',
 			})
 			.setOrigin(0.5);

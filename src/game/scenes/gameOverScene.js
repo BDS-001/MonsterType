@@ -19,6 +19,7 @@ export class GameOver extends Phaser.Scene {
 
 		this.add
 			.text(this.game.config.width / 2, this.game.config.height / 2 - 110, 'GAME OVER', {
+				fontFamily: '"Press Start 2P", monospace',
 				fontSize: '48px',
 				color: '#ff4444',
 				fontStyle: 'bold',
@@ -44,6 +45,9 @@ export class GameOver extends Phaser.Scene {
 		playAgainButton.on('pointerout', () => {
 			playAgainButton.clearTint();
 		});
+
+		// Improve pixel text crispness
+		this.cameras.main.roundPixels = true;
 	}
 
 	playAgain() {

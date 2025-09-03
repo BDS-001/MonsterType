@@ -16,7 +16,6 @@ export default class ItemManager extends BaseManager {
 
 	setupEventListeners() {
 		this.subscribe(GAME_EVENTS.ITEM_SPAWNED, (data) => {
-			console.log('ItemManager received ITEM_SPAWNED event:', data);
 			this.spawnItem(data);
 		});
 	}
@@ -32,22 +31,6 @@ export default class ItemManager extends BaseManager {
 	}
 
 	spawnItem({ x, y, itemType }) {
-		console.log('ItemManager.spawnItem called:', { x, y, itemType });
-		if (!this.items || !this.scene || !this.scene.add || !this.scene.add.existing) {
-			console.error('ItemManager.spawnItem: invalid state', {
-				items: this.items,
-				scene: this.scene,
-				sceneAdd: this.scene?.add,
-				sceneAddExisting: this.scene?.add?.existing,
-			});
-			return null;
-		}
-
-		if (!this.items.add) {
-			console.error('ItemManager.spawnItem: items group missing add method', this.items);
-			return null;
-		}
-
 		const itemId = `item${this.currentItemId}`;
 		let item;
 
@@ -70,7 +53,6 @@ export default class ItemManager extends BaseManager {
 
 		this.currentItemId++;
 		this.items.add(item);
-		console.log('ItemManager: item added successfully');
 		return item;
 	}
 
@@ -83,11 +65,10 @@ export default class ItemManager extends BaseManager {
 	}
 
 	destroy() {
-		console.log('ItemManager.destroy called');
-		this.unsubscribeAll();
 		if (this.items) {
 			this.items.clear(true, true);
 			this.items = null;
 		}
+		super.destroy();
 	}
 }

@@ -16,12 +16,10 @@ export default class WaveManager extends BaseManager {
 
 	handleEnemySpawned() {
 		this.enemiesAlive++;
-		console.log(`WaveManager: enemies alive: ${this.enemiesAlive}`);
 	}
 
 	handleEnemyKilled() {
 		this.enemiesAlive--;
-		console.log(`WaveManager: enemies alive: ${this.enemiesAlive}`);
 		if (this.enemiesAlive <= 0) {
 			this.onWaveComplete();
 		}
@@ -70,7 +68,6 @@ export default class WaveManager extends BaseManager {
 	}
 
 	destroy() {
-		console.log('WaveManager.destroy() called');
 		super.destroy();
 	}
 }

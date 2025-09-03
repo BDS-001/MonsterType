@@ -35,8 +35,6 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	create() {
-		console.log('GameScene.create() - initializing scene');
-
 		this.setupBackground();
 		this.setupEventListeners();
 
@@ -53,7 +51,6 @@ export default class GameScene extends Phaser.Scene {
 		this.waveManager.startWaves();
 
 		this.collisionManager = new CollisionManager(this);
-		this.events.emit(GAME_EVENTS.SCENE_READY);
 	}
 
 	setupEventListeners() {
@@ -96,8 +93,6 @@ export default class GameScene extends Phaser.Scene {
 	update() {}
 
 	destroy() {
-		console.log('GameScene.destroy() - cleaning up managers');
-
 		this.inputManager?.destroy?.();
 		this.stateManager?.destroy?.();
 		this.enemyManager?.destroy?.();

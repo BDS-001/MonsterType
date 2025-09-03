@@ -39,7 +39,7 @@ export class HudScene extends Phaser.Scene {
 
 	setupUI() {
 		const textStyle = {
-			fontFamily: 'Arial, sans-serif',
+			fontFamily: '"Press Start 2P", monospace',
 			fill: '#ffffff',
 			stroke: '#000000',
 			strokeThickness: 2,
@@ -69,7 +69,7 @@ export class HudScene extends Phaser.Scene {
 			this.game.config.height - this.HEALTH_TEXT_Y_OFFSET,
 			`${this.INITIAL_HEALTH}/${this.INITIAL_HEALTH}`,
 			{
-				fontFamily: 'Arial, sans-serif',
+				fontFamily: '"Press Start 2P", monospace',
 				fontSize: '20px',
 				fill: '#ffffff',
 				stroke: '#000000',
@@ -78,6 +78,9 @@ export class HudScene extends Phaser.Scene {
 			}
 		);
 		this.healthText.setDepth(1000);
+
+		// Improve pixel text crispness
+		this.cameras.main.roundPixels = true;
 	}
 
 	setupEventListeners() {
@@ -127,6 +130,7 @@ export class HudScene extends Phaser.Scene {
 			this.healthBar.y - 10,
 			`+${amount}`,
 			{
+				fontFamily: '"Press Start 2P", monospace',
 				fontSize: '20px',
 				fill: '#4CAF50',
 				stroke: '#000000',
