@@ -23,6 +23,7 @@ export class PauseScene extends Phaser.Scene {
 				this.game.config.height / 2,
 				'PAUSED\n\nPress ESC to Resume',
 				{
+					fontFamily: '"Press Start 2P", monospace',
 					fontSize: '48px',
 					color: '#fff',
 					align: 'center',
@@ -32,5 +33,8 @@ export class PauseScene extends Phaser.Scene {
 				}
 			)
 			.setOrigin(0.5);
+
+		// Improve pixel text crispness
+		this.cameras.main.roundPixels = true;
 	}
 }

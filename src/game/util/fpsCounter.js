@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 export default class fpsCounter extends Phaser.GameObjects.Text {
 	constructor(scene, x = 10, y = 10, text = 'FPS: 0') {
 		const FPS_TEXT_STYLE = {
-			font: '16px Arial',
+			font: '16px "Press Start 2P"',
 			fill: '#00ff00',
 		};
 

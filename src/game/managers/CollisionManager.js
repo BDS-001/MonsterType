@@ -26,14 +26,6 @@ export default class CollisionManager extends BaseManager {
 		enemy.knockbackEnemy();
 	}
 
-	setPlayerImmunity(immune) {
-		this.playerImmunity = immune;
-	}
-
-	isPlayerImmune() {
-		return this.playerImmunity;
-	}
-
 	addCollision(objectA, objectB, callback, processCallback = null) {
 		this.scene.physics.add.overlap(
 			objectA,
@@ -44,7 +36,5 @@ export default class CollisionManager extends BaseManager {
 		);
 	}
 
-	destroy() {
-		this.playerImmunity = false;
-	}
+	destroy() {}
 }
