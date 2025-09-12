@@ -6,89 +6,54 @@ export default class LazerGun extends Weapon {
 			cooldown: 500,
 			damage: 1,
 			maxTargets: 1,
-			projectileSprite: 'basicShot',
+			attackAnimation: 'lazer',
 		});
-		this.halfAngle = 0.6;
-		this.maxRange = 1200;
-		this.lazerFxCount = 16;
+		this.lazerLength = 1500;
+		this.lazerWidth = 60;
 	}
 
-	lazerEffect(primaryTarget, data) {
-		primaryTarget.takeDamage(this.damage);
-		const secondaryTargets = this.findConeTargets(primaryTarget);
-		secondaryTargets.forEach((target) => {
-			const impactX = target.x;
-			const impactY = target.y;
-			target.takeDamage(this.damage);
-			this.scene.events.emit('weapon:fired', {
-				target,
-				projectileSprite: this.projectileSprite,
-				impactX,
-				impactY,
-			});
-		});
-		const scene = this.scene;
-		const player = scene?.player;
+	shotEffect(primaryTarget) {
+		const player = this.scene?.player;
 		if (!player) return;
 
-		const dx = primaryTarget.x - player.x;
-		const dy = primaryTarget.y - player.y;
-		const centerAngle = Math.atan2(dy, dx);
-		const halfConeAngle = this.halfAngle;
+		this.damageEnemies(primaryTarget, player);
 
-		const cam = scene.cameras?.main;
-		const far = cam ? Math.hypot(cam.width, cam.height) + 200 : 1600;
-		for (let i = 0; i < this.lazerFxCount; i++) {
-			const rand = (Math.random() * 2 - 1) * halfConeAngle;
-			const ang = centerAngle + rand;
-			const impactX = player.x + Math.cos(ang) * far;
-			const impactY = player.y + Math.sin(ang) * far;
-			scene.events.emit('weapon:fired', {
-				projectileSprite: this.projectileSprite,
-				impactX,
-				impactY,
-			});
-		}
+		this.scene.events.emit('weapon:fired', {
+			target: primaryTarget,
+			weapon: this,
+			lazerLength: this.lazerLength,
+			lazerWidth: this.lazerWidth,
+		});
 	}
 
-	findConeTargets(primaryTarget) {
-		const scene = this.scene;
-		const player = scene?.player;
-		if (!player) return [];
-
-		const enemyGroup = scene?.enemyManager?.getEnemies?.();
+	damageEnemies(primaryTarget, player) {
+		const enemyGroup = this.scene?.enemyManager?.getEnemies?.();
 		const enemies = enemyGroup ? enemyGroup.getChildren() : [];
-		if (!enemies || enemies.length === 0) return [];
+		const itemGroup = this.scene?.itemManager?.getItems?.();
+		const items = itemGroup ? itemGroup.getChildren() : [];
+		const allTargets = [...enemies, ...items];
 
-		const dx = primaryTarget.x - player.x;
-		const dy = primaryTarget.y - player.y;
-		const dirLenSq = dx * dx + dy * dy;
-		if (dirLenSq === 0) return [];
+		if (allTargets.length === 0) return;
 
-		const invDirLen = 1 / Math.sqrt(dirLenSq);
-		const dirX = dx * invDirLen;
-		const dirY = dy * invDirLen;
+		const angle = Phaser.Math.Angle.Between(player.x, player.y, primaryTarget.x, primaryTarget.y);
+		const laserDirX = Math.cos(angle);
+		const laserDirY = Math.sin(angle);
+		const lazerLengthSq = this.lazerLength * this.lazerLength;
 
-		const maxRange = this.maxRange;
-		const maxRangeSq = maxRange * maxRange;
-		const cosThreshSq = Math.cos(this.halfAngle) ** 2;
+		for (const target of allTargets) {
+			const toTargetX = target.x - player.x;
+			const toTargetY = target.y - player.y;
 
-		const coneTargets = [];
-		for (const target of enemies) {
-			if (target === primaryTarget) continue;
+			const distanceSq = toTargetX * toTargetX + toTargetY * toTargetY;
+			if (distanceSq > lazerLengthSq) continue;
 
-			const ex = target.x - player.x;
-			const ey = target.y - player.y;
-			const distSq = ex * ex + ey * ey;
-			if (distSq > maxRangeSq || distSq === 0) continue;
+			const dotProduct = toTargetX * laserDirX + toTargetY * laserDirY;
+			if (dotProduct <= 0) continue;
 
-			const dot = dirX * ex + dirY * ey;
-			if (dot <= 0) continue;
-			if (dot * dot >= cosThreshSq * distSq) {
-				coneTargets.push(target);
+			const distanceToLaser = Math.abs(toTargetX * laserDirY - toTargetY * laserDirX);
+			if (distanceToLaser <= this.lazerWidth) {
+				target.takeDamage(this.damage);
 			}
 		}
-
-		return coneTargets;
 	}
 }

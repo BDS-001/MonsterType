@@ -6,49 +6,26 @@ export default class Shotgun extends Weapon {
 			cooldown: 500,
 			damage: 1,
 			maxTargets: 1,
-			projectileSprite: 'basicShot',
+			attackAnimation: 'shotgun',
 		});
 		this.halfAngle = 0.6;
 		this.maxRange = 1200;
 		this.pelletFxCount = 16;
 	}
 
-	shotEffect(primaryTarget, data) {
+	shotEffect(primaryTarget) {
 		primaryTarget.takeDamage(this.damage);
 		const secondaryTargets = this.findConeTargets(primaryTarget);
 		secondaryTargets.forEach((target) => {
-			const impactX = target.x;
-			const impactY = target.y;
 			target.takeDamage(this.damage);
-			this.scene.events.emit('weapon:fired', {
-				target,
-				projectileSprite: this.projectileSprite,
-				impactX,
-				impactY,
-			});
 		});
-		const scene = this.scene;
-		const player = scene?.player;
-		if (!player) return;
 
-		const dx = primaryTarget.x - player.x;
-		const dy = primaryTarget.y - player.y;
-		const centerAngle = Math.atan2(dy, dx);
-		const halfConeAngle = this.halfAngle;
-
-		const cam = scene.cameras?.main;
-		const far = cam ? Math.hypot(cam.width, cam.height) + 200 : 1600;
-		for (let i = 0; i < this.pelletFxCount; i++) {
-			const rand = (Math.random() * 2 - 1) * halfConeAngle;
-			const ang = centerAngle + rand;
-			const impactX = player.x + Math.cos(ang) * far;
-			const impactY = player.y + Math.sin(ang) * far;
-			scene.events.emit('weapon:fired', {
-				projectileSprite: this.projectileSprite,
-				impactX,
-				impactY,
-			});
-		}
+		this.scene.events.emit('weapon:fired', {
+			target: primaryTarget,
+			weapon: this,
+			pelletFxCount: this.pelletFxCount,
+			halfAngle: this.halfAngle,
+		});
 	}
 
 	findConeTargets(primaryTarget) {

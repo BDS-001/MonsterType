@@ -5,7 +5,7 @@ export default class Weapon {
 		this.cooldown = options.cooldown ?? 1000;
 		this.damage = options.damage || 1;
 		this.maxTargets = options.maxTargets || 1;
-		this.projectileSprite = options.projectileSprite || null;
+		this.attackAnimation = options.attackAnimation ?? 'basic';
 		this.lastFireTime = 0;
 		this.scene = null;
 	}
@@ -37,20 +37,20 @@ export default class Weapon {
 		return true;
 	}
 
-	handleTargetsSelected(data) {
-		if (data.weapon !== this) return;
-		this.performFiring(data);
+	handleTargetsSelected(weaponFireData) {
+		if (weaponFireData.weapon !== this) return;
+		this.performFiring(weaponFireData);
 	}
 
-	performFiring(data) {
-		const { targets } = data;
+	performFiring(weaponFireData) {
+		const { targets } = weaponFireData;
 		targets.forEach((target) => {
-			this.shotEffect(target, data);
-			this.scene.events.emit('weapon:fired', { target, projectileSprite: this.projectileSprite });
+			this.shotEffect(target);
+			this.scene.events.emit('weapon:fired', { target, weapon: this });
 		});
 	}
 
-	shotEffect(target, data) {
+	shotEffect(target) {
 		target.takeDamage(this.damage);
 	}
 }

@@ -8,7 +8,7 @@ export default class HeavyGun extends Weapon {
 			{
 				cooldown: 1200,
 				damage: 2,
-				projectileSprite: 'basicShot',
+				attackAnimation: 'basic',
 			}
 		);
 	}
