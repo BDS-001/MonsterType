@@ -48,19 +48,18 @@ export default class TargetManager extends BaseManager {
 	}
 
 	handleWeaponReadyToFire(data) {
-		const { key, weapon, timestamp } = data;
+		const { key, weapon } = data;
 
 		const validTargets = this.findValidTargets(key);
 		const sortedTargets = this.sortTargetsByDistance(validTargets, this.scene.player);
 		const selectedTargets = sortedTargets.slice(0, weapon.maxTargets);
 
 		if (selectedTargets.length > 0) {
-			weapon.fire(timestamp);
+			weapon.fire();
 			this.emit(GAME_EVENTS.TARGETS_SELECTED, {
 				targets: selectedTargets,
 				weapon,
 				key,
-				timestamp,
 			});
 		}
 	}

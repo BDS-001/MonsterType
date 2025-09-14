@@ -59,13 +59,9 @@ export default class WeaponManager extends BaseManager {
 	handleTypingInput(key) {
 		if (!this.currentWeapon) return;
 
-		const currentTime = this.scene.time.now;
-		if (!this.currentWeapon.canFireNow(currentTime)) return;
-
 		this.emit(GAME_EVENTS.WEAPON_READY_TO_FIRE, {
 			key,
 			weapon: this.currentWeapon,
-			timestamp: currentTime,
 		});
 	}
 
