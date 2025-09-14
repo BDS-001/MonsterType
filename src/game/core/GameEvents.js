@@ -19,6 +19,7 @@ export const GAME_EVENTS = {
 	WEAPON_FIRED: 'weapon:fired',
 	WEAPON_EQUIPPED: 'weapon:equipped',
 	TARGETS_SELECTED: 'weapon:targets_selected',
+	RANDOM_WEAPON_REQUESTED: 'weapon:random_requested',
 
 	ITEM_SPAWNED: 'item:item_spawn',
 	ITEM_COLLECTED: 'item:collected',

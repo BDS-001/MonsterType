@@ -40,4 +40,11 @@ export const ITEM_DATA = {
 		baseValue: 5,
 		duration: 10000,
 	},
+	RANDOM_WEAPON_DROP: {
+		id: 'RANDOM_WEAPON_DROP',
+		name: 'Random Weapon',
+		word: 'weapon',
+		type: 'weapon',
+		rarity: 'common',
+	},
 };
