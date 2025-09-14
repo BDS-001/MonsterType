@@ -36,11 +36,11 @@ export default class WaveManager extends BaseManager {
 
 	calculateItemCounts(wave) {
 		let healthUpCount = wave % 10 === 0 ? 1 : 0;
-		let bombCount = 1;
+		let randomWeaponCount = 1;
 
 		const itemCounts = {};
 		if (healthUpCount > 0) itemCounts['HEALTH_UP'] = healthUpCount;
-		if (bombCount > 0) itemCounts['BOMB'] = bombCount;
+		if (randomWeaponCount > 0) itemCounts['RANDOM_WEAPON_DROP'] = randomWeaponCount;
 
 		return itemCounts;
 	}

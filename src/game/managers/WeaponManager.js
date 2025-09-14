@@ -19,12 +19,13 @@ export default class WeaponManager extends BaseManager {
 		]);
 
 		this.setupEventListeners();
-		this.equipWeapon('shotgun');
+		this.equipWeapon('basicRifle');
 	}
 
 	setupEventListeners() {
 		this.subscribe(GAME_EVENTS.WEAPON_SWITCH, this.handleWeaponSwitch);
 		this.subscribe(GAME_EVENTS.KEY_PRESSED, this.handleTypingInput);
+		this.subscribe(GAME_EVENTS.RANDOM_WEAPON_REQUESTED, this.handleRandomWeaponRequest);
 	}
 
 	equipWeapon(weaponType) {
@@ -66,6 +67,12 @@ export default class WeaponManager extends BaseManager {
 			weapon: this.currentWeapon,
 			timestamp: currentTime,
 		});
+	}
+
+	handleRandomWeaponRequest() {
+		const weaponKeys = Array.from(this.weaponTypes.keys());
+		const randomWeapon = weaponKeys[Math.floor(Math.random() * weaponKeys.length)];
+		this.equipWeapon(randomWeapon);
 	}
 
 	getCurrentWeapon() {
