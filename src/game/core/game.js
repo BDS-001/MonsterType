@@ -24,7 +24,5 @@ export default class Game {
 		this.game.scene.start('GameScene');
 	}
 
-	goToMenu() {
-		// TODO: this.game.scene.start('MenuScene');
-	}
+	goToMenu() {}
 }
