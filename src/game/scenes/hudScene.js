@@ -8,6 +8,7 @@ export class HudScene extends Phaser.Scene {
 
 		this.scoreText = null;
 		this.waveText = null;
+		this.weaponText = null;
 		this.healthBar = null;
 		this.healthText = null;
 		this.fpsDisplay = null;
@@ -15,6 +16,7 @@ export class HudScene extends Phaser.Scene {
 		// Game state tracking
 		this.currentScore = 0;
 		this.currentWave = 1;
+		this.currentWeapon = 'Basic Rifle';
 
 		// UI Constants
 		this.HEALTH_BAR_X = 85;
@@ -64,6 +66,17 @@ export class HudScene extends Phaser.Scene {
 		});
 		this.waveText.setOrigin(0.5, 0);
 
+		this.weaponText = this.add.text(
+			this.game.config.width / 2,
+			125,
+			`Weapon: ${this.currentWeapon}`,
+			{
+				...textStyle,
+				fontSize: '18px',
+			}
+		);
+		this.weaponText.setOrigin(0.5, 0);
+
 		this.healthText = this.add.text(
 			this.HEALTH_BAR_X,
 			this.game.config.height - this.HEALTH_TEXT_Y_OFFSET,
@@ -86,6 +99,7 @@ export class HudScene extends Phaser.Scene {
 	setupEventListeners() {
 		this.game.events.on(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
 		this.game.events.on(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
+		this.game.events.on(GAME_EVENTS.WEAPON_EQUIPPED, this.updateWeapon, this);
 		this.game.events.on(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
 		this.game.events.on(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
 		this.game.events.on(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
@@ -103,6 +117,11 @@ export class HudScene extends Phaser.Scene {
 	updateWave(data) {
 		this.currentWave = data.waveNumber;
 		this.waveText.setText(`Wave: ${this.currentWave}`);
+	}
+
+	updateWeapon(data) {
+		this.currentWeapon = data.weapon.name;
+		this.weaponText.setText(`Weapon: ${this.currentWeapon}`);
 	}
 
 	handlePlayerHit(data) {
@@ -164,6 +183,7 @@ export class HudScene extends Phaser.Scene {
 	destroy() {
 		this.game.events.off(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
 		this.game.events.off(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
+		this.game.events.off(GAME_EVENTS.WEAPON_EQUIPPED, this.updateWeapon, this);
 		this.game.events.off(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
 		this.game.events.off(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
 		this.game.events.off(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);

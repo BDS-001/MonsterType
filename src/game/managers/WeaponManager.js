@@ -43,7 +43,7 @@ export default class WeaponManager extends BaseManager {
 		this.currentWeapon = new WeaponClass();
 		this.currentWeapon.setScene(this.scene);
 
-		this.emit(GAME_EVENTS.WEAPON_EQUIPPED, {
+		this.emitGame(GAME_EVENTS.WEAPON_EQUIPPED, {
 			weapon: this.currentWeapon,
 			weaponType,
 		});
