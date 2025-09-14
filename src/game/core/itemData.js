@@ -6,7 +6,7 @@ export const ITEM_DATA = {
 		type: 'consumable',
 		rarity: 'common',
 		baseValue: 2,
-		radius: 200,
+		radius: 300,
 	},
 	HEAVYROUNDS_PICKUP: {
 		id: 'HEAVYROUNDS_PICKUP',

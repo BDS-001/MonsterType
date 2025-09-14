@@ -3,7 +3,6 @@ import Weapon from './weapon.js';
 export default class LazerGun extends Weapon {
 	constructor() {
 		super('Lazer Gun', 'DISABLED - Needs beam implementation', {
-			cooldown: 500,
 			damage: 1,
 			maxTargets: 1,
 			attackAnimation: 'lazer',

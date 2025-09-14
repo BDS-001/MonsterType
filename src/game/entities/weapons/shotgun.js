@@ -3,7 +3,6 @@ import Weapon from './weapon.js';
 export default class Shotgun extends Weapon {
 	constructor() {
 		super('Shotgun', 'DISABLED - Needs spread implementation', {
-			cooldown: 500,
 			damage: 1,
 			maxTargets: 1,
 			attackAnimation: 'shotgun',

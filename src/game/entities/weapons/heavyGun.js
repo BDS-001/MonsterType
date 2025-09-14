@@ -6,7 +6,6 @@ export default class HeavyGun extends Weapon {
 			'Heavy Gun',
 			'A powerful weapon that fires heavy rounds with high damage but slower fire rate.',
 			{
-				cooldown: 1200,
 				damage: 2,
 				attackAnimation: 'basic',
 			}
