@@ -1,4 +1,5 @@
 import { GAME_EVENTS } from '../core/GameEvents.js';
+import { TEXT_STYLES } from '../config/fontConfig.js';
 
 export class GameOver extends Phaser.Scene {
 	constructor() {
@@ -19,12 +20,8 @@ export class GameOver extends Phaser.Scene {
 
 		this.add
 			.text(this.game.config.width / 2, this.game.config.height / 2 - 110, 'GAME OVER', {
-				fontFamily: '"Press Start 2P", monospace',
-				fontSize: '48px',
+				...TEXT_STYLES.UI_LARGE,
 				color: '#ff4444',
-				fontStyle: 'bold',
-				stroke: '#000000',
-				strokeThickness: 4,
 			})
 			.setOrigin(0.5);
 
@@ -46,7 +43,6 @@ export class GameOver extends Phaser.Scene {
 			playAgainButton.clearTint();
 		});
 
-		// Improve pixel text crispness
 		this.cameras.main.roundPixels = true;
 	}
 

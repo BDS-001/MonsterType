@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { TEXT_STYLES } from '../config/fontConfig.js';
 
 export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	constructor(scene, x, y, texture, word = '', id = null) {
@@ -15,11 +16,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		scene.physics.add.existing(this);
 
 		this.healthText = scene.add
-			.text(this.x, this.y - 30, this.word, {
-				fontFamily: '"Press Start 2P", monospace',
-				fontSize: '28px',
-				color: '#ffffff',
-			})
+			.text(this.x, this.y - 30, this.word, TEXT_STYLES.ENTITY_WORD)
 			.setOrigin(0.5);
 	}
 

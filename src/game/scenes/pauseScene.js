@@ -1,3 +1,5 @@
+import { TEXT_STYLES } from '../config/fontConfig.js';
+
 export class PauseScene extends Phaser.Scene {
 	constructor() {
 		super({ key: 'PauseScene', active: true });
@@ -22,19 +24,10 @@ export class PauseScene extends Phaser.Scene {
 				this.game.config.width / 2,
 				this.game.config.height / 2,
 				'PAUSED\n\nPress ESC to Resume',
-				{
-					fontFamily: '"Press Start 2P", monospace',
-					fontSize: '48px',
-					color: '#fff',
-					align: 'center',
-					fontStyle: 'bold',
-					stroke: '#000000',
-					strokeThickness: 3,
-				}
+				{ ...TEXT_STYLES.UI_LARGE, align: 'center' }
 			)
 			.setOrigin(0.5);
 
-		// Improve pixel text crispness
 		this.cameras.main.roundPixels = true;
 	}
 }

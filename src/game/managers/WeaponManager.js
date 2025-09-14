@@ -35,7 +35,6 @@ export default class WeaponManager extends BaseManager {
 			return false;
 		}
 
-		// Clean up old weapon
 		if (this.currentWeapon) {
 			this.currentWeapon.removeEventListeners();
 		}

@@ -1,6 +1,7 @@
 import HealthBar from '../util/healthBar';
 import fpsCounter from '../util/fpsCounter';
 import { GAME_EVENTS } from '../core/GameEvents.js';
+import { TEXT_STYLES } from '../config/fontConfig.js';
 
 export class HudScene extends Phaser.Scene {
 	constructor() {
@@ -13,12 +14,10 @@ export class HudScene extends Phaser.Scene {
 		this.healthText = null;
 		this.fpsDisplay = null;
 
-		// Game state tracking
 		this.currentScore = 0;
 		this.currentWave = 1;
 		this.currentWeapon = 'Basic Rifle';
 
-		// UI Constants
 		this.HEALTH_BAR_X = 85;
 		this.HEALTH_BAR_Y_OFFSET = 50;
 		this.HEALTH_TEXT_Y_OFFSET = 80;
@@ -40,40 +39,35 @@ export class HudScene extends Phaser.Scene {
 	}
 
 	setupUI() {
-		const textStyle = {
-			fontFamily: '"Press Start 2P", monospace',
-			fill: '#ffffff',
-			stroke: '#000000',
-			strokeThickness: 2,
-			fontStyle: 'bold',
-		};
-
-		const devText = this.add.text(this.game.config.width / 2, 20, '🚧 GAME UNDER DEVELOPMENT 🚧', {
-			...textStyle,
-			fontSize: '24px',
-		});
+		const devText = this.add.text(
+			this.game.config.width / 2,
+			20,
+			'🚧 GAME UNDER DEVELOPMENT 🚧',
+			TEXT_STYLES.UI_MEDIUM
+		);
 		devText.setOrigin(0.5, 0);
 
-		this.scoreText = this.add.text(this.game.config.width / 2, 60, `Score: ${this.currentScore}`, {
-			...textStyle,
-			fontSize: '24px',
-		});
+		this.scoreText = this.add.text(
+			this.game.config.width / 2,
+			60,
+			`Score: ${this.currentScore}`,
+			TEXT_STYLES.UI_MEDIUM
+		);
 		this.scoreText.setOrigin(0.5, 0);
 
-		this.waveText = this.add.text(this.game.config.width / 2, 95, `Wave: ${this.currentWave}`, {
-			...textStyle,
-			fontSize: '20px',
-		});
+		this.waveText = this.add.text(
+			this.game.config.width / 2,
+			95,
+			`Wave: ${this.currentWave}`,
+			TEXT_STYLES.UI_SMALL
+		);
 		this.waveText.setOrigin(0.5, 0);
 
 		this.weaponText = this.add.text(
 			this.game.config.width / 2,
 			125,
 			`Weapon: ${this.currentWeapon}`,
-			{
-				...textStyle,
-				fontSize: '18px',
-			}
+			TEXT_STYLES.UI_TINY
 		);
 		this.weaponText.setOrigin(0.5, 0);
 
@@ -81,18 +75,9 @@ export class HudScene extends Phaser.Scene {
 			this.HEALTH_BAR_X,
 			this.game.config.height - this.HEALTH_TEXT_Y_OFFSET,
 			`${this.INITIAL_HEALTH}/${this.INITIAL_HEALTH}`,
-			{
-				fontFamily: '"Press Start 2P", monospace',
-				fontSize: '20px',
-				fill: '#ffffff',
-				stroke: '#000000',
-				strokeThickness: 2,
-				fontStyle: 'bold',
-			}
+			TEXT_STYLES.UI_SMALL
 		);
 		this.healthText.setDepth(1000);
-
-		// Improve pixel text crispness
 		this.cameras.main.roundPixels = true;
 	}
 
@@ -148,14 +133,7 @@ export class HudScene extends Phaser.Scene {
 			this.healthBar.x + this.healthBar.width / 2,
 			this.healthBar.y - 10,
 			`+${amount}`,
-			{
-				fontFamily: '"Press Start 2P", monospace',
-				fontSize: '20px',
-				fill: '#4CAF50',
-				stroke: '#000000',
-				strokeThickness: 2,
-				fontStyle: 'bold',
-			}
+			{ ...TEXT_STYLES.UI_SMALL, fill: '#4CAF50' }
 		);
 
 		healText.setOrigin(0.5, 1);
