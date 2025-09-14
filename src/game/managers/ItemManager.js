@@ -3,6 +3,7 @@ import Medkit from '../entities/items/medkit';
 import Bomb from '../entities/items/bomb';
 import HeavyRoundsPickup from '../entities/items/heavyRoundsPickup';
 import HealthUp from '../entities/items/healthUp';
+import RandomWeaponDrop from '../entities/items/randomWeaponDrop';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
@@ -46,6 +47,9 @@ export default class ItemManager extends BaseManager {
 				break;
 			case 'HEALTH_UP':
 				item = new HealthUp(this.scene, x, y, itemId);
+				break;
+			case 'RANDOM_WEAPON_DROP':
+				item = new RandomWeaponDrop(this.scene, x, y, itemId);
 				break;
 			default:
 				item = new Item(this.scene, x, y, itemType, itemId);
