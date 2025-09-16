@@ -2,7 +2,7 @@ import Weapon from './weapon.js';
 
 export default class Shotgun extends Weapon {
 	constructor() {
-		super('Shotgun', 'DISABLED - Needs spread implementation', {
+		super('Shotgun', 'Fires a spread of pellets in a cone, hitting multiple enemies', {
 			damage: 1,
 			maxTargets: 1,
 			attackAnimation: 'shotgun',
