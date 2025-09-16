@@ -4,7 +4,7 @@ export default class LazerGun extends Weapon {
 	constructor() {
 		super(
 			'Lazer Gun',
-			'Fires a powerful laser beam that pierces through multiple enemies in a line',
+			'Powerful laser beam that pierces through multiple enemies in a line',
 			{
 				damage: 1,
 				maxTargets: 1,
