@@ -2,15 +2,11 @@ import Weapon from './weapon.js';
 
 export default class LazerGun extends Weapon {
 	constructor() {
-		super(
-			'Lazer Gun',
-			'Powerful laser beam that pierces through multiple enemies in a line',
-			{
-				damage: 1,
-				maxTargets: 1,
-				attackAnimation: 'lazer',
-			}
-		);
+		super('Lazer Gun', 'Powerful laser beam that pierces through multiple enemies in a line', {
+			damage: 1,
+			maxTargets: 1,
+			attackAnimation: 'lazer',
+		});
 		this.lazerLength = 1500;
 		this.lazerWidth = 60;
 	}
