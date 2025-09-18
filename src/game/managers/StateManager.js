@@ -11,11 +11,13 @@ export default class StateManager extends BaseManager {
 				health: 100,
 				immunity: false,
 				immunityLength: 1000,
+				shield: 0,
 			},
 			score: 0,
 			gameOver: false,
 		};
 
+		this.shieldTimer = null;
 		this.setupEventListeners();
 	}
 
@@ -57,22 +59,29 @@ export default class StateManager extends BaseManager {
 		const { damage, player } = data;
 		if (this.state.player.immunity) return;
 
-		this.state.player.health = Math.max(0, this.state.player.health - damage);
+		if (damage <= this.state.player.shield) {
+			this.state.player.shield -= damage;
+		} else {
+			const trueDamage = damage - this.state.player.shield;
+			this.state.player.shield = 0;
+			if (this.shieldTimer) {
+				this.shieldTimer.destroy();
+				this.shieldTimer = null;
+			}
+			this.state.player.health = Math.max(0, this.state.player.health - trueDamage);
+		}
+
 		this.state.player.immunity = true;
 
 		this.scene.time.delayedCall(this.state.player.immunityLength, () => {
 			this.state.player.immunity = false;
 		});
 
-		if (player) {
-			player.takeDamage(damage, this.state.player.immunityLength);
-		}
+		player?.takeDamage(damage, this.state.player.immunityLength);
 
-		this.emit(GAME_EVENTS.PLAYER_HIT, { damage });
-		this.emitGame(GAME_EVENTS.PLAYER_HIT, {
-			damage,
-			immunityLength: this.state.player.immunityLength,
-		});
+		const hitData = { damage, immunityLength: this.state.player.immunityLength };
+		this.emit(GAME_EVENTS.PLAYER_HIT, hitData);
+		this.emitGame(GAME_EVENTS.PLAYER_HIT, hitData);
 
 		if (this.state.player.health <= 0) {
 			this.handleGameOver();
@@ -93,5 +102,17 @@ export default class StateManager extends BaseManager {
 		this.state.gameOver = true;
 		this.emit(GAME_EVENTS.GAME_OVER);
 		this.emitGame(GAME_EVENTS.GAME_OVER);
+	}
+
+	applyShield({ amount, duration }) {
+		if (this.shieldTimer) {
+			this.shieldTimer.destroy();
+		}
+
+		this.state.player.shield = amount;
+		this.shieldTimer = this.scene.time.delayedCall(duration, () => {
+			this.state.player.shield = 0;
+			this.shieldTimer = null;
+		});
 	}
 }
