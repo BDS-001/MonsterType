@@ -1,6 +1,7 @@
 import TypedEntity from '../typedEntity';
 import wordBank from '../../data/wordbank';
 import { gameSettings } from '../../core/constants';
+import { GAME_EVENTS } from '../../core/GameEvents';
 
 function calculateRandomPosition(camera) {
 	const width = camera.width;
@@ -37,6 +38,7 @@ const defaultOptions = {
 	knockback: 10,
 	wordCategory: 'easy',
 	damage: 10,
+	dropTable: [],
 };
 
 export default class Enemy extends TypedEntity {
@@ -56,6 +58,7 @@ export default class Enemy extends TypedEntity {
 		this.moveSpeed = enemyOptions.moveSpeed;
 		this.knockback = enemyOptions.knockback;
 		this.damage = enemyOptions.damage;
+		this.dropTable = enemyOptions.dropTable;
 		this.displayedWord = this.word;
 		this.isKnockedBack = false;
 
@@ -129,7 +132,32 @@ export default class Enemy extends TypedEntity {
 		}
 	}
 
+	handleItemDrop() {
+		if (!this.dropTable || this.dropTable.length === 0) return;
+
+		const totalWeight = this.dropTable.reduce((sum, entry) => sum + entry.chance, 0);
+
+		const dropRoll = Math.random() * 100;
+		if (dropRoll >= totalWeight) return;
+
+		const itemRoll = Math.random() * totalWeight;
+		let currentWeight = 0;
+
+		for (const dropEntry of this.dropTable) {
+			currentWeight += dropEntry.chance;
+			if (itemRoll <= currentWeight) {
+				this.scene.events.emit(GAME_EVENTS.ITEM_SPAWNED, {
+					x: this.x,
+					y: this.y,
+					itemType: dropEntry.itemType,
+				});
+				break;
+			}
+		}
+	}
+
 	onKill() {
+		this.handleItemDrop();
 		this.scene.events.emit('combat:enemy_killed', { enemy: this, points: 10 });
 	}
 

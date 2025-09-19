@@ -1,5 +1,4 @@
 import Enemy from './enemy.js';
-import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class Zombie extends Enemy {
 	constructor(scene, id) {
@@ -7,21 +6,14 @@ export default class Zombie extends Enemy {
 			moveSpeed: 40,
 			knockback: 40,
 			wordCategory: 'easy',
+			dropTable: [
+				{ itemType: 'MEDKIT', chance: 5 },
+				{ itemType: 'SHIELD', chance: 3 },
+				{ itemType: 'RANDOM_WEAPON_DROP', chance: 4 },
+				{ itemType: 'BOMB', chance: 3 },
+			],
 		};
 
 		super(id, scene, 'zombie', zombieOptions);
-	}
-
-	onKill() {
-		super.onKill();
-
-		const val = Math.floor(Math.random() * 100);
-		if (val < 5) {
-			this.scene.events.emit(GAME_EVENTS.ITEM_SPAWNED, {
-				x: this.x,
-				y: this.y,
-				itemType: 'MEDKIT',
-			});
-		}
 	}
 }
