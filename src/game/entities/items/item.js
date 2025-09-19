@@ -23,6 +23,16 @@ export default class Item extends TypedEntity {
 
 		scene.add.existing(this);
 		scene.physics.add.existing(this);
+
+		// floating animation
+		this.floatTween = this.scene.tweens.add({
+			targets: this,
+			y: y - 10,
+			duration: 1500,
+			ease: 'Sine.easeInOut',
+			yoyo: true,
+			repeat: -1,
+		});
 	}
 
 	update() {
@@ -35,6 +45,9 @@ export default class Item extends TypedEntity {
 	}
 
 	destroy(fromScene) {
+		if (this.floatTween) {
+			this.floatTween.destroy();
+		}
 		super.destroy(fromScene);
 	}
 }
