@@ -36,11 +36,9 @@ export default class WaveManager extends BaseManager {
 
 	calculateItemCounts(wave) {
 		let healthUpCount = wave % 10 === 0 ? 1 : 0;
-		let shieldCount = 1; // Shield drops every wave for testing
 
 		const itemCounts = {};
 		if (healthUpCount > 0) itemCounts['HEALTH_UP'] = healthUpCount;
-		if (shieldCount > 0) itemCounts['SHIELD'] = shieldCount;
 
 		return itemCounts;
 	}
