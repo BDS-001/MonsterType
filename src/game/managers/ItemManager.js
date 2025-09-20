@@ -4,6 +4,7 @@ import Bomb from '../entities/items/bomb';
 import HeavyRoundsPickup from '../entities/items/heavyRoundsPickup';
 import HealthUp from '../entities/items/healthUp';
 import RandomWeaponDrop from '../entities/items/randomWeaponDrop';
+import Shield from '../entities/items/shield';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
@@ -42,6 +43,9 @@ export default class ItemManager extends BaseManager {
 			case 'BOMB':
 				item = new Bomb(this.scene, x, y, itemId);
 				break;
+			case 'SHIELD':
+				item = new Shield(this.scene, x, y, itemId);
+				break;
 			case 'HEAVYROUNDS_PICKUP':
 				item = new HeavyRoundsPickup(this.scene, x, y, itemId);
 				break;
@@ -55,7 +59,18 @@ export default class ItemManager extends BaseManager {
 				item = new Item(this.scene, x, y, itemType, itemId);
 		}
 
+		if (!item) {
+			console.error(`Failed to create item of type: ${itemType}`);
+			return null;
+		}
+
 		this.currentItemId++;
+
+		if (!this.items) {
+			console.error('ItemManager items group is null');
+			return null;
+		}
+
 		this.items.add(item);
 		return item;
 	}

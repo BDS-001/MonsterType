@@ -71,6 +71,9 @@ export class HudScene extends Phaser.Scene {
 		);
 		this.weaponText.setOrigin(0.5, 0);
 
+		this.ammoText = this.add.text(this.game.config.width / 2, 145, '', TEXT_STYLES.UI_TINY);
+		this.ammoText.setOrigin(0.5, 0);
+
 		this.healthText = this.add.text(
 			this.HEALTH_BAR_X,
 			this.game.config.height - this.HEALTH_TEXT_Y_OFFSET,
@@ -78,6 +81,14 @@ export class HudScene extends Phaser.Scene {
 			TEXT_STYLES.UI_SMALL
 		);
 		this.healthText.setDepth(1000);
+
+		this.shieldText = this.add.text(
+			this.HEALTH_BAR_X,
+			this.game.config.height - this.HEALTH_TEXT_Y_OFFSET - 25,
+			'Shield: 0',
+			TEXT_STYLES.UI_SMALL
+		);
+		this.shieldText.setDepth(1000);
 		this.cameras.main.roundPixels = true;
 	}
 
@@ -85,9 +96,12 @@ export class HudScene extends Phaser.Scene {
 		this.game.events.on(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
 		this.game.events.on(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
 		this.game.events.on(GAME_EVENTS.WEAPON_EQUIPPED, this.updateWeapon, this);
+		this.game.events.on(GAME_EVENTS.WEAPON_AMMO_CHANGED, this.updateAmmo, this);
 		this.game.events.on(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
 		this.game.events.on(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
 		this.game.events.on(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
+		this.game.events.on(GAME_EVENTS.SHIELD_CHANGED, this.updateShield, this);
+		this.game.events.on(GAME_EVENTS.GAME_OVER, this.handleGameRestart, this);
 	}
 
 	update() {
@@ -152,19 +166,47 @@ export class HudScene extends Phaser.Scene {
 		});
 	}
 
+	updateAmmo(data) {
+		const { ammo, maxAmmo } = data;
+		if (maxAmmo === -1) {
+			this.ammoText.setText('Ammo: ∞');
+		} else {
+			this.ammoText.setText(`Ammo: ${ammo}/${maxAmmo}`);
+		}
+	}
+
+	updateShield(data) {
+		const { shield } = data;
+		this.shieldText.setText(`Shield: ${shield}`);
+		this.shieldText.setVisible(shield > 0);
+	}
+
 	updateHealthText() {
 		const currentHealth = Math.floor(this.healthBar.value);
 		const maxHealth = Math.floor(this.healthBar.maxValue);
 		this.healthText.setText(`${currentHealth}/${maxHealth}`);
 	}
 
+	handleGameRestart(data) {
+		if (data && data.reset) {
+			this.healthBar.resetToFull();
+			this.updateHealthText();
+			this.scoreText.setText('Score: 0');
+			this.currentWave = 1;
+			this.waveText.setText('Wave: 1');
+		}
+	}
+
 	destroy() {
 		this.game.events.off(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
 		this.game.events.off(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
 		this.game.events.off(GAME_EVENTS.WEAPON_EQUIPPED, this.updateWeapon, this);
+		this.game.events.off(GAME_EVENTS.WEAPON_AMMO_CHANGED, this.updateAmmo, this);
 		this.game.events.off(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
 		this.game.events.off(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
 		this.game.events.off(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
+		this.game.events.off(GAME_EVENTS.SHIELD_CHANGED, this.updateShield, this);
+		this.game.events.off(GAME_EVENTS.GAME_OVER, this.handleGameRestart, this);
 		super.destroy();
 	}
 }

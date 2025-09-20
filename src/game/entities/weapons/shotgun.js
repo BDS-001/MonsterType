@@ -3,9 +3,9 @@ import Weapon from './weapon.js';
 export default class Shotgun extends Weapon {
 	constructor() {
 		super('Shotgun', 'Spreads pellets in a cone, hitting multiple enemies', {
-			damage: 1,
 			maxTargets: 1,
 			attackAnimation: 'shotgun',
+			maxUsages: 30,
 		});
 		this.halfAngle = 0.6;
 		this.maxRange = 1200;
@@ -13,10 +13,11 @@ export default class Shotgun extends Weapon {
 	}
 
 	shotEffect(primaryTarget) {
-		primaryTarget.takeDamage(this.damage);
+		primaryTarget.takeDamage();
+
 		const secondaryTargets = this.findConeTargets(primaryTarget);
 		secondaryTargets.forEach((target) => {
-			target.takeDamage(this.damage);
+			target.takeDamage();
 		});
 
 		this.scene.events.emit('weapon:fired', {
