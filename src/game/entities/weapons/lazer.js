@@ -3,9 +3,9 @@ import Weapon from './weapon.js';
 export default class LazerGun extends Weapon {
 	constructor() {
 		super('Lazer Gun', 'Powerful laser beam that pierces through multiple enemies in a line', {
-			damage: 1,
 			maxTargets: 1,
 			attackAnimation: 'lazer',
+			maxUsages: 20,
 		});
 		this.lazerLength = 1500;
 		this.lazerWidth = 60;
@@ -15,7 +15,8 @@ export default class LazerGun extends Weapon {
 		const player = this.scene?.player;
 		if (!player) return;
 
-		this.damageEnemies(primaryTarget, player);
+		primaryTarget.takeDamage();
+		this.damageEnemiesInLine(primaryTarget, player);
 
 		this.scene.events.emit('weapon:fired', {
 			target: primaryTarget,
@@ -25,7 +26,7 @@ export default class LazerGun extends Weapon {
 		});
 	}
 
-	damageEnemies(primaryTarget, player) {
+	damageEnemiesInLine(primaryTarget, player) {
 		const enemyGroup = this.scene?.enemyManager?.getEnemies?.();
 		const enemies = enemyGroup ? enemyGroup.getChildren() : [];
 		const itemGroup = this.scene?.itemManager?.getItems?.();
@@ -51,7 +52,7 @@ export default class LazerGun extends Weapon {
 
 			const distanceToLaser = Math.abs(toTargetX * laserDirY - toTargetY * laserDirX);
 			if (distanceToLaser <= this.lazerWidth) {
-				target.takeDamage(this.damage);
+				target.takeDamage();
 			}
 		}
 	}

@@ -5,6 +5,16 @@ export default class StateManager extends BaseManager {
 	constructor(scene) {
 		super(scene);
 
+		this.resetState();
+		this.setupEventListeners();
+	}
+
+	resetState() {
+		if (this.shieldTimer) {
+			this.shieldTimer.destroy();
+			this.shieldTimer = null;
+		}
+
 		this.state = {
 			player: {
 				maxHealth: 100,
@@ -18,7 +28,6 @@ export default class StateManager extends BaseManager {
 		};
 
 		this.shieldTimer = null;
-		this.setupEventListeners();
 	}
 
 	setupEventListeners() {
@@ -26,6 +35,7 @@ export default class StateManager extends BaseManager {
 		this.subscribe(GAME_EVENTS.ITEM_COLLECTED, this.handleItemCollected);
 		this.subscribe(GAME_EVENTS.PLAYER_HIT, this.playerHit);
 		this.subscribe(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged);
+		this.subscribeGame(GAME_EVENTS.GAME_OVER, this.handleGameRestart);
 	}
 
 	handleEnemyKilled(data) {
@@ -59,29 +69,33 @@ export default class StateManager extends BaseManager {
 		const { damage, player } = data;
 		if (this.state.player.immunity) return;
 
-		if (damage <= this.state.player.shield) {
-			this.state.player.shield -= damage;
-		} else {
-			const trueDamage = damage - this.state.player.shield;
-			this.state.player.shield = 0;
-			if (this.shieldTimer) {
-				this.shieldTimer.destroy();
-				this.shieldTimer = null;
-			}
-			this.state.player.health = Math.max(0, this.state.player.health - trueDamage);
+		const shieldAbsorbed = Math.min(damage, this.state.player.shield);
+		const trueDamage = damage - shieldAbsorbed;
+
+		this.state.player.shield -= shieldAbsorbed;
+		this.state.player.health = Math.max(0, this.state.player.health - trueDamage);
+
+		if (this.state.player.shield <= 0 && this.shieldTimer) {
+			this.shieldTimer.destroy();
+			this.shieldTimer = null;
 		}
 
 		this.state.player.immunity = true;
-
 		this.scene.time.delayedCall(this.state.player.immunityLength, () => {
 			this.state.player.immunity = false;
 		});
 
-		player?.takeDamage(damage, this.state.player.immunityLength);
+		player?.playHitEffect(this.state.player.immunityLength);
 
-		const hitData = { damage, immunityLength: this.state.player.immunityLength };
-		this.emit(GAME_EVENTS.PLAYER_HIT, hitData);
-		this.emitGame(GAME_EVENTS.PLAYER_HIT, hitData);
+		this.emitGame(GAME_EVENTS.SHIELD_CHANGED, { shield: this.state.player.shield });
+		this.emit(GAME_EVENTS.PLAYER_HIT, {
+			damage: trueDamage,
+			immunityLength: this.state.player.immunityLength,
+		});
+		this.emitGame(GAME_EVENTS.PLAYER_HIT, {
+			damage: trueDamage,
+			immunityLength: this.state.player.immunityLength,
+		});
 
 		if (this.state.player.health <= 0) {
 			this.handleGameOver();
@@ -104,15 +118,25 @@ export default class StateManager extends BaseManager {
 		this.emitGame(GAME_EVENTS.GAME_OVER);
 	}
 
+	handleGameRestart(data) {
+		if (data && data.reset) {
+			this.resetState();
+			this.emitGame(GAME_EVENTS.SHIELD_CHANGED, { shield: 0 });
+		}
+	}
+
 	applyShield({ amount, duration }) {
 		if (this.shieldTimer) {
 			this.shieldTimer.destroy();
 		}
 
 		this.state.player.shield = amount;
+		this.emitGame(GAME_EVENTS.SHIELD_CHANGED, { shield: amount });
+
 		this.shieldTimer = this.scene.time.delayedCall(duration, () => {
 			this.state.player.shield = 0;
 			this.shieldTimer = null;
+			this.emitGame(GAME_EVENTS.SHIELD_CHANGED, { shield: 0 });
 		});
 	}
 }

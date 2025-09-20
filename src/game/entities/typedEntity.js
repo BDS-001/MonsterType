@@ -30,7 +30,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		this.healthText?.setPosition(this.x, this.y - 30);
 	}
 
-	takeDamage(damage) {
+	takeDamage(damage = 1) {
 		if (this.isDestroyed) return;
 
 		this.hitIndex = Math.min(this.hitIndex + damage, this.word.length);

@@ -1,6 +1,5 @@
-import BasicRifle from '../entities/weapons/basicRifle.js';
+import Pistol from '../entities/weapons/pistol.js';
 import Shotgun from '../entities/weapons/shotgun.js';
-import HeavyGun from '../entities/weapons/heavyGun.js';
 import Minigun from '../entities/weapons/miniGun.js';
 import LazerGun from '../entities/weapons/lazer.js';
 import BaseManager from '../core/BaseManager.js';
@@ -11,21 +10,23 @@ export default class WeaponManager extends BaseManager {
 		super(scene);
 		this.currentWeapon = null;
 		this.weaponTypes = new Map([
-			['basicRifle', BasicRifle],
+			['pistol', Pistol],
 			['shotgun', Shotgun],
-			['heavyGun', HeavyGun],
 			['minigun', Minigun],
 			['lazerGun', LazerGun],
 		]);
 
 		this.setupEventListeners();
-		this.equipWeapon('basicRifle');
+		this.equipWeapon('pistol');
 	}
 
 	setupEventListeners() {
 		this.subscribe(GAME_EVENTS.WEAPON_SWITCH, this.handleWeaponSwitch);
 		this.subscribe(GAME_EVENTS.KEY_PRESSED, this.handleTypingInput);
 		this.subscribe(GAME_EVENTS.RANDOM_WEAPON_REQUESTED, this.handleRandomWeaponRequest);
+		this.subscribe('weapon:ammo_empty', this.handleAmmoEmpty);
+		this.subscribe(GAME_EVENTS.WEAPON_AMMO_CHANGED, this.handleAmmoChanged);
+		this.subscribeGame(GAME_EVENTS.GAME_OVER, this.handleGameRestart);
 	}
 
 	equipWeapon(weaponType) {
@@ -45,6 +46,11 @@ export default class WeaponManager extends BaseManager {
 		this.emitGame(GAME_EVENTS.WEAPON_EQUIPPED, {
 			weapon: this.currentWeapon,
 			weaponType,
+		});
+
+		this.emitGame(GAME_EVENTS.WEAPON_AMMO_CHANGED, {
+			ammo: this.currentWeapon.getAmmoCount(),
+			maxAmmo: this.currentWeapon.maxUsages,
 		});
 
 		return true;
@@ -68,6 +74,20 @@ export default class WeaponManager extends BaseManager {
 		const weaponKeys = Array.from(this.weaponTypes.keys());
 		const randomWeapon = weaponKeys[Math.floor(Math.random() * weaponKeys.length)];
 		this.equipWeapon(randomWeapon);
+	}
+
+	handleAmmoEmpty() {
+		this.equipWeapon('pistol');
+	}
+
+	handleAmmoChanged(data) {
+		this.emitGame(GAME_EVENTS.WEAPON_AMMO_CHANGED, data);
+	}
+
+	handleGameRestart(data) {
+		if (data && data.reset) {
+			this.equipWeapon('pistol');
+		}
 	}
 
 	getCurrentWeapon() {

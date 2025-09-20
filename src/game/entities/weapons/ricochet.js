@@ -3,16 +3,12 @@ import Weapon from './weapon.js';
 export default class Ricochet extends Weapon {
 	constructor() {
 		super('Ricochet Gun', 'Projectile that bounces between multiple enemies', {
-			damage: 1,
 			maxTargets: 1,
 			attackAnimation: 'basic',
+			maxUsages: 40,
 		});
 		this.ricochetCount = 3;
 		this.range = 300;
-	}
-
-	shotEffect(primaryTarget) {
-		primaryTarget.takeDamage(this.damage);
 	}
 
 	damageTargetsInRadius() {

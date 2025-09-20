@@ -26,6 +26,10 @@ export default class HealthBar {
 		this.setValue(this.value + amount);
 	}
 
+	resetToFull() {
+		this.setValue(this.maxValue);
+	}
+
 	setValue(newValue) {
 		this.value = Math.max(0, Math.min(this.maxValue, newValue));
 		this.draw();

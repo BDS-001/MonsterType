@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import { gameSettings } from '../core/constants';
-import { GAME_EVENTS } from '../core/GameEvents.js';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
 	constructor(scene, x, y) {
@@ -12,7 +11,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		this.setScale(gameSettings.SPRITE_SCALE);
 	}
 
-	takeDamage(amount, immunityLength) {
+	playHitEffect(immunityLength) {
 		const flashDuration = 100;
 		this.scene.tweens.add({
 			targets: this,
@@ -22,7 +21,5 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 			repeat: Math.max(Math.floor(immunityLength / (flashDuration * 2)) - 1, 0),
 			onComplete: () => this.setAlpha(1),
 		});
-
-		this.scene.events.emit(GAME_EVENTS.PLAYER_HIT, { damage: amount });
 	}
 }

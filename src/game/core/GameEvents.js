@@ -6,6 +6,7 @@ export const GAME_EVENTS = {
 
 	SCORE_CHANGED: 'game:score_changed',
 	HEALTH_CHANGED: 'game:health_changed',
+	SHIELD_CHANGED: 'game:shield_changed',
 	PLAYER_HIT: 'game:player_hit',
 	PLAYER_HEALED: 'game:player_healed',
 	WAVE_STARTED: 'game:wave_started',
@@ -18,6 +19,7 @@ export const GAME_EVENTS = {
 	WEAPON_READY_TO_FIRE: 'weapon:ready_to_fire',
 	WEAPON_FIRED: 'weapon:fired',
 	WEAPON_EQUIPPED: 'weapon:equipped',
+	WEAPON_AMMO_CHANGED: 'weapon:ammo_changed',
 	TARGETS_SELECTED: 'weapon:targets_selected',
 	RANDOM_WEAPON_REQUESTED: 'weapon:random_requested',
 
