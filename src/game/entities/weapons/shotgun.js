@@ -1,4 +1,5 @@
 import Weapon from './weapon.js';
+import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class Shotgun extends Weapon {
 	constructor() {
@@ -20,7 +21,7 @@ export default class Shotgun extends Weapon {
 			target.takeDamage();
 		});
 
-		this.scene.events.emit('weapon:fired', {
+		this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, {
 			target: primaryTarget,
 			weapon: this,
 			pelletFxCount: this.pelletFxCount,

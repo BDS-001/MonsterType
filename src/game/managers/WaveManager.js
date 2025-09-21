@@ -46,7 +46,6 @@ export default class WaveManager extends BaseManager {
 	startWave(waveNumber) {
 		this.currentWave = waveNumber;
 		this.enemiesAlive = 0;
-		this.emit(GAME_EVENTS.WAVE_STARTED, { waveNumber: this.currentWave });
 		this.emitGame(GAME_EVENTS.WAVE_STARTED, { waveNumber: this.currentWave });
 
 		const enemyCounts = this.calculateEnemyCounts(this.currentWave);

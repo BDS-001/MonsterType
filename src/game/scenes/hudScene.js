@@ -113,18 +113,29 @@ export class HudScene extends Phaser.Scene {
 	}
 
 	handlePlayerHit(data) {
-		this.healthBar.decrease(data.damage);
 		this.updateHealthText();
 	}
 
 	handlePlayerHealed(data) {
-		this.healthBar.heal(data.amount);
-		this.updateHealthText();
 		this.showHealNumber(data.amount);
 	}
 
 	handleHealthChanged(data) {
-		if (data.maxHealthIncrease) {
+		if (data && typeof data.currentHealth === 'number') {
+			if (typeof data.maxHealth === 'number' && data.maxHealth !== this.healthBar.maxValue) {
+				this.healthBar.maxValue = data.maxHealth;
+				this.healthBar.p =
+					(this.healthBar.width - this.healthBar.borderThickness * 2) / this.healthBar.maxValue;
+			}
+			this.healthBar.setValue(data.currentHealth);
+			this.updateHealthText();
+			if (typeof data.healthIncrease === 'number' && data.healthIncrease > 0) {
+				this.showHealNumber(data.healthIncrease);
+			}
+			return;
+		}
+
+		if (data?.maxHealthIncrease) {
 			this.healthBar.increaseMax(data.maxHealthIncrease, data.healthIncrease);
 			this.updateHealthText();
 			this.showHealNumber(data.healthIncrease);
