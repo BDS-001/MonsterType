@@ -18,13 +18,13 @@ export default class Weapon {
 
 	setupEventListeners() {
 		if (this.scene) {
-			this.scene.events.on('weapon:targets_selected', this.handleTargetsSelected, this);
+			this.scene.events.on(GAME_EVENTS.TARGETS_SELECTED, this.handleTargetsSelected, this);
 		}
 	}
 
 	removeEventListeners() {
 		if (this.scene) {
-			this.scene.events.off('weapon:targets_selected', this.handleTargetsSelected, this);
+			this.scene.events.off(GAME_EVENTS.TARGETS_SELECTED, this.handleTargetsSelected, this);
 		}
 	}
 
@@ -43,7 +43,7 @@ export default class Weapon {
 		const { targets } = weaponFireData;
 		targets.forEach((target) => {
 			this.shotEffect(target);
-			this.scene.events.emit('weapon:fired', { target, weapon: this });
+			this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, { target, weapon: this });
 		});
 
 		if (this.maxUsages <= 0) return;

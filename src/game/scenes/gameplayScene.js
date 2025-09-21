@@ -54,7 +54,7 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	setupEventListeners() {
-		this.events.on(GAME_EVENTS.GAME_OVER, this.handleGameOver, this);
+		this.game.events.on(GAME_EVENTS.GAME_OVER, this.handleGameOver, this);
 		this.events.on(GAME_EVENTS.WAVE_SPAWN_ENEMIES, this.handleSpawnEnemies, this);
 		this.events.on(GAME_EVENTS.WAVE_SPAWN_ITEMS, this.handleSpawnItems, this);
 	}
@@ -67,7 +67,8 @@ export default class GameScene extends Phaser.Scene {
 		this.itemManager.spawnItemsFromCounts(itemCounts);
 	}
 
-	handleGameOver() {
+	handleGameOver(data) {
+		if (data && data.reset) return;
 		this.scene.pause();
 		this.scene.setVisible(true, 'GameOver');
 	}

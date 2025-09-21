@@ -49,13 +49,16 @@ export default class StateManager extends BaseManager {
 		if (data.maxHealthIncrease) {
 			this.state.player.maxHealth += data.maxHealthIncrease;
 			this.state.player.health += data.healthIncrease;
-			this.emitGame(GAME_EVENTS.HEALTH_CHANGED, data);
+			this.emitGame(GAME_EVENTS.HEALTH_CHANGED, {
+				...data,
+				currentHealth: this.state.player.health,
+				maxHealth: this.state.player.maxHealth,
+			});
 		}
 	}
 
 	updateScore(points) {
 		this.state.score += points;
-		this.emit(GAME_EVENTS.SCORE_CHANGED, { amount: points, newScore: this.state.score });
 		this.emitGame(GAME_EVENTS.SCORE_CHANGED, { amount: points, newScore: this.state.score });
 	}
 
@@ -77,13 +80,15 @@ export default class StateManager extends BaseManager {
 		player?.playHitEffect(this.state.player.immunityLength);
 
 		this.emitGame(GAME_EVENTS.SHIELD_CHANGED, { shield: this.state.player.shield });
-		this.emit(GAME_EVENTS.PLAYER_HIT, {
-			damage: trueDamage,
-			immunityLength: this.state.player.immunityLength,
-		});
 		this.emitGame(GAME_EVENTS.PLAYER_HIT, {
 			damage: trueDamage,
 			immunityLength: this.state.player.immunityLength,
+			currentHealth: this.state.player.health,
+			maxHealth: this.state.player.maxHealth,
+		});
+		this.emitGame(GAME_EVENTS.HEALTH_CHANGED, {
+			currentHealth: this.state.player.health,
+			maxHealth: this.state.player.maxHealth,
 		});
 
 		if (this.state.player.health <= 0) {
@@ -97,13 +102,15 @@ export default class StateManager extends BaseManager {
 			this.state.player.maxHealth,
 			this.state.player.health + amount
 		);
-		this.emit(GAME_EVENTS.PLAYER_HEALED, { amount });
 		this.emitGame(GAME_EVENTS.PLAYER_HEALED, { amount });
+		this.emitGame(GAME_EVENTS.HEALTH_CHANGED, {
+			currentHealth: this.state.player.health,
+			maxHealth: this.state.player.maxHealth,
+		});
 	}
 
 	handleGameOver() {
 		this.state.gameOver = true;
-		this.emit(GAME_EVENTS.GAME_OVER);
 		this.emitGame(GAME_EVENTS.GAME_OVER);
 	}
 

@@ -1,4 +1,5 @@
 import Weapon from './weapon.js';
+import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class LazerGun extends Weapon {
 	constructor() {
@@ -18,7 +19,7 @@ export default class LazerGun extends Weapon {
 		primaryTarget.takeDamage();
 		this.damageEnemiesInLine(primaryTarget, player);
 
-		this.scene.events.emit('weapon:fired', {
+		this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, {
 			target: primaryTarget,
 			weapon: this,
 			lazerLength: this.lazerLength,
