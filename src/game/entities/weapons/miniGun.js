@@ -5,7 +5,7 @@ export default class Minigun extends Weapon {
 		super('Minigun', 'Fast firing gun that targets multiple enemies.', {
 			maxTargets: 3,
 			attackAnimation: 'basic',
-			maxUsages: 50,
+			maxUsages: 150,
 		});
 	}
 }
