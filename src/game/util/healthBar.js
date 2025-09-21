@@ -8,7 +8,7 @@ export default class HealthBar {
 		this.height = height;
 		this.value = initialHealth;
 		this.maxValue = maxHealth;
-		this.borderThickness = 2;
+		this.borderThickness = 0;
 		this.borderOffset = this.borderThickness;
 		this.cornerRadius = 4;
 		this.p = (this.width - this.borderThickness * 2) / this.maxValue;
@@ -44,8 +44,10 @@ export default class HealthBar {
 	draw() {
 		this.bar.clear();
 
-		this.bar.lineStyle(this.borderThickness, 0x444444, 1);
-		this.bar.strokeRoundedRect(this.x, this.y, this.width, this.height, this.cornerRadius);
+		if (this.borderThickness > 0) {
+			this.bar.lineStyle(this.borderThickness, 0x444444, 1);
+			this.bar.strokeRoundedRect(this.x, this.y, this.width, this.height, this.cornerRadius);
+		}
 
 		this.bar.fillStyle(0x222222);
 		this.bar.fillRoundedRect(

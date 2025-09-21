@@ -9,6 +9,7 @@ export default class WeaponManager extends BaseManager {
 	constructor(scene) {
 		super(scene);
 		this.currentWeapon = null;
+		this.STARTER_WEAPON = 'pistol';
 		this.weaponTypes = new Map([
 			['pistol', Pistol],
 			['shotgun', Shotgun],
@@ -17,7 +18,7 @@ export default class WeaponManager extends BaseManager {
 		]);
 
 		this.setupEventListeners();
-		this.equipWeapon('pistol');
+		this.equipWeapon(this.STARTER_WEAPON);
 	}
 
 	setupEventListeners() {
@@ -71,13 +72,12 @@ export default class WeaponManager extends BaseManager {
 	}
 
 	handleRandomWeaponRequest() {
-		const weaponKeys = Array.from(this.weaponTypes.keys());
-		const randomWeapon = weaponKeys[Math.floor(Math.random() * weaponKeys.length)];
+		const randomWeapon = this.getRandomWeaponKey([this.STARTER_WEAPON]);
 		this.equipWeapon(randomWeapon);
 	}
 
 	handleAmmoEmpty() {
-		this.equipWeapon('pistol');
+		this.equipWeapon(this.STARTER_WEAPON);
 	}
 
 	handleAmmoChanged(data) {
@@ -86,11 +86,17 @@ export default class WeaponManager extends BaseManager {
 
 	handleGameRestart(data) {
 		if (data && data.reset) {
-			this.equipWeapon('pistol');
+			this.equipWeapon(this.STARTER_WEAPON);
 		}
 	}
 
 	getCurrentWeapon() {
 		return this.currentWeapon;
+	}
+
+	getRandomWeaponKey(exclude = []) {
+		const excludeSet = new Set(exclude);
+		const keys = Array.from(this.weaponTypes.keys()).filter((k) => !excludeSet.has(k));
+		return keys[Math.floor(Math.random() * keys.length)];
 	}
 }

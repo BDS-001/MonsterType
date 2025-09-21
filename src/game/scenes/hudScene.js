@@ -7,88 +7,77 @@ export class HudScene extends Phaser.Scene {
 	constructor() {
 		super({ key: 'HudScene', active: true });
 
-		this.scoreText = null;
-		this.waveText = null;
-		this.weaponText = null;
+		this.uiElements = {};
 		this.healthBar = null;
-		this.healthText = null;
 		this.fpsDisplay = null;
 
 		this.currentScore = 0;
 		this.currentWave = 1;
 		this.currentWeapon = 'Basic Rifle';
-
-		this.HEALTH_BAR_X = 85;
-		this.HEALTH_BAR_Y_OFFSET = 50;
-		this.HEALTH_TEXT_Y_OFFSET = 80;
+		this.currentAmmo = null;
+		this.currentMaxAmmo = null;
 		this.INITIAL_HEALTH = 100;
+		this.PADDING = 20;
 	}
 	create() {
 		this.setupUI();
 		this.setupEventListeners();
 
+		const { width, height } = this.game.config;
+
 		this.healthBar = new HealthBar(
 			this,
-			this.HEALTH_BAR_X,
-			this.game.config.height - this.HEALTH_BAR_Y_OFFSET,
+			this.PADDING,
+			height - this.PADDING - 15,
 			this.INITIAL_HEALTH,
 			this.INITIAL_HEALTH
 		);
+
+		this.uiElements.healthValueText = this.add
+			.text(
+				this.healthBar.x + this.healthBar.width / 2,
+				this.healthBar.y + this.healthBar.height / 2,
+				`${this.INITIAL_HEALTH}/${this.INITIAL_HEALTH}`,
+				TEXT_STYLES.UI_SMALL
+			)
+			.setOrigin(0.5, 0.5)
+			.setDepth(1000);
+
+		this.uiElements.shieldText = this.add
+			.text(this.healthBar.x, this.healthBar.y - 8, 'Shield: 0', TEXT_STYLES.UI_SMALL)
+			.setOrigin(0, 1)
+			.setDepth(1000)
+			.setVisible(false);
+
 		this.fpsDisplay = new fpsCounter(this);
+		this.fpsDisplay.setOrigin(1, 0);
+		this.fpsDisplay.setPosition(width - this.PADDING, this.PADDING);
+
 		this.updateHealthText();
 	}
 
 	setupUI() {
-		const devText = this.add.text(
-			this.game.config.width / 2,
-			20,
-			'🚧 GAME UNDER DEVELOPMENT 🚧',
-			TEXT_STYLES.UI_MEDIUM
-		);
-		devText.setOrigin(0.5, 0);
+		const { width, height } = this.game.config;
 
-		this.scoreText = this.add.text(
-			this.game.config.width / 2,
-			60,
-			`Score: ${this.currentScore}`,
-			TEXT_STYLES.UI_MEDIUM
-		);
-		this.scoreText.setOrigin(0.5, 0);
+		this.uiElements.devBadge = this.add
+			.text(this.PADDING, this.PADDING, 'GAME IS WORK IN PROGRESS', TEXT_STYLES.UI_TINY)
+			.setOrigin(0, 0)
+			.setAlpha(0.9);
 
-		this.waveText = this.add.text(
-			this.game.config.width / 2,
-			95,
-			`Wave: ${this.currentWave}`,
-			TEXT_STYLES.UI_SMALL
-		);
-		this.waveText.setOrigin(0.5, 0);
+		const waveY = this.uiElements.devBadge.y + this.uiElements.devBadge.height + 6;
+		this.uiElements.waveText = this.add
+			.text(this.PADDING, waveY, `Wave: ${this.currentWave}`, TEXT_STYLES.UI_SMALL)
+			.setOrigin(0, 0);
 
-		this.weaponText = this.add.text(
-			this.game.config.width / 2,
-			125,
-			`Weapon: ${this.currentWeapon}`,
-			TEXT_STYLES.UI_TINY
-		);
-		this.weaponText.setOrigin(0.5, 0);
+		this.uiElements.scoreText = this.add
+			.text(width / 2, this.PADDING, `Score: ${this.currentScore}`, TEXT_STYLES.UI_MEDIUM)
+			.setOrigin(0.5, 0);
 
-		this.ammoText = this.add.text(this.game.config.width / 2, 145, '', TEXT_STYLES.UI_TINY);
-		this.ammoText.setOrigin(0.5, 0);
+		this.uiElements.weaponAmmoText = this.add
+			.text(width - this.PADDING, height - this.PADDING, '', TEXT_STYLES.UI_SMALL)
+			.setOrigin(1, 1);
+		this.renderWeaponAmmoText();
 
-		this.healthText = this.add.text(
-			this.HEALTH_BAR_X,
-			this.game.config.height - this.HEALTH_TEXT_Y_OFFSET,
-			`${this.INITIAL_HEALTH}/${this.INITIAL_HEALTH}`,
-			TEXT_STYLES.UI_SMALL
-		);
-		this.healthText.setDepth(1000);
-
-		this.shieldText = this.add.text(
-			this.HEALTH_BAR_X,
-			this.game.config.height - this.HEALTH_TEXT_Y_OFFSET - 25,
-			'Shield: 0',
-			TEXT_STYLES.UI_SMALL
-		);
-		this.shieldText.setDepth(1000);
 		this.cameras.main.roundPixels = true;
 	}
 
@@ -110,17 +99,17 @@ export class HudScene extends Phaser.Scene {
 
 	updateScore(data) {
 		this.currentScore = data.newScore || this.currentScore + (data.amount || 0);
-		this.scoreText.setText(`Score: ${this.currentScore}`);
+		this.renderScoreText();
 	}
 
 	updateWave(data) {
 		this.currentWave = data.waveNumber;
-		this.waveText.setText(`Wave: ${this.currentWave}`);
+		this.renderWaveText();
 	}
 
 	updateWeapon(data) {
 		this.currentWeapon = data.weapon.name;
-		this.weaponText.setText(`Weapon: ${this.currentWeapon}`);
+		this.renderWeaponAmmoText();
 	}
 
 	handlePlayerHit(data) {
@@ -168,33 +157,62 @@ export class HudScene extends Phaser.Scene {
 
 	updateAmmo(data) {
 		const { ammo, maxAmmo } = data;
-		if (maxAmmo === -1) {
-			this.ammoText.setText('Ammo: ∞');
-		} else {
-			this.ammoText.setText(`Ammo: ${ammo}/${maxAmmo}`);
-		}
+		this.currentAmmo = ammo;
+		this.currentMaxAmmo = maxAmmo;
+		this.renderWeaponAmmoText();
 	}
 
 	updateShield(data) {
 		const { shield } = data;
-		this.shieldText.setText(`Shield: ${shield}`);
-		this.shieldText.setVisible(shield > 0);
+		this.uiElements.shieldText.setText(`Shield: ${shield}`);
+		this.uiElements.shieldText.setVisible(shield > 0);
 	}
 
 	updateHealthText() {
 		const currentHealth = Math.floor(this.healthBar.value);
 		const maxHealth = Math.floor(this.healthBar.maxValue);
-		this.healthText.setText(`${currentHealth}/${maxHealth}`);
+		const centerX = this.healthBar.x + this.healthBar.width / 2;
+		const centerY = this.healthBar.y + this.healthBar.height / 2;
+		this.uiElements.healthValueText?.setText(`${currentHealth}/${maxHealth}`);
+		this.uiElements.healthValueText?.setPosition(centerX, centerY);
 	}
 
 	handleGameRestart(data) {
 		if (data && data.reset) {
 			this.healthBar.resetToFull();
 			this.updateHealthText();
-			this.scoreText.setText('Score: 0');
+			this.currentScore = 0;
 			this.currentWave = 1;
-			this.waveText.setText('Wave: 1');
+			this.currentAmmo = null;
+			this.currentMaxAmmo = null;
+			this.renderScoreText();
+			this.renderWaveText();
+			this.renderWeaponAmmoText();
+			this.uiElements.shieldText.setVisible(false);
 		}
+	}
+
+	renderScoreText() {
+		this.uiElements.scoreText?.setText(`Score: ${this.currentScore}`);
+	}
+
+	renderWaveText() {
+		this.uiElements.waveText?.setText(`Wave: ${this.currentWave}`);
+	}
+
+	renderWeaponAmmoText() {
+		let ammoText = '';
+		if (this.currentMaxAmmo === -1) {
+			ammoText = ' · Ammo: ∞';
+		} else if (
+			this.currentAmmo !== null &&
+			this.currentAmmo !== undefined &&
+			this.currentMaxAmmo !== null &&
+			this.currentMaxAmmo !== undefined
+		) {
+			ammoText = ` · Ammo: ${this.currentAmmo}/${this.currentMaxAmmo}`;
+		}
+		this.uiElements.weaponAmmoText?.setText(`Weapon: ${this.currentWeapon}${ammoText}`);
 	}
 
 	destroy() {
