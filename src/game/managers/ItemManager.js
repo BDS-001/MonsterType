@@ -1,7 +1,6 @@
 import Item from '../entities/items/item';
 import Medkit from '../entities/items/medkit';
 import Bomb from '../entities/items/bomb';
-import HeavyRoundsPickup from '../entities/items/heavyRoundsPickup';
 import HealthUp from '../entities/items/healthUp';
 import RandomWeaponDrop from '../entities/items/randomWeaponDrop';
 import Shield from '../entities/items/shield';
@@ -45,9 +44,6 @@ export default class ItemManager extends BaseManager {
 				break;
 			case 'SHIELD':
 				item = new Shield(this.scene, x, y, itemId);
-				break;
-			case 'HEAVYROUNDS_PICKUP':
-				item = new HeavyRoundsPickup(this.scene, x, y, itemId);
 				break;
 			case 'HEALTH_UP':
 				item = new HealthUp(this.scene, x, y, itemId);
