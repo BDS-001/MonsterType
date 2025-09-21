@@ -38,7 +38,6 @@ export const ITEM_DATA = {
 		type: 'consumable',
 		rarity: 'uncommon',
 		baseValue: 5,
-		duration: 10000,
 	},
 	RANDOM_WEAPON_DROP: {
 		id: 'RANDOM_WEAPON_DROP',
