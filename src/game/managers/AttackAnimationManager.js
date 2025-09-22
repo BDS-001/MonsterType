@@ -1,6 +1,7 @@
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 import AnimationFactory from '../animations/AnimationFactory.js';
+import { shakeCamera } from '../util/cameraEffects.js';
 
 export default class AttackAnimationManager extends BaseManager {
 	constructor(scene) {
@@ -15,6 +16,8 @@ export default class AttackAnimationManager extends BaseManager {
 
 		const animation = this.animationFactory.createAnimation(animationType);
 		animation.animate(data);
+
+		shakeCamera(this.scene);
 	}
 
 	determineAnimationType(data) {

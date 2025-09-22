@@ -1,5 +1,6 @@
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
+import { shakeCamera } from '../util/cameraEffects.js';
 import { spawnFloatingText } from '../util/floatingText.js';
 
 export default class StateManager extends BaseManager {
@@ -93,6 +94,10 @@ export default class StateManager extends BaseManager {
 			currentHealth: this.state.player.health,
 			maxHealth: this.state.player.maxHealth,
 		});
+
+		if (trueDamage > 0) {
+			shakeCamera(this.scene);
+		}
 
 		if (trueDamage > 0 && this.scene.player) {
 			spawnFloatingText(
