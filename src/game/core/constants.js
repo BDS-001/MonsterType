@@ -2,10 +2,14 @@ import Phaser from 'phaser';
 
 export const phaserConfig = {
 	type: Phaser.AUTO,
-	width: 800,
-	height: 600,
+	width: 1280,
+	height: 720,
 	backgroundColor: '#222',
 	pixelArt: true,
+	scale: {
+		mode: Phaser.Scale.FIT,
+		autoCenter: Phaser.Scale.CENTER_BOTH,
+	},
 
 	physics: {
 		default: 'arcade',
@@ -26,5 +30,5 @@ export const phaserConfig = {
 };
 
 export const gameSettings = {
-	SPRITE_SCALE: 4,
+	SPRITE_SCALE: 3,
 };

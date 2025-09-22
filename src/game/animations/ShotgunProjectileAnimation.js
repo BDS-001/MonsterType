@@ -1,4 +1,5 @@
 import BasicProjectileAnimation from './BasicProjectileAnimation.js';
+import { gameSettings } from '../core/constants.js';
 
 export default class ShotgunProjectileAnimation extends BasicProjectileAnimation {
 	constructor(scene, config = {}) {
@@ -25,7 +26,7 @@ export default class ShotgunProjectileAnimation extends BasicProjectileAnimation
 		const player = this.getPlayer();
 
 		const sprite = this.scene.add.sprite(player.x, player.y, 'basicShot');
-		sprite.setScale(2);
+		sprite.setScale(gameSettings.SPRITE_SCALE);
 
 		const angle = Phaser.Math.Angle.Between(player.x, player.y, impactX, impactY);
 		sprite.setRotation(angle);

@@ -1,5 +1,6 @@
 import TypedEntity from '../typedEntity';
 import { ITEM_DATA } from '../../core/itemData.js';
+import { gameSettings } from '../../core/constants';
 
 export default class Item extends TypedEntity {
 	constructor(scene, x, y, itemType, itemId, spriteKey = 'item-sprite') {
@@ -10,7 +11,7 @@ export default class Item extends TypedEntity {
 
 		super(scene, x, y, spriteKey, itemData.word, itemId);
 
-		this.setScale(2);
+		this.setScale(gameSettings.SPRITE_SCALE);
 
 		this.entityType = 'item';
 		this.itemType = itemType;
