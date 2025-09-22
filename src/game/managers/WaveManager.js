@@ -56,7 +56,6 @@ export default class WaveManager extends BaseManager {
 	}
 
 	onWaveComplete() {
-		this.emit(GAME_EVENTS.WAVE_COMPLETED, { waveNumber: this.currentWave });
 		this.startWave(this.currentWave + 1);
 	}
 

@@ -8,14 +8,11 @@ export const GAME_EVENTS = {
 	HEALTH_CHANGED: 'game:health_changed',
 	SHIELD_CHANGED: 'game:shield_changed',
 	PLAYER_HIT: 'game:player_hit',
-	PLAYER_HEALED: 'game:player_healed',
 	WAVE_STARTED: 'game:wave_started',
-	WAVE_COMPLETED: 'game:wave_completed',
 	WAVE_SPAWN_ENEMIES: 'wave:spawn_enemies',
 	WAVE_SPAWN_ITEMS: 'wave:spawn_items',
 	GAME_OVER: 'game:game_over',
 
-	WEAPON_SWITCH: 'weapon:switch',
 	WEAPON_READY_TO_FIRE: 'weapon:ready_to_fire',
 	WEAPON_FIRED: 'weapon:fired',
 	WEAPON_EQUIPPED: 'weapon:equipped',
@@ -24,7 +21,4 @@ export const GAME_EVENTS = {
 	RANDOM_WEAPON_REQUESTED: 'weapon:random_requested',
 
 	ITEM_SPAWNED: 'item:item_spawn',
-	ITEM_COLLECTED: 'item:collected',
-	ITEM_DESTROYED: 'item:destroyed',
-	SCENE_READY: 'system:scene_ready',
 };

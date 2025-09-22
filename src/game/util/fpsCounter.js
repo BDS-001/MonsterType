@@ -6,6 +6,7 @@ export default class fpsCounter extends Phaser.GameObjects.Text {
 		super(scene, x, y, text, TEXT_STYLES.FPS_COUNTER);
 		scene.add.existing(this);
 		this.scene = scene;
+		this.setShadow(0, 2, '#000000', 4, true, true);
 	}
 
 	updateFPS() {

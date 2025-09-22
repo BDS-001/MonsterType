@@ -23,7 +23,8 @@ export class GameOver extends Phaser.Scene {
 				...TEXT_STYLES.UI_LARGE,
 				color: '#ff4444',
 			})
-			.setOrigin(0.5);
+			.setOrigin(0.5)
+			.setShadow(0, 4, '#000000', 6, true, true);
 
 		const playAgainButton = this.add.image(
 			this.game.config.width / 2,

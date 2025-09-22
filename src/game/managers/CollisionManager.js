@@ -22,7 +22,7 @@ export default class CollisionManager extends BaseManager {
 	handlePlayerEnemyCollision(player, enemy) {
 		if (enemy.isDying || enemy.isDestroyed) return;
 
-		this.emit(GAME_EVENTS.PLAYER_HIT, { player, enemy, damage: enemy.damage || 10 });
+		this.emit(GAME_EVENTS.PLAYER_HIT, { player, enemy });
 		enemy.knockbackEnemy();
 	}
 

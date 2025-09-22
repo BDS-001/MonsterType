@@ -2,6 +2,8 @@ import HealthBar from '../util/healthBar';
 import fpsCounter from '../util/fpsCounter';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 import { TEXT_STYLES } from '../config/fontConfig.js';
+import { spawnFloatingText } from '../util/floatingText.js';
+import { applyTextShadow } from '../util/textEffects.js';
 
 export class HudScene extends Phaser.Scene {
 	constructor() {
@@ -42,12 +44,14 @@ export class HudScene extends Phaser.Scene {
 			)
 			.setOrigin(0.5, 0.5)
 			.setDepth(1000);
+		applyTextShadow(this.uiElements.healthValueText);
 
 		this.uiElements.shieldText = this.add
 			.text(this.healthBar.x, this.healthBar.y - 8, 'Shield: 0', TEXT_STYLES.UI_SMALL)
 			.setOrigin(0, 1)
 			.setDepth(1000)
 			.setVisible(false);
+		applyTextShadow(this.uiElements.shieldText);
 
 		this.fpsDisplay = new fpsCounter(this);
 		this.fpsDisplay.setOrigin(1, 0);
@@ -63,20 +67,24 @@ export class HudScene extends Phaser.Scene {
 			.text(this.PADDING, this.PADDING, 'GAME IS WORK IN PROGRESS', TEXT_STYLES.UI_TINY)
 			.setOrigin(0, 0)
 			.setAlpha(0.9);
+		applyTextShadow(this.uiElements.devBadge);
 
 		const waveY = this.uiElements.devBadge.y + this.uiElements.devBadge.height + 6;
 		this.uiElements.waveText = this.add
 			.text(this.PADDING, waveY, `Wave: ${this.currentWave}`, TEXT_STYLES.UI_SMALL)
 			.setOrigin(0, 0);
+		applyTextShadow(this.uiElements.waveText);
 
 		this.uiElements.scoreText = this.add
 			.text(width / 2, this.PADDING, `Score: ${this.currentScore}`, TEXT_STYLES.UI_MEDIUM)
 			.setOrigin(0.5, 0);
+		applyTextShadow(this.uiElements.scoreText);
 
 		this.uiElements.weaponAmmoText = this.add
 			.text(width - this.PADDING, height - this.PADDING, '', TEXT_STYLES.UI_SMALL)
 			.setOrigin(1, 1);
 		this.renderWeaponAmmoText();
+		applyTextShadow(this.uiElements.weaponAmmoText);
 
 		this.cameras.main.roundPixels = true;
 	}
@@ -86,8 +94,6 @@ export class HudScene extends Phaser.Scene {
 		this.game.events.on(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
 		this.game.events.on(GAME_EVENTS.WEAPON_EQUIPPED, this.updateWeapon, this);
 		this.game.events.on(GAME_EVENTS.WEAPON_AMMO_CHANGED, this.updateAmmo, this);
-		this.game.events.on(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
-		this.game.events.on(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
 		this.game.events.on(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
 		this.game.events.on(GAME_EVENTS.SHIELD_CHANGED, this.updateShield, this);
 		this.game.events.on(GAME_EVENTS.GAME_OVER, this.handleGameRestart, this);
@@ -98,8 +104,15 @@ export class HudScene extends Phaser.Scene {
 	}
 
 	updateScore(data) {
-		this.currentScore = data.newScore || this.currentScore + (data.amount || 0);
+		const added = data?.amount || 0;
+		this.currentScore = data.newScore || this.currentScore + added;
 		this.renderScoreText();
+
+		if (added > 0 && this.uiElements.scoreText) {
+			const x = this.uiElements.scoreText.x;
+			const y = this.uiElements.scoreText.y + this.uiElements.scoreText.height + 8;
+			spawnFloatingText(this, x, y, `+${added}`, '#ffd54f');
+		}
 	}
 
 	updateWave(data) {
@@ -112,14 +125,6 @@ export class HudScene extends Phaser.Scene {
 		this.renderWeaponAmmoText();
 	}
 
-	handlePlayerHit(data) {
-		this.updateHealthText();
-	}
-
-	handlePlayerHealed(data) {
-		this.showHealNumber(data.amount);
-	}
-
 	handleHealthChanged(data) {
 		if (data && typeof data.currentHealth === 'number') {
 			if (typeof data.maxHealth === 'number' && data.maxHealth !== this.healthBar.maxValue) {
@@ -129,41 +134,14 @@ export class HudScene extends Phaser.Scene {
 			}
 			this.healthBar.setValue(data.currentHealth);
 			this.updateHealthText();
-			if (typeof data.healthIncrease === 'number' && data.healthIncrease > 0) {
-				this.showHealNumber(data.healthIncrease);
-			}
+
 			return;
 		}
 
 		if (data?.maxHealthIncrease) {
 			this.healthBar.increaseMax(data.maxHealthIncrease, data.healthIncrease);
 			this.updateHealthText();
-			this.showHealNumber(data.healthIncrease);
 		}
-	}
-
-	showHealNumber(amount) {
-		const healText = this.add.text(
-			this.healthBar.x + this.healthBar.width / 2,
-			this.healthBar.y - 10,
-			`+${amount}`,
-			{ ...TEXT_STYLES.UI_SMALL, fill: '#4CAF50' }
-		);
-
-		healText.setOrigin(0.5, 1);
-		healText.setDepth(2000);
-
-		this.tweens.add({
-			targets: healText,
-			y: healText.y - 40,
-			alpha: 0,
-			scale: 1.2,
-			duration: 1200,
-			ease: 'Power2',
-			onComplete: () => {
-				healText.destroy();
-			},
-		});
 	}
 
 	updateAmmo(data) {
@@ -231,8 +209,6 @@ export class HudScene extends Phaser.Scene {
 		this.game.events.off(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
 		this.game.events.off(GAME_EVENTS.WEAPON_EQUIPPED, this.updateWeapon, this);
 		this.game.events.off(GAME_EVENTS.WEAPON_AMMO_CHANGED, this.updateAmmo, this);
-		this.game.events.off(GAME_EVENTS.PLAYER_HIT, this.handlePlayerHit, this);
-		this.game.events.off(GAME_EVENTS.PLAYER_HEALED, this.handlePlayerHealed, this);
 		this.game.events.off(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
 		this.game.events.off(GAME_EVENTS.SHIELD_CHANGED, this.updateShield, this);
 		this.game.events.off(GAME_EVENTS.GAME_OVER, this.handleGameRestart, this);

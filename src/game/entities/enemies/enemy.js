@@ -98,10 +98,12 @@ export default class Enemy extends TypedEntity {
 		}
 	}
 
-	hitEffect() {
+	hitEffect(damage = 1) {
 		if (this.isDestroyed || !this.scene || !this.scene.tweens) {
 			return;
 		}
+
+		super.hitEffect?.(damage);
 
 		this.scene.tweens.add({
 			targets: this,
