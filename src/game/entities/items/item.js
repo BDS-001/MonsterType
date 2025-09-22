@@ -11,7 +11,7 @@ export default class Item extends TypedEntity {
 
 		super(scene, x, y, spriteKey, itemData.word, itemId);
 
-		this.setScale(gameSettings.SPRITE_SCALE);
+		this.setScale(gameSettings.ITEM_SPRITE_SCALE);
 
 		this.entityType = 'item';
 		this.itemType = itemType;

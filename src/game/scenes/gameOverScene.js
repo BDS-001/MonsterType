@@ -7,9 +7,7 @@ export class GameOver extends Phaser.Scene {
 		this.playAgainButton = null;
 	}
 
-	preload() {
-		this.load.image('playagain', 'assets/ui/playagain.png');
-	}
+	preload() {}
 
 	create() {
 		this.scene.setVisible(false);
@@ -26,22 +24,36 @@ export class GameOver extends Phaser.Scene {
 			.setOrigin(0.5)
 			.setShadow(0, 4, '#000000', 6, true, true);
 
-		const playAgainButton = this.add.image(
-			this.game.config.width / 2,
-			this.game.config.height / 2,
-			'playagain'
-		);
-		playAgainButton.setScale(5);
+		const playAgainButton = this.add
+			.text(
+				this.game.config.width / 2,
+				this.game.config.height / 2,
+				'PLAY AGAIN',
+				TEXT_STYLES.UI_LARGE
+			)
+			.setOrigin(0.5);
 		playAgainButton.setInteractive({ useHandCursor: true });
 		this.playAgainButton = playAgainButton;
 
 		playAgainButton.on('pointerdown', this.playAgain, this);
 
 		playAgainButton.on('pointerover', () => {
-			playAgainButton.setTint(0xcccccc);
+			this.tweens.add({
+				targets: playAgainButton,
+				scaleX: 1.12,
+				scaleY: 1.12,
+				duration: 120,
+				ease: 'Sine.easeOut',
+			});
 		});
 		playAgainButton.on('pointerout', () => {
-			playAgainButton.clearTint();
+			this.tweens.add({
+				targets: playAgainButton,
+				scaleX: 1,
+				scaleY: 1,
+				duration: 120,
+				ease: 'Sine.easeOut',
+			});
 		});
 
 		this.cameras.main.roundPixels = true;
