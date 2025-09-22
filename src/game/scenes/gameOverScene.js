@@ -3,17 +3,11 @@ import { TEXT_STYLES } from '../config/fontConfig.js';
 
 export class GameOver extends Phaser.Scene {
 	constructor() {
-		super({ key: 'GameOver', active: true });
+		super({ key: 'GameOver' });
 		this.playAgainButton = null;
 	}
 
-	preload() {}
-
 	create() {
-		this.scene.setVisible(false);
-		this.input.enabled = false;
-		this.game.events.on(GAME_EVENTS.GAME_OVER, this.onGameOverEvent, this);
-
 		this.cameras.main.setBackgroundColor('rgba(0,0,0,0.3)');
 
 		this.add
@@ -38,6 +32,7 @@ export class GameOver extends Phaser.Scene {
 		playAgainButton.on('pointerdown', this.playAgain, this);
 
 		playAgainButton.on('pointerover', () => {
+			this.tweens.killTweensOf(playAgainButton);
 			this.tweens.add({
 				targets: playAgainButton,
 				scaleX: 1.12,
@@ -47,6 +42,7 @@ export class GameOver extends Phaser.Scene {
 			});
 		});
 		playAgainButton.on('pointerout', () => {
+			this.tweens.killTweensOf(playAgainButton);
 			this.tweens.add({
 				targets: playAgainButton,
 				scaleX: 1,
@@ -60,20 +56,13 @@ export class GameOver extends Phaser.Scene {
 	}
 
 	playAgain() {
-		this.input.enabled = false;
 		this.game.events.emit(GAME_EVENTS.GAME_OVER, { reset: true });
-		this.scene.setVisible(false);
+		this.scene.stop('GameScene');
 		this.scene.start('GameScene');
-	}
-
-	onGameOverEvent(data) {
-		if (data && data.reset) return;
-		this.input.enabled = true;
-		this.scene.setVisible(true);
+		this.scene.launch('HudScene');
 	}
 
 	destroy() {
-		this.game.events.off(GAME_EVENTS.GAME_OVER, this.onGameOverEvent, this);
 		super.destroy();
 	}
 }
