@@ -112,12 +112,14 @@ export class HudScene extends Phaser.Scene {
 			const x = this.uiElements.scoreText.x;
 			const y = this.uiElements.scoreText.y + this.uiElements.scoreText.height + 8;
 			spawnFloatingText(this, x, y, `+${added}`, '#ffd54f');
+			this.pulseText(this.uiElements.scoreText, 1.12, 140);
 		}
 	}
 
 	updateWave(data) {
 		this.currentWave = data.waveNumber;
 		this.renderWaveText();
+		this.showWaveBanner(this.currentWave);
 	}
 
 	updateWeapon(data) {
@@ -202,6 +204,56 @@ export class HudScene extends Phaser.Scene {
 			ammoText = ` · Ammo: ${this.currentAmmo}/${this.currentMaxAmmo}`;
 		}
 		this.uiElements.weaponAmmoText?.setText(`Weapon: ${this.currentWeapon}${ammoText}`);
+	}
+
+	pulseText(target, scaleTo = 1.12, duration = 140) {
+		if (!target) return;
+		this.tweens.add({
+			targets: target,
+			scaleX: scaleTo,
+			scaleY: scaleTo,
+			duration,
+			yoyo: true,
+			ease: 'Sine.easeOut',
+		});
+	}
+
+	showWaveBanner(waveNumber) {
+		const { width } = this.game.config;
+		this.uiElements.waveBanner?.destroy();
+
+		const finalY =
+			(this.uiElements.scoreText?.y || this.PADDING) +
+			(this.uiElements.scoreText?.height || 0) +
+			12;
+		const text = this.add
+			.text(width / 2, finalY - 30, `Wave ${waveNumber}`, TEXT_STYLES.UI_MEDIUM)
+			.setOrigin(0.5, 0)
+			.setDepth(3000)
+			.setAlpha(0);
+
+		applyTextShadow(text);
+		this.uiElements.waveBanner = text;
+
+		this.tweens.add({
+			targets: text,
+			y: finalY,
+			alpha: 1,
+			duration: 200,
+			ease: 'Back.Out',
+			onComplete: () => {
+				this.time.delayedCall(600, () => {
+					this.tweens.add({
+						targets: text,
+						y: text.y - 20,
+						alpha: 0,
+						duration: 250,
+						ease: 'Sine.easeIn',
+						onComplete: () => text.destroy(),
+					});
+				});
+			},
+		});
 	}
 
 	destroy() {
