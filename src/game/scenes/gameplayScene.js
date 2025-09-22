@@ -39,6 +39,8 @@ export default class GameScene extends Phaser.Scene {
 		this.setupBackground();
 		this.setupEventListeners();
 
+		this.cameras.main.roundPixels = true;
+
 		this.inputManager = new InputManager(this);
 		this.stateManager = new StateManager(this);
 		this.enemyManager = new EnemyManager(this);

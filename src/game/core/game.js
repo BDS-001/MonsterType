@@ -6,13 +6,8 @@ import { GameOver } from '../scenes/gameOverScene';
 
 export default class Game {
 	constructor(gameConfig) {
-		const viewportWidth = window.innerWidth;
-		const viewportHeight = window.innerHeight;
-
 		const config = {
 			...gameConfig,
-			width: viewportWidth,
-			height: viewportHeight,
 			scene: [GameScene, HudScene, PauseScene, GameOver],
 		};
 

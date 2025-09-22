@@ -1,4 +1,5 @@
 import ProjectileAnimation from './ProjectileAnimation.js';
+import { gameSettings } from '../core/constants.js';
 
 export default class BasicProjectileAnimation extends ProjectileAnimation {
 	animate(data) {
@@ -8,7 +9,7 @@ export default class BasicProjectileAnimation extends ProjectileAnimation {
 		const player = this.getPlayer();
 
 		const sprite = this.scene.add.sprite(player.x, player.y, 'basicShot');
-		sprite.setScale(2);
+		sprite.setScale(gameSettings.SPRITE_SCALE);
 
 		const toX = impactX ?? target.x;
 		const toY = impactY ?? target.y;
