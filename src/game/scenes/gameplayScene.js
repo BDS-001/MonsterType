@@ -73,7 +73,7 @@ export default class GameScene extends Phaser.Scene {
 	handleGameOver(data) {
 		if (data && data.reset) return;
 		this.scene.pause();
-		this.scene.setVisible(true, 'GameOver');
+		this.scene.launch('GameOver');
 	}
 
 	setupBackground() {

@@ -7,7 +7,7 @@ import { applyTextShadow } from '../util/textEffects.js';
 
 export class HudScene extends Phaser.Scene {
 	constructor() {
-		super({ key: 'HudScene', active: true });
+		super({ key: 'HudScene' });
 
 		this.uiElements = {};
 		this.healthBar = null;
