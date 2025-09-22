@@ -31,4 +31,5 @@ export const phaserConfig = {
 
 export const gameSettings = {
 	SPRITE_SCALE: 3,
+	ITEM_SPRITE_SCALE: 2,
 };
