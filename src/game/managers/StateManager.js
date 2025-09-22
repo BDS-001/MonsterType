@@ -1,5 +1,6 @@
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
+import { spawnFloatingText } from '../util/floatingText.js';
 
 export default class StateManager extends BaseManager {
 	constructor(scene) {
@@ -26,7 +27,6 @@ export default class StateManager extends BaseManager {
 
 	setupEventListeners() {
 		this.subscribe(GAME_EVENTS.ENEMY_KILLED, this.handleEnemyKilled);
-		this.subscribe(GAME_EVENTS.ITEM_COLLECTED, this.handleItemCollected);
 		this.subscribe(GAME_EVENTS.PLAYER_HIT, this.playerHit);
 		this.subscribe(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged);
 		this.subscribeGame(GAME_EVENTS.GAME_OVER, this.handleGameRestart);
@@ -35,14 +35,6 @@ export default class StateManager extends BaseManager {
 	handleEnemyKilled(data) {
 		const { points } = data;
 		this.updateScore(points);
-	}
-
-	handleItemCollected(data) {
-		const { points, item } = data;
-		this.updateScore(points);
-		if (item.type === 'health') {
-			this.playerHeal({ amount: item.healAmount || 20 });
-		}
 	}
 
 	handleHealthChanged(data) {
@@ -54,6 +46,16 @@ export default class StateManager extends BaseManager {
 				currentHealth: this.state.player.health,
 				maxHealth: this.state.player.maxHealth,
 			});
+
+			if (data.healthIncrease > 0 && this.scene.player) {
+				spawnFloatingText(
+					this.scene,
+					this.scene.player.x,
+					this.scene.player.y - this.scene.player.displayHeight / 2 - 8,
+					`+${Math.floor(data.healthIncrease)}`,
+					'#4CAF50'
+				);
+			}
 		}
 	}
 
@@ -63,11 +65,12 @@ export default class StateManager extends BaseManager {
 	}
 
 	playerHit(data) {
-		const { damage, player } = data;
+		const { player, enemy } = data;
 		if (this.state.player.immunity) return;
 
-		const shieldAbsorbed = Math.min(damage, this.state.player.shield);
-		const trueDamage = damage - shieldAbsorbed;
+		const incomingDamage = typeof enemy?.damage === 'number' ? enemy.damage : 10;
+		const shieldAbsorbed = Math.min(incomingDamage, this.state.player.shield);
+		const trueDamage = incomingDamage - shieldAbsorbed;
 
 		this.state.player.shield -= shieldAbsorbed;
 		this.state.player.health = Math.max(0, this.state.player.health - trueDamage);
@@ -91,6 +94,16 @@ export default class StateManager extends BaseManager {
 			maxHealth: this.state.player.maxHealth,
 		});
 
+		if (trueDamage > 0 && this.scene.player) {
+			spawnFloatingText(
+				this.scene,
+				this.scene.player.x,
+				this.scene.player.y - this.scene.player.displayHeight / 2 - 8,
+				`-${Math.floor(trueDamage)}`,
+				'#f44336'
+			);
+		}
+
 		if (this.state.player.health <= 0) {
 			this.handleGameOver();
 		}
@@ -102,11 +115,20 @@ export default class StateManager extends BaseManager {
 			this.state.player.maxHealth,
 			this.state.player.health + amount
 		);
-		this.emitGame(GAME_EVENTS.PLAYER_HEALED, { amount });
 		this.emitGame(GAME_EVENTS.HEALTH_CHANGED, {
 			currentHealth: this.state.player.health,
 			maxHealth: this.state.player.maxHealth,
 		});
+
+		if (amount > 0 && this.scene.player) {
+			spawnFloatingText(
+				this.scene,
+				this.scene.player.x,
+				this.scene.player.y - this.scene.player.displayHeight / 2 - 8,
+				`+${Math.floor(amount)}`,
+				'#4CAF50'
+			);
+		}
 	}
 
 	handleGameOver() {
@@ -127,5 +149,14 @@ export default class StateManager extends BaseManager {
 			this.state.player.shield + amount
 		);
 		this.emitGame(GAME_EVENTS.SHIELD_CHANGED, { shield: this.state.player.shield });
+		if (amount > 0 && this.scene.player) {
+			spawnFloatingText(
+				this.scene,
+				this.scene.player.x,
+				this.scene.player.y - this.scene.player.displayHeight / 2 - 8,
+				`+${Math.floor(amount)}`,
+				'#ffffff'
+			);
+		}
 	}
 }

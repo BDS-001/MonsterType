@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { TEXT_STYLES } from '../config/fontConfig.js';
+import { applyTextShadow } from '../util/textEffects.js';
+import { spawnFloatingText } from '../util/floatingText.js';
 
 export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	constructor(scene, x, y, texture, word = '', id = null) {
@@ -18,6 +20,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		this.healthText = scene.add
 			.text(this.x, this.y - 30, this.word, TEXT_STYLES.ENTITY_WORD)
 			.setOrigin(0.5);
+		applyTextShadow(this.healthText);
 	}
 
 	update() {
@@ -34,7 +37,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		if (this.isDestroyed) return;
 
 		this.hitIndex = Math.min(this.hitIndex + damage, this.word.length);
-		this.hitEffect();
+		this.hitEffect(damage);
 		this.updateDisplay();
 	}
 
@@ -57,12 +60,8 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		this.scene.time.delayedCall(0, () => this.destroy());
 	}
 
-	getCurrentWord() {
-		return this.word.slice(this.hitIndex);
-	}
-
-	hitEffect() {
-		// Override in subclasses to add visual/audio effects when hit
+	hitEffect(damage = 1) {
+		spawnFloatingText(this.scene, this.x, this.y - this.displayHeight / 2 - 8, `-10`, '#f44336');
 	}
 
 	onKill() {

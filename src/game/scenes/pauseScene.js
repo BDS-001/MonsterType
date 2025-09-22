@@ -26,7 +26,8 @@ export class PauseScene extends Phaser.Scene {
 				'PAUSED\n\nPress ESC to Resume',
 				{ ...TEXT_STYLES.UI_LARGE, align: 'center' }
 			)
-			.setOrigin(0.5);
+			.setOrigin(0.5)
+			.setShadow(0, 4, '#000000', 6, true, true);
 
 		this.cameras.main.roundPixels = true;
 	}

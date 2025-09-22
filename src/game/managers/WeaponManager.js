@@ -22,7 +22,6 @@ export default class WeaponManager extends BaseManager {
 	}
 
 	setupEventListeners() {
-		this.subscribe(GAME_EVENTS.WEAPON_SWITCH, this.handleWeaponSwitch);
 		this.subscribe(GAME_EVENTS.KEY_PRESSED, this.handleTypingInput);
 		this.subscribe(GAME_EVENTS.RANDOM_WEAPON_REQUESTED, this.handleRandomWeaponRequest);
 		this.subscribe('weapon:ammo_empty', this.handleAmmoEmpty);
@@ -57,11 +56,6 @@ export default class WeaponManager extends BaseManager {
 		return true;
 	}
 
-	handleWeaponSwitch(data) {
-		const { weaponType } = data;
-		this.equipWeapon(weaponType);
-	}
-
 	handleTypingInput(key) {
 		if (!this.currentWeapon) return;
 
@@ -88,10 +82,6 @@ export default class WeaponManager extends BaseManager {
 		if (data && data.reset) {
 			this.equipWeapon(this.STARTER_WEAPON);
 		}
-	}
-
-	getCurrentWeapon() {
-		return this.currentWeapon;
 	}
 
 	getRandomWeaponKey(exclude = []) {

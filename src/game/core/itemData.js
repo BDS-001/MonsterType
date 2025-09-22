@@ -8,13 +8,6 @@ export const ITEM_DATA = {
 		baseValue: 2,
 		radius: 300,
 	},
-	HEAVYROUNDS_PICKUP: {
-		id: 'HEAVYROUNDS_PICKUP',
-		name: 'Heavy Rounds',
-		word: 'heavy',
-		type: 'weapon',
-		rarity: 'rare',
-	},
 	MEDKIT: {
 		id: 'MEDKIT',
 		name: 'Medkit',
