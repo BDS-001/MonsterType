@@ -6,13 +6,25 @@ export class MainMenu extends Phaser.Scene {
 		this.playButton = null;
 	}
 
+	preload() {
+		this.load.image('menuBackground', 'assets/ui/menuBackground.png');
+	}
+
 	create() {
 		this.cameras.main.setBackgroundColor('rgba(0,0,0,0.3)');
+
+		const { width, height } = this.game.config;
+		const bg = this.add.image(width / 2, height / 2, 'menuBackground');
+		const scaleX = width / bg.width;
+		const scaleY = height / bg.height;
+		const scale = Math.max(scaleX, scaleY);
+		bg.setScale(scale).setScrollFactor(0).setDepth(-10);
 
 		this.add
 			.text(this.game.config.width / 2, this.game.config.height / 2 - 110, 'MONSTERTYPE', {
 				...TEXT_STYLES.UI_LARGE,
-				color: '#39FF14',
+				fill: '#39FF14',
+				fontSize: '72px',
 			})
 			.setOrigin(0.5)
 			.setShadow(0, 4, '#000000', 6, true, true);

@@ -23,3 +23,5 @@ review.md
 *.njsproj
 *.sln
 *.sw?
+
+*menuBackground.png
