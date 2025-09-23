@@ -22,41 +22,41 @@ export default class ShotgunProjectileAnimation extends BasicProjectileAnimation
 	}
 
 	animateSinglePellet(data) {
-		const { impactX, impactY } = data;
-		const player = this.getPlayer();
+		const { impactX, impactY, originX, originY } = data;
 
-		const sprite = this.scene.add.sprite(player.x, player.y, 'basicShot');
+		const sprite = this.scene.add.sprite(originX, originY, 'basicShot');
 		sprite.setScale(gameSettings.SPRITE_SCALE);
 
-		const angle = Phaser.Math.Angle.Between(player.x, player.y, impactX, impactY);
+		const angle = Phaser.Math.Angle.Between(originX, originY, impactX, impactY);
 		sprite.setRotation(angle);
 
-		this.animateProjectileMovement(sprite, player, impactX, impactY);
+		this.animateProjectileMovement(sprite, originX, originY, impactX, impactY);
 	}
 
 	animateSpreadPattern(data) {
-		const { target } = data;
-		const player = this.getPlayer();
+		const { target, originX, originY } = data;
 
-		if (!player || !target) return;
+		if (!target) return;
 
-		const centerAngle = this.calculateCenterAngle(player, target);
+		const centerAngle = this.calculateCenterAngle(originX, originY, target);
 		const maxDistance = this.calculateMaxDistance();
 
 		for (let i = 0; i < this.pelletFxCount; i++) {
 			const angle = this.calculatePelletAngle(centerAngle);
-			const impactPoint = this.calculateImpactPoint(player, angle, maxDistance);
+			const impactPoint = this.calculateImpactPoint(originX, originY, angle, maxDistance);
 
 			this.animateSinglePellet({
 				impactX: impactPoint.x,
 				impactY: impactPoint.y,
+				originX,
+				originY,
 			});
 		}
 	}
 
-	calculateCenterAngle(player, target) {
-		const dx = target.x - player.x;
-		const dy = target.y - player.y;
+	calculateCenterAngle(originX, originY, target) {
+		const dx = target.x - originX;
+		const dy = target.y - originY;
 		return Math.atan2(dy, dx);
 	}
 
@@ -70,10 +70,10 @@ export default class ShotgunProjectileAnimation extends BasicProjectileAnimation
 		return centerAngle + rand;
 	}
 
-	calculateImpactPoint(player, angle, distance) {
+	calculateImpactPoint(originX, originY, angle, distance) {
 		return {
-			x: player.x + Math.cos(angle) * distance,
-			y: player.y + Math.sin(angle) * distance,
+			x: originX + Math.cos(angle) * distance,
+			y: originY + Math.sin(angle) * distance,
 		};
 	}
 }

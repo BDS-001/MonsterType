@@ -60,6 +60,8 @@ export default class TargetManager extends BaseManager {
 				targets: selectedTargets,
 				weapon,
 				key,
+				originX: this.scene.player.x,
+				originY: this.scene.player.y,
 			});
 		}
 	}

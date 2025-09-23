@@ -40,10 +40,10 @@ export default class Weapon {
 	performFiring(weaponFireData) {
 		if (this.currentUsages === 0) return;
 
-		const { targets } = weaponFireData;
+		const { targets, originX, originY } = weaponFireData;
 		targets.forEach((target) => {
 			this.shotEffect(target);
-			this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, { target, weapon: this });
+			this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, { target, weapon: this, originX, originY });
 		});
 
 		if (this.maxUsages <= 0) return;
