@@ -12,10 +12,9 @@ export default class ProjectileAnimation {
 	}
 
 	validateData(data) {
-		const { target } = data;
-		const player = this.getPlayer();
+		const { target, originX, originY } = data;
 
-		if (!player) return false;
+		if (originX == null || originY == null) return false;
 		if (!target || target.x == null || target.y == null) return false;
 
 		return true;

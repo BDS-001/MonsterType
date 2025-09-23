@@ -16,20 +16,19 @@ export default class LazerProjectileAnimation extends ProjectileAnimation {
 	animate(data) {
 		if (!this.validateData(data)) return;
 
-		const { target, lazerLength, lazerWidth } = data;
-		const player = this.getPlayer();
+		const { target, lazerLength, lazerWidth, originX, originY } = data;
 
 		if (lazerLength) this.lazerLength = lazerLength;
 		if (lazerWidth) this.lazerWidth = lazerWidth;
 
-		const angle = Phaser.Math.Angle.Between(player.x, player.y, target.x, target.y);
+		const angle = Phaser.Math.Angle.Between(originX, originY, target.x, target.y);
 
-		this.createLazerBeam(player, angle);
+		this.createLazerBeam(originX, originY, angle);
 	}
 
-	createLazerBeam(player, angle) {
+	createLazerBeam(originX, originY, angle) {
 		const lazer = this.scene.add.graphics();
-		lazer.setPosition(player.x, player.y);
+		lazer.setPosition(originX, originY);
 		lazer.lineStyle(this.lineWidth, this.lineColor, this.lineAlpha);
 		lazer.fillStyle(this.fillColor, this.fillAlpha);
 		lazer.fillRect(0, 0, this.lazerLength, this.lazerWidth);

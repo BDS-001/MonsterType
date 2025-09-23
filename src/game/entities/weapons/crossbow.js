@@ -1,8 +1,8 @@
 import Weapon from './weapon.js';
 
-export default class Ricochet extends Weapon {
+export default class Crossbow extends Weapon {
 	constructor() {
-		super('Ricochet Gun', 'Projectile that bounces between multiple enemies', {
+		super('Crossbow', 'Fires bolts that ricochet between multiple enemies', {
 			maxTargets: 1,
 			attackAnimation: 'basic',
 			maxUsages: 40,
@@ -13,6 +13,7 @@ export default class Ricochet extends Weapon {
 
 	damageTargetsInRadius() {
 		const bodies = this.scene.physics.overlapCirc(this.x, this.y, this.range, true, false);
+		if (bodies.length < 1) return;
 		//TODO: get next closest enemy in range
 	}
 }
