@@ -9,10 +9,11 @@ export default class ShotgunProjectileAnimation extends BasicProjectileAnimation
 	}
 
 	animate(data) {
-		const { impactX, impactY, pelletFxCount, halfAngle } = data;
+		const { impactX, impactY, pelletFxCount, halfAngle, maxRange } = data;
 
 		if (pelletFxCount) this.pelletFxCount = pelletFxCount;
 		if (halfAngle) this.halfAngle = halfAngle;
+		if (maxRange) this.maxRange = maxRange;
 
 		if (impactX != null && impactY != null) {
 			this.animateSinglePellet({ impactX, impactY });
@@ -39,7 +40,7 @@ export default class ShotgunProjectileAnimation extends BasicProjectileAnimation
 		if (!target) return;
 
 		const centerAngle = this.calculateCenterAngle(originX, originY, target);
-		const maxDistance = this.calculateMaxDistance();
+		const maxDistance = this.maxRange || this.calculateMaxDistance();
 
 		for (let i = 0; i < this.pelletFxCount; i++) {
 			const angle = this.calculatePelletAngle(centerAngle);

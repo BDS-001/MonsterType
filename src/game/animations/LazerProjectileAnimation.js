@@ -28,11 +28,15 @@ export default class LazerProjectileAnimation extends ProjectileAnimation {
 
 	createLazerBeam(originX, originY, angle) {
 		const lazer = this.scene.add.graphics();
-		lazer.setPosition(originX, originY);
-		lazer.lineStyle(this.lineWidth, this.lineColor, this.lineAlpha);
-		lazer.fillStyle(this.fillColor, this.fillAlpha);
-		lazer.fillRect(0, 0, this.lazerLength, this.lazerWidth);
-		lazer.rotation = angle;
+		lazer.lineStyle(this.lazerWidth, this.lineColor, this.lineAlpha);
+
+		const endX = originX + Math.cos(angle) * this.lazerLength;
+		const endY = originY + Math.sin(angle) * this.lazerLength;
+
+		lazer.beginPath();
+		lazer.moveTo(originX, originY);
+		lazer.lineTo(endX, endY);
+		lazer.strokePath();
 
 		this.animateLazerFade(lazer);
 	}

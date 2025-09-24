@@ -24,29 +24,33 @@ export default class LazerGun extends Weapon {
 			weapon: this,
 			lazerLength: this.lazerLength,
 			lazerWidth: this.lazerWidth,
+			originX: player.x,
+			originY: player.y,
 		});
 	}
 
 	damageEnemiesInLine(primaryTarget, player) {
-		const enemyGroup = this.scene?.enemyManager?.getEnemies?.();
-		const enemies = enemyGroup ? enemyGroup.getChildren() : [];
-		const itemGroup = this.scene?.itemManager?.getItems?.();
-		const items = itemGroup ? itemGroup.getChildren() : [];
-		const allTargets = [...enemies, ...items];
+		if (!this.scene?.physics) return;
 
-		if (allTargets.length === 0) return;
+		const bodies = this.scene.physics.overlapCirc(
+			player.x,
+			player.y,
+			this.lazerLength,
+			true,
+			false
+		);
+		if (!bodies || bodies.length === 0) return;
 
 		const angle = Phaser.Math.Angle.Between(player.x, player.y, primaryTarget.x, primaryTarget.y);
 		const laserDirX = Math.cos(angle);
 		const laserDirY = Math.sin(angle);
-		const lazerLengthSq = this.lazerLength * this.lazerLength;
 
-		for (const target of allTargets) {
+		for (const body of bodies) {
+			const target = body.gameObject;
+			if (!target?.takeDamage || target.id === primaryTarget.id) continue;
+
 			const toTargetX = target.x - player.x;
 			const toTargetY = target.y - player.y;
-
-			const distanceSq = toTargetX * toTargetX + toTargetY * toTargetY;
-			if (distanceSq > lazerLengthSq) continue;
 
 			const dotProduct = toTargetX * laserDirX + toTargetY * laserDirY;
 			if (dotProduct <= 0) continue;
