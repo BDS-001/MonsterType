@@ -5,7 +5,7 @@ export default class Crossbow extends Weapon {
 	constructor() {
 		super('Crossbow', 'Fires bolts that ricochet between multiple enemies', {
 			maxTargets: 1,
-			attackAnimation: 'basic',
+			attackAnimation: 'crossbow',
 			maxUsages: 40,
 		});
 		this.ricochetCount = 3;

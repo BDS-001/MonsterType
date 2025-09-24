@@ -10,7 +10,7 @@ export default class WeaponManager extends BaseManager {
 	constructor(scene) {
 		super(scene);
 		this.currentWeapon = null;
-		this.STARTER_WEAPON = 'pistol';
+		this.STARTER_WEAPON = 'crossbow';
 		this.weaponTypes = new Map([
 			['pistol', Pistol],
 			['crossbow', Crossbow],
