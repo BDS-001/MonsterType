@@ -1,4 +1,5 @@
 import Pistol from '../entities/weapons/pistol.js';
+import Crossbow from '../entities/weapons/crossbow.js';
 import Shotgun from '../entities/weapons/shotgun.js';
 import Minigun from '../entities/weapons/miniGun.js';
 import LazerGun from '../entities/weapons/lazer.js';
@@ -12,6 +13,7 @@ export default class WeaponManager extends BaseManager {
 		this.STARTER_WEAPON = 'pistol';
 		this.weaponTypes = new Map([
 			['pistol', Pistol],
+			['crossbow', Crossbow],
 			['shotgun', Shotgun],
 			['minigun', Minigun],
 			['lazerGun', LazerGun],
