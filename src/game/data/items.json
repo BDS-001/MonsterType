@@ -36,7 +36,7 @@
 			"OnKill": [
 				{
 					"type": "EmitEvent",
-					"event": "game:health_changed",
+					"event": "HEALTH_CHANGED",
 					"payload": { "maxHealthIncrease": 10, "healthIncrease": 10 }
 				}
 			]
@@ -62,7 +62,7 @@
 		"rarity": "common",
 		"spriteKey": "randomWeapon",
 		"triggers": {
-			"OnKill": [{ "type": "EmitEvent", "event": "weapon:random_requested" }]
+			"OnKill": [{ "type": "EmitEvent", "event": "RANDOM_WEAPON_REQUESTED" }]
 		}
 	}
 }

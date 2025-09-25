@@ -1,6 +1,6 @@
 import TypedEntity from './typedEntity.js';
 import items from '../data/items.json';
-import { runAction } from '../composition/actions.js';
+import { runAction } from '../core/registries/ActionRegistry.js';
 import { gameSettings } from '../core/constants.js';
 
 export default class CompositeItem extends TypedEntity {

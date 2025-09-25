@@ -1,5 +1,5 @@
 import { GAME_EVENTS } from '../../core/GameEvents.js';
-import { runWeaponAction } from '../../weapons/WeaponActions.js';
+import { runWeaponAction } from '../../core/registries/WeaponActionRegistry.js';
 
 export default class Weapon {
 	constructor(name, description, options = {}) {
@@ -68,7 +68,7 @@ export default class Weapon {
 	}
 
 	onAmmoEmpty() {
-		this.scene?.events.emit('weapon:ammo_empty', { weapon: this });
+		this.scene?.events.emit(GAME_EVENTS.WEAPON_AMMO_EMPTY, { weapon: this });
 	}
 
 	hasAmmo() {

@@ -3,6 +3,7 @@ export const GAME_EVENTS = {
 
 	ENEMY_SPAWNED: 'combat:enemy_spawned',
 	ENEMY_KILLED: 'combat:enemy_killed',
+	ENEMY_DUMMY_ACTION: 'enemy:dummy_action',
 
 	SCORE_CHANGED: 'game:score_changed',
 	HEALTH_CHANGED: 'game:health_changed',
@@ -17,6 +18,7 @@ export const GAME_EVENTS = {
 	WEAPON_FIRED: 'weapon:fired',
 	WEAPON_EQUIPPED: 'weapon:equipped',
 	WEAPON_AMMO_CHANGED: 'weapon:ammo_changed',
+	WEAPON_AMMO_EMPTY: 'weapon:ammo_empty',
 	TARGETS_SELECTED: 'weapon:targets_selected',
 	RANDOM_WEAPON_REQUESTED: 'weapon:random_requested',
 

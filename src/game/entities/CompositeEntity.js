@@ -1,8 +1,9 @@
 import TypedEntity from './typedEntity.js';
-import { BehaviorRegistry } from '../composition/registry.js';
-import Triggers from '../composition/Triggers.js';
+import { BehaviorRegistry } from '../core/registries/BehaviorRegistry.js';
+import Triggers from '../triggers/Triggers.js';
 import wordBank from '../data/wordbank.js';
 import { gameSettings } from '../core/constants.js';
+import { GAME_EVENTS } from '../core/GameEvents.js';
 
 export default class CompositeEntity extends TypedEntity {
 	constructor(scene, x, y, definition, id = null) {
@@ -28,13 +29,6 @@ export default class CompositeEntity extends TypedEntity {
 
 	static pickWord(definition) {
 		if (typeof definition.word === 'string') return definition.word;
-		if (definition.wordMode === 'letters') {
-			const alphabet = definition.letters || 'abcdefghijklmnopqrstuvwxyz';
-			const letterCount = Math.max(1, definition.wordLength ?? 1);
-			let result = '';
-			for (let index = 0; index < letterCount; index++) result += alphabet[Math.floor(Math.random() * alphabet.length)];
-			return result;
-		}
 		const category = definition.wordCategory ?? 'easy';
 		const wordList = wordBank[category] ?? wordBank['easy'] ?? ['foo'];
 		const index = Math.floor(Math.random() * wordList.length);
@@ -50,7 +44,7 @@ export default class CompositeEntity extends TypedEntity {
 	}
 
 	onKill() {
-		this.scene?.events?.emit?.('combat:enemy_killed', { enemy: this, points: 10 });
+		this.scene?.events?.emit?.(GAME_EVENTS.ENEMY_KILLED, { enemy: this, points: 10 });
 		if (this.dropTable && this.dropTable.length > 0) {
 			const totalWeight = this.dropTable.reduce((sum, entry) => sum + entry.chance, 0);
 			const dropRoll = Math.random() * 100;
@@ -60,7 +54,7 @@ export default class CompositeEntity extends TypedEntity {
 				for (const dropEntry of this.dropTable) {
 					currentWeight += dropEntry.chance;
 					if (itemRoll <= currentWeight) {
-						this.scene?.events?.emit?.('item:item_spawn', {
+						this.scene?.events?.emit?.(GAME_EVENTS.ITEM_SPAWNED, {
 							x: this.x,
 							y: this.y,
 							itemType: dropEntry.itemType,

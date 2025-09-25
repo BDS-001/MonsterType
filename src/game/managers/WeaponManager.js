@@ -16,7 +16,7 @@ export default class WeaponManager extends BaseManager {
 	setupEventListeners() {
 		this.subscribe(GAME_EVENTS.KEY_PRESSED, this.handleTypingInput);
 		this.subscribe(GAME_EVENTS.RANDOM_WEAPON_REQUESTED, this.handleRandomWeaponRequest);
-		this.subscribe('weapon:ammo_empty', this.handleAmmoEmpty);
+		this.subscribe(GAME_EVENTS.WEAPON_AMMO_EMPTY, this.handleAmmoEmpty);
 		this.subscribe(GAME_EVENTS.WEAPON_AMMO_CHANGED, this.handleAmmoChanged);
 		this.subscribeGame(GAME_EVENTS.GAME_OVER, this.handleGameRestart);
 	}

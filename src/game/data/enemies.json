@@ -16,9 +16,7 @@
 	"ghost": {
 		"id": "ghost",
 		"texture": "ghost",
-		"wordMode": "letters",
-		"letters": "abcdefghijklmnopqrstuvwxyz",
-		"wordLength": 1,
+		"wordCategory": "veryEasy",
 		"scale": 3,
 		"entityType": "enemy",
 		"behaviors": [{ "type": "Seek", "speed": 60 }, { "type": "FlipTowardsPlayer" }]
@@ -26,7 +24,18 @@
 	"mummy": {
 		"id": "mummy",
 		"texture": "mummy",
-		"wordCategory": "easy",
+		"wordCategory": "hard",
+		"scale": 3,
+		"entityType": "enemy",
+		"behaviors": [
+			{ "type": "Seek", "speed": 50 },
+			{ "type": "FlipTowardsPlayer" }
+		]
+	},
+	"pumpkin mage": {
+		"id": "pumpkinMage",
+		"texture": "pumpkinMage",
+		"wordCategory": "medium",
 		"scale": 3,
 		"entityType": "enemy",
 		"behaviors": [
@@ -35,11 +44,11 @@
 			{ "type": "FlipTowardsPlayer" }
 		],
 		"triggers": {
-			"OnTimer(2.5)": [
+			"OnTimer(5)": [
 				{
 					"type": "IfTag",
 					"tag": "inRange",
-					"then": [{ "type": "EmitEvent", "event": "enemy:dummy_action" }]
+					"then": [{ "type": "EmitEvent", "event": "ENEMY_DUMMY_ACTION" }]
 				}
 			]
 		}
