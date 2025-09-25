@@ -13,12 +13,13 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		this.hitIndex = 0;
 		this.isDestroyed = false;
 		this.isDying = false;
+		this.textHeight = 65
 
 		scene.add.existing(this);
 		scene.physics.add.existing(this);
 
 		this.healthText = scene.add
-			.text(this.x, this.y - 30, this.word, TEXT_STYLES.ENTITY_WORD)
+			.text(this.x, this.y - this.textHeight, this.word, TEXT_STYLES.ENTITY_WORD)
 			.setOrigin(0.5);
 		applyTextShadow(this.healthText);
 	}
@@ -30,7 +31,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	}
 
 	updateTextPositions() {
-		this.healthText?.setPosition(this.x, this.y - 30);
+		this.healthText?.setPosition(this.x, this.y - this.textHeight);
 	}
 
 	takeDamage(damage = 1) {
