@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Player from '../entities/player';
+import playerConfig from '../data/player.json';
 import EnemyManager from '../managers/EnemyManager';
 import ItemManager from '../managers/ItemManager';
 import TargetManager from '../managers/TargetManager';
@@ -63,12 +64,12 @@ export default class GameScene extends Phaser.Scene {
 		this.events.on(GAME_EVENTS.WAVE_SPAWN_ITEMS, this.handleSpawnItems, this);
 	}
 
-	handleSpawnEnemies(enemyCounts) {
-		this.enemyManager.spawnEnemiesFromCounts(enemyCounts);
+	handleSpawnEnemies(spawnList) {
+		this.enemyManager.spawnEnemiesFromList(spawnList);
 	}
 
-	handleSpawnItems(itemCounts) {
-		this.itemManager.spawnItemsFromCounts(itemCounts);
+	handleSpawnItems(itemSpawns) {
+		this.itemManager.spawnItemsFromSpawns(itemSpawns);
 	}
 
 	handleGameOver(data) {
@@ -90,9 +91,12 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	createPlayer() {
-		const centerX = this.game.config.width / 2;
-		const centerY = this.game.config.height / 2;
-		this.player = new Player(this, centerX, centerY);
+		const width = this.game.config.width;
+		const height = this.game.config.height;
+		const start = playerConfig?.start || { x: 'center', y: 'center' };
+		const startX = typeof start.x === 'number' ? start.x : width / 2;
+		const startY = typeof start.y === 'number' ? start.y : height / 2;
+		this.player = new Player(this, startX, startY);
 	}
 
 	update() {}

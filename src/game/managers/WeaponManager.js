@@ -1,23 +1,13 @@
-import Pistol from '../entities/weapons/pistol.js';
-import Crossbow from '../entities/weapons/crossbow.js';
-import Shotgun from '../entities/weapons/shotgun.js';
-import Minigun from '../entities/weapons/miniGun.js';
-import LazerGun from '../entities/weapons/lazer.js';
+import Weapon from '../entities/weapons/weapon.js';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
+import weaponDefs from '../data/weapons.json';
 
 export default class WeaponManager extends BaseManager {
 	constructor(scene) {
 		super(scene);
 		this.currentWeapon = null;
-		this.STARTER_WEAPON = 'pistol';
-		this.weaponTypes = new Map([
-			['pistol', Pistol],
-			['crossbow', Crossbow],
-			['shotgun', Shotgun],
-			['minigun', Minigun],
-			['lazerGun', LazerGun],
-		]);
+		this.STARTER_WEAPON = this.getDefaultWeaponId();
 
 		this.setupEventListeners();
 		this.equipWeapon(this.STARTER_WEAPON);
@@ -31,10 +21,10 @@ export default class WeaponManager extends BaseManager {
 		this.subscribeGame(GAME_EVENTS.GAME_OVER, this.handleGameRestart);
 	}
 
-	equipWeapon(weaponType) {
-		const WeaponClass = this.weaponTypes.get(weaponType);
-		if (!WeaponClass) {
-			console.warn(`WeaponManager: Unknown weapon type '${weaponType}'`);
+	equipWeapon(weaponId) {
+		const def = weaponDefs[weaponId];
+		if (!def) {
+			console.warn(`WeaponManager: Missing config for '${weaponId}'`);
 			return false;
 		}
 
@@ -42,18 +32,18 @@ export default class WeaponManager extends BaseManager {
 			this.currentWeapon.removeEventListeners();
 		}
 
-		this.currentWeapon = new WeaponClass();
+		this.currentWeapon = new Weapon(def.name, def.description, {
+			maxTargets: def.maxTargets ?? 1,
+			attackAnimation: def.attackAnimation ?? 'basic',
+			maxUsages: def.kind === 'default' ? -1 : (def.maxUsages ?? -1),
+		});
 		this.currentWeapon.setScene(this.scene);
+		this.currentWeapon.currentUsages = this.currentWeapon.maxUsages;
+		this.currentWeapon.actions = def.actions ?? null;
 
-		this.emitGame(GAME_EVENTS.WEAPON_EQUIPPED, {
-			weapon: this.currentWeapon,
-			weaponType,
-		});
+		this.emitGame(GAME_EVENTS.WEAPON_EQUIPPED, { weapon: this.currentWeapon, weaponType: weaponId });
 
-		this.emitGame(GAME_EVENTS.WEAPON_AMMO_CHANGED, {
-			ammo: this.currentWeapon.getAmmoCount(),
-			maxAmmo: this.currentWeapon.maxUsages,
-		});
+		this.emitGame(GAME_EVENTS.WEAPON_AMMO_CHANGED, { ammo: this.currentWeapon.getAmmoCount(), maxAmmo: this.currentWeapon.maxUsages });
 
 		return true;
 	}
@@ -68,7 +58,7 @@ export default class WeaponManager extends BaseManager {
 	}
 
 	handleRandomWeaponRequest() {
-		const randomWeapon = this.getRandomWeaponKey([this.STARTER_WEAPON]);
+		const randomWeapon = this.getRandomUniqueWeaponId();
 		this.equipWeapon(randomWeapon);
 	}
 
@@ -86,9 +76,14 @@ export default class WeaponManager extends BaseManager {
 		}
 	}
 
-	getRandomWeaponKey(exclude = []) {
-		const excludeSet = new Set(exclude);
-		const keys = Array.from(this.weaponTypes.keys()).filter((k) => !excludeSet.has(k));
-		return keys[Math.floor(Math.random() * keys.length)];
+	getDefaultWeaponId() {
+		const entries = Object.entries(weaponDefs);
+		const found = entries.find(([, def]) => def.kind === 'default');
+		return found ? found[0] : 'pistol';
+	}
+
+	getRandomUniqueWeaponId() {
+		const ids = Object.keys(weaponDefs).filter((id) => id !== this.STARTER_WEAPON && weaponDefs[id].kind !== 'default');
+		return ids[Math.floor(Math.random() * ids.length)] || this.STARTER_WEAPON;
 	}
 }

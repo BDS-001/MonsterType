@@ -1,8 +1,7 @@
-import Zombie from '../entities/enemies/zombie';
-import Ghost from '../entities/enemies/ghost';
-import Mummy from '../entities/enemies/mummy';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
+import enemies from '../data/enemies.json';
+import { spawnEntityFromDef } from '../entities/EntityFactory.js';
 
 export default class EnemyManager extends BaseManager {
 	constructor(scene) {
@@ -19,21 +18,25 @@ export default class EnemyManager extends BaseManager {
 		});
 	}
 
-	spawnEnemyType(EnemyClass, count = 1) {
-		for (let i = 0; i < count; i++) {
-			const enemyId = `enemy${this.currentEnemyId}`;
-			const enemy = new EnemyClass(this.scene, enemyId);
-			this.currentEnemyId++;
-			this.enemies.add(enemy);
-			this.emit(GAME_EVENTS.ENEMY_SPAWNED, { enemy });
+	spawnEnemiesFromList(spawnList = []) {
+		for (const entry of spawnList) {
+			const definition = enemies[entry.id];
+			if (!definition) {
+				console.warn(`EnemyManager: unknown enemy id '${entry.id}'`);
+				continue;
+			}
+			const count = entry.count ?? 1;
+			for (let i = 0; i < count; i++) {
+				const enemyId = `enemy${this.currentEnemyId}`;
+				const enemy = spawnEntityFromDef(this.scene, definition, enemyId);
+				this.currentEnemyId++;
+				this.enemies.add(enemy);
+				this.emit(GAME_EVENTS.ENEMY_SPAWNED, { enemy });
+			}
 		}
 	}
 
-	spawnEnemiesFromCounts({ zombieCount, ghostCount, mummyCount }) {
-		this.spawnEnemyType(Zombie, zombieCount);
-		this.spawnEnemyType(Ghost, ghostCount);
-		this.spawnEnemyType(Mummy, mummyCount);
-	}
+
 
 	getEnemies() {
 		return this.enemies;

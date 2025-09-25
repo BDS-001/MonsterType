@@ -131,7 +131,7 @@ export class HudScene extends Phaser.Scene {
 		if (data && typeof data.currentHealth === 'number') {
 			if (typeof data.maxHealth === 'number' && data.maxHealth !== this.healthBar.maxValue) {
 				this.healthBar.maxValue = data.maxHealth;
-				this.healthBar.p =
+				this.healthBar.pixelsPerValue =
 					(this.healthBar.width - this.healthBar.borderThickness * 2) / this.healthBar.maxValue;
 			}
 			this.healthBar.setValue(data.currentHealth);

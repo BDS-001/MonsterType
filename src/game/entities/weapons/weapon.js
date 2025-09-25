@@ -1,4 +1,5 @@
 import { GAME_EVENTS } from '../../core/GameEvents.js';
+import { runWeaponAction } from '../../weapons/WeaponActions.js';
 
 export default class Weapon {
 	constructor(name, description, options = {}) {
@@ -9,6 +10,7 @@ export default class Weapon {
 		this.maxUsages = options.maxUsages || -1;
 		this.currentUsages = this.maxUsages;
 		this.scene = null;
+		this.actions = null;
 	}
 
 	setScene(scene) {
@@ -40,11 +42,17 @@ export default class Weapon {
 	performFiring(weaponFireData) {
 		if (this.currentUsages === 0) return;
 
-		const { targets, originX, originY } = weaponFireData;
-		targets.forEach((target) => {
-			this.shotEffect(target);
-			this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, { target, weapon: this, originX, originY });
-		});
+		if (Array.isArray(this.actions) && this.actions.length > 0) {
+			for (const action of this.actions) {
+				runWeaponAction(action, this.scene.player, this.scene, this, weaponFireData);
+			}
+		} else {
+			const { targets, originX, originY } = weaponFireData;
+			targets.forEach((target) => {
+				this.shotEffect(target);
+				this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, { target, weapon: this, originX, originY });
+			});
+		}
 
 		if (this.maxUsages <= 0) return;
 

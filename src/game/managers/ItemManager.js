@@ -1,9 +1,4 @@
-import Item from '../entities/items/item';
-import Medkit from '../entities/items/medkit';
-import Bomb from '../entities/items/bomb';
-import HealthUp from '../entities/items/healthUp';
-import RandomWeaponDrop from '../entities/items/randomWeaponDrop';
-import Shield from '../entities/items/shield';
+import CompositeItem from '../entities/CompositeItem.js';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
@@ -21,44 +16,20 @@ export default class ItemManager extends BaseManager {
 		});
 	}
 
-	spawnItemsFromCounts(itemCounts) {
-		Object.entries(itemCounts).forEach(([itemType, count]) => {
+	spawnItemsFromSpawns(itemSpawns = []) {
+		for (const entry of itemSpawns) {
+			const count = entry.count ?? 1;
 			for (let i = 0; i < count; i++) {
 				const x = Math.random() * this.scene.game.config.width;
 				const y = Math.random() * this.scene.game.config.height;
-				this.spawnItem({ x, y, itemType });
+				this.spawnItem({ x, y, itemType: entry.type });
 			}
-		});
+		}
 	}
 
 	spawnItem({ x, y, itemType }) {
 		const itemId = `item${this.currentItemId}`;
-		let item;
-
-		switch (itemType) {
-			case 'MEDKIT':
-				item = new Medkit(this.scene, x, y, itemId);
-				break;
-			case 'BOMB':
-				item = new Bomb(this.scene, x, y, itemId);
-				break;
-			case 'SHIELD':
-				item = new Shield(this.scene, x, y, itemId);
-				break;
-			case 'HEALTH_UP':
-				item = new HealthUp(this.scene, x, y, itemId);
-				break;
-			case 'RANDOM_WEAPON_DROP':
-				item = new RandomWeaponDrop(this.scene, x, y, itemId);
-				break;
-			default:
-				item = new Item(this.scene, x, y, itemType, itemId);
-		}
-
-		if (!item) {
-			console.error(`Failed to create item of type: ${itemType}`);
-			return null;
-		}
+		const item = new CompositeItem(this.scene, x, y, itemType, itemId);
 
 		this.currentItemId++;
 

@@ -11,7 +11,7 @@ export default class HealthBar {
 		this.borderThickness = 0;
 		this.borderOffset = this.borderThickness;
 		this.cornerRadius = 4;
-		this.p = (this.width - this.borderThickness * 2) / this.maxValue;
+		this.pixelsPerValue = (this.width - this.borderThickness * 2) / this.maxValue;
 
 		this.draw();
 		scene.add.existing(this.bar);
@@ -37,7 +37,7 @@ export default class HealthBar {
 
 	increaseMax(maxIncrease, healthIncrease) {
 		this.maxValue += maxIncrease;
-		this.p = (this.width - this.borderThickness * 2) / this.maxValue;
+		this.pixelsPerValue = (this.width - this.borderThickness * 2) / this.maxValue;
 		this.setValue(this.value + healthIncrease);
 	}
 

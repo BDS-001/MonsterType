@@ -1,0 +1,47 @@
+{
+	"zombie": {
+		"id": "zombie",
+		"texture": "zombie",
+		"wordCategory": "easy",
+		"scale": 3,
+		"entityType": "enemy",
+		"behaviors": [{ "type": "Seek", "speed": 40 }, { "type": "FlipTowardsPlayer" }],
+		"dropTable": [
+			{ "itemType": "MEDKIT", "chance": 5 },
+			{ "itemType": "SHIELD", "chance": 3 },
+			{ "itemType": "RANDOM_WEAPON_DROP", "chance": 4 },
+			{ "itemType": "BOMB", "chance": 3 }
+		]
+	},
+	"ghost": {
+		"id": "ghost",
+		"texture": "ghost",
+		"wordMode": "letters",
+		"letters": "abcdefghijklmnopqrstuvwxyz",
+		"wordLength": 1,
+		"scale": 3,
+		"entityType": "enemy",
+		"behaviors": [{ "type": "Seek", "speed": 60 }, { "type": "FlipTowardsPlayer" }]
+	},
+	"mummy": {
+		"id": "mummy",
+		"texture": "mummy",
+		"wordCategory": "easy",
+		"scale": 3,
+		"entityType": "enemy",
+		"behaviors": [
+			{ "type": "Seek", "speed": 50 },
+			{ "type": "StopAtRange", "range": 200, "hysteresis": 20, "tag": "inRange" },
+			{ "type": "FlipTowardsPlayer" }
+		],
+		"triggers": {
+			"OnTimer(2.5)": [
+				{
+					"type": "IfTag",
+					"tag": "inRange",
+					"then": [{ "type": "EmitEvent", "event": "enemy:dummy_action" }]
+				}
+			]
+		}
+	}
+}

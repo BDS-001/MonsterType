@@ -1,0 +1,5 @@
+{
+	"texture": "player",
+	"scale": 3,
+	"start": { "x": "center", "y": "center" }
+}

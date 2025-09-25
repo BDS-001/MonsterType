@@ -1,0 +1,44 @@
+[
+	{ "wave": 1, "enemies": [{ "id": "zombie", "count": 2 }], "items": [] },
+	{ "wave": 2, "enemies": [{ "id": "zombie", "count": 3 }], "items": [] },
+	{ "wave": 3, "enemies": [{ "id": "zombie", "count": 4 }], "items": [] },
+	{ "wave": 4, "enemies": [{ "id": "zombie", "count": 5 }], "items": [] },
+	{ "wave": 5, "enemies": [{ "id": "ghost", "count": 7 }], "items": [] },
+	{ "wave": 6, "enemies": [{ "id": "zombie", "count": 7 }], "items": [] },
+	{
+		"wave": 7,
+		"enemies": [
+			{ "id": "zombie", "count": 8 },
+			{ "id": "mummy", "count": 1 }
+		],
+		"items": []
+	},
+	{ "wave": 8, "enemies": [{ "id": "zombie", "count": 9 }], "items": [] },
+	{ "wave": 9, "enemies": [{ "id": "zombie", "count": 10 }], "items": [] },
+	{
+		"wave": 10,
+		"enemies": [{ "id": "ghost", "count": 8 }],
+		"items": [{ "type": "HEALTH_UP", "count": 1 }]
+	},
+	{ "wave": 11, "enemies": [{ "id": "zombie", "count": 12 }], "items": [] },
+	{ "wave": 12, "enemies": [{ "id": "zombie", "count": 13 }], "items": [] },
+	{ "wave": 13, "enemies": [{ "id": "zombie", "count": 14 }], "items": [] },
+	{
+		"wave": 14,
+		"enemies": [
+			{ "id": "zombie", "count": 15 },
+			{ "id": "mummy", "count": 2 }
+		],
+		"items": []
+	},
+	{ "wave": 15, "enemies": [{ "id": "ghost", "count": 9 }], "items": [] },
+	{ "wave": 16, "enemies": [{ "id": "zombie", "count": 17 }], "items": [] },
+	{ "wave": 17, "enemies": [{ "id": "zombie", "count": 18 }], "items": [] },
+	{ "wave": 18, "enemies": [{ "id": "zombie", "count": 19 }], "items": [] },
+	{ "wave": 19, "enemies": [{ "id": "zombie", "count": 20 }], "items": [] },
+	{
+		"wave": 20,
+		"enemies": [{ "id": "ghost", "count": 10 }],
+		"items": [{ "type": "HEALTH_UP", "count": 1 }]
+	}
+]

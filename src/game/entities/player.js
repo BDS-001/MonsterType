@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { gameSettings } from '../core/constants';
+import playerConfig from '../data/player.json';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
 	constructor(scene, x, y) {
@@ -8,7 +9,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		this.scene = scene;
 		scene.add.existing(this);
 		scene.physics.add.existing(this);
-		this.setScale(gameSettings.SPRITE_SCALE);
+		const scale = (playerConfig && playerConfig.scale) || gameSettings.SPRITE_SCALE;
+		this.setScale(scale);
 	}
 
 	playHitEffect(immunityLength) {

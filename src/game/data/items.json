@@ -1,0 +1,68 @@
+{
+	"BOMB": {
+		"id": "BOMB",
+		"name": "Bomb",
+		"word": "explode",
+		"type": "consumable",
+		"rarity": "common",
+		"baseValue": 2,
+		"radius": 300,
+		"spriteKey": "bomb",
+		"triggers": {
+			"OnKill": [{ "type": "AreaDamage", "radius": 300, "damage": 10 }]
+		}
+	},
+	"MEDKIT": {
+		"id": "MEDKIT",
+		"name": "Medkit",
+		"word": "heal",
+		"type": "consumable",
+		"rarity": "common",
+		"baseValue": 10,
+		"spriteKey": "medkit",
+		"triggers": {
+			"OnKill": [{ "type": "HealPlayer", "amount": 10 }]
+		}
+	},
+	"HEALTH_UP": {
+		"id": "HEALTH_UP",
+		"name": "Max Health Upgrade",
+		"word": "endurance",
+		"type": "upgrade",
+		"rarity": "rare",
+		"baseValue": 10,
+		"spriteKey": "healthUp",
+		"triggers": {
+			"OnKill": [
+				{
+					"type": "EmitEvent",
+					"event": "game:health_changed",
+					"payload": { "maxHealthIncrease": 10, "healthIncrease": 10 }
+				}
+			]
+		}
+	},
+	"SHIELD": {
+		"id": "SHIELD",
+		"name": "Shield",
+		"word": "protect",
+		"type": "consumable",
+		"rarity": "uncommon",
+		"baseValue": 5,
+		"spriteKey": "shield",
+		"triggers": {
+			"OnKill": [{ "type": "ApplyShield", "amount": 5 }]
+		}
+	},
+	"RANDOM_WEAPON_DROP": {
+		"id": "RANDOM_WEAPON_DROP",
+		"name": "Random Weapon",
+		"word": "weapon",
+		"type": "weapon",
+		"rarity": "common",
+		"spriteKey": "randomWeapon",
+		"triggers": {
+			"OnKill": [{ "type": "EmitEvent", "event": "weapon:random_requested" }]
+		}
+	}
+}
