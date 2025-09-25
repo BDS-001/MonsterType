@@ -41,9 +41,15 @@ export default class WeaponManager extends BaseManager {
 		this.currentWeapon.currentUsages = this.currentWeapon.maxUsages;
 		this.currentWeapon.actions = def.actions ?? null;
 
-		this.emitGame(GAME_EVENTS.WEAPON_EQUIPPED, { weapon: this.currentWeapon, weaponType: weaponId });
+		this.emitGame(GAME_EVENTS.WEAPON_EQUIPPED, {
+			weapon: this.currentWeapon,
+			weaponType: weaponId,
+		});
 
-		this.emitGame(GAME_EVENTS.WEAPON_AMMO_CHANGED, { ammo: this.currentWeapon.getAmmoCount(), maxAmmo: this.currentWeapon.maxUsages });
+		this.emitGame(GAME_EVENTS.WEAPON_AMMO_CHANGED, {
+			ammo: this.currentWeapon.getAmmoCount(),
+			maxAmmo: this.currentWeapon.maxUsages,
+		});
 
 		return true;
 	}
@@ -83,7 +89,9 @@ export default class WeaponManager extends BaseManager {
 	}
 
 	getRandomUniqueWeaponId() {
-		const ids = Object.keys(weaponDefs).filter((id) => id !== this.STARTER_WEAPON && weaponDefs[id].kind !== 'default');
+		const ids = Object.keys(weaponDefs).filter(
+			(id) => id !== this.STARTER_WEAPON && weaponDefs[id].kind !== 'default'
+		);
 		return ids[Math.floor(Math.random() * ids.length)] || this.STARTER_WEAPON;
 	}
 }

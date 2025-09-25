@@ -46,10 +46,19 @@ export function createActionHandlers(resolveGameEvent, runAction) {
 				graphics.fillStyle(0xff0000, 0.3);
 				graphics.fillCircle(0, 0, damageRadius);
 				graphics.strokeCircle(0, 0, damageRadius);
-				scene.tweens.add({ targets: graphics, alpha: 0, duration: 300, ease: 'Power2', onComplete: () => graphics.destroy() });
+				scene.tweens.add({
+					targets: graphics,
+					alpha: 0,
+					duration: 300,
+					ease: 'Power2',
+					onComplete: () => graphics.destroy(),
+				});
 			}
-			const overlapBodies = scene?.physics?.overlapCirc?.(sprite.x, sprite.y, damageRadius, true, false) ?? [];
-			const validBodies = overlapBodies.filter((entry) => ['item', 'enemy'].includes(entry?.gameObject?.entityType));
+			const overlapBodies =
+				scene?.physics?.overlapCirc?.(sprite.x, sprite.y, damageRadius, true, false) ?? [];
+			const validBodies = overlapBodies.filter((entry) =>
+				['item', 'enemy'].includes(entry?.gameObject?.entityType)
+			);
 			for (const entry of validBodies) entry?.gameObject?.takeDamage?.(damageAmount);
 		},
 	};

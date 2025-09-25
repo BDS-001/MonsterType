@@ -36,8 +36,6 @@ export default class EnemyManager extends BaseManager {
 		}
 	}
 
-
-
 	getEnemies() {
 		return this.enemies;
 	}

@@ -118,7 +118,14 @@ export const WeaponActionRegistry = {
 			if (distanceToBeam <= beamWidth) target.takeDamage?.(config.damage ?? 1);
 		}
 
-		emitFired(scene, weapon, primary, { lazerLength: beamLength, lazerWidth: beamWidth }, player.x, player.y);
+		emitFired(
+			scene,
+			weapon,
+			primary,
+			{ lazerLength: beamLength, lazerWidth: beamWidth },
+			player.x,
+			player.y
+		);
 	},
 };
 

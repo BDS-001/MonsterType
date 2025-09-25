@@ -13,7 +13,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		this.hitIndex = 0;
 		this.isDestroyed = false;
 		this.isDying = false;
-		this.textHeight = 65
+		this.textHeight = 65;
 
 		scene.add.existing(this);
 		scene.physics.add.existing(this);

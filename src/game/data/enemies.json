@@ -27,10 +27,7 @@
 		"wordCategory": "hard",
 		"scale": 3,
 		"entityType": "enemy",
-		"behaviors": [
-			{ "type": "Seek", "speed": 50 },
-			{ "type": "FlipTowardsPlayer" }
-		]
+		"behaviors": [{ "type": "Seek", "speed": 50 }, { "type": "FlipTowardsPlayer" }]
 	},
 	"pumpkin mage": {
 		"id": "pumpkinMage",

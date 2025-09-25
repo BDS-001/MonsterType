@@ -83,7 +83,10 @@ export default class CompositeEntity extends TypedEntity {
 		const directionX = player.x - this.x;
 		const directionY = player.y - this.y;
 		const distance = Math.hypot(directionX, directionY) || 1;
-		this.setVelocity((-directionX / distance) * this.knockback, (-directionY / distance) * this.knockback);
+		this.setVelocity(
+			(-directionX / distance) * this.knockback,
+			(-directionY / distance) * this.knockback
+		);
 		this.isKnockedBack = true;
 		this.scene.time.delayedCall(200, () => {
 			this.isKnockedBack = false;

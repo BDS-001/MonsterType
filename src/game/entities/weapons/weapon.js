@@ -50,7 +50,12 @@ export default class Weapon {
 			const { targets, originX, originY } = weaponFireData;
 			targets.forEach((target) => {
 				this.shotEffect(target);
-				this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, { target, weapon: this, originX, originY });
+				this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, {
+					target,
+					weapon: this,
+					originX,
+					originY,
+				});
 			});
 		}
 

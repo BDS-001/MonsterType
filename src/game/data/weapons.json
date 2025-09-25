@@ -1,62 +1,60 @@
 {
-  "pistol": {
-    "id": "pistol",
-    "name": "Pistol",
-    "description": "A standard pistol with unlimited ammo.",
-    "kind": "default",
-    "maxTargets": 1,
-    "attackAnimation": "basic",
-    "maxUsages": -1,
-    "actions": [
-      { "type": "BasicShot", "damage": 1 }
-    ]
-  },
-  "shotgun": {
-    "id": "shotgun",
-    "name": "Shotgun",
-    "description": "Spreads pellets in a cone, hitting multiple enemies",
-    "kind": "unique",
-    "maxTargets": 1,
-    "attackAnimation": "shotgun",
-    "maxUsages": 30,
-    "actions": [
-      { "type": "ShotgunCone", "halfAngle": 0.6, "maxRange": 1200, "pelletFxCount": 16, "damage": 1 }
-    ]
-  },
-  "crossbow": {
-    "id": "crossbow",
-    "name": "Crossbow",
-    "description": "Bolts ricochet between multiple enemies",
-    "kind": "unique",
-    "maxTargets": 1,
-    "attackAnimation": "crossbow",
-    "maxUsages": 40,
-    "actions": [
-      { "type": "RicochetShot", "ricochetCount": 3, "range": 300, "damage": 1 }
-    ]
-  },
-  "minigun": {
-    "id": "minigun",
-    "name": "Minigun",
-    "description": "Fast firing gun that targets multiple enemies.",
-    "kind": "unique",
-    "maxTargets": 3,
-    "attackAnimation": "basic",
-    "maxUsages": 150,
-    "actions": [
-      { "type": "BasicShot", "damage": 1 }
-    ]
-  },
-  "lazerGun": {
-    "id": "lazerGun",
-    "name": "Lazer Gun",
-    "description": "Piercing laser line attack",
-    "kind": "unique",
-    "maxTargets": 1,
-    "attackAnimation": "lazer",
-    "maxUsages": 20,
-    "actions": [
-      { "type": "LazerLine", "length": 1500, "width": 60, "damage": 1 }
-    ]
-  }
+	"pistol": {
+		"id": "pistol",
+		"name": "Pistol",
+		"description": "A standard pistol with unlimited ammo.",
+		"kind": "default",
+		"maxTargets": 1,
+		"attackAnimation": "basic",
+		"maxUsages": -1,
+		"actions": [{ "type": "BasicShot", "damage": 1 }]
+	},
+	"shotgun": {
+		"id": "shotgun",
+		"name": "Shotgun",
+		"description": "Spreads pellets in a cone, hitting multiple enemies",
+		"kind": "unique",
+		"maxTargets": 1,
+		"attackAnimation": "shotgun",
+		"maxUsages": 30,
+		"actions": [
+			{
+				"type": "ShotgunCone",
+				"halfAngle": 0.6,
+				"maxRange": 1200,
+				"pelletFxCount": 16,
+				"damage": 1
+			}
+		]
+	},
+	"crossbow": {
+		"id": "crossbow",
+		"name": "Crossbow",
+		"description": "Bolts ricochet between multiple enemies",
+		"kind": "unique",
+		"maxTargets": 1,
+		"attackAnimation": "crossbow",
+		"maxUsages": 40,
+		"actions": [{ "type": "RicochetShot", "ricochetCount": 3, "range": 300, "damage": 1 }]
+	},
+	"minigun": {
+		"id": "minigun",
+		"name": "Minigun",
+		"description": "Fast firing gun that targets multiple enemies.",
+		"kind": "unique",
+		"maxTargets": 3,
+		"attackAnimation": "basic",
+		"maxUsages": 150,
+		"actions": [{ "type": "BasicShot", "damage": 1 }]
+	},
+	"lazerGun": {
+		"id": "lazerGun",
+		"name": "Lazer Gun",
+		"description": "Piercing laser line attack",
+		"kind": "unique",
+		"maxTargets": 1,
+		"attackAnimation": "lazer",
+		"maxUsages": 20,
+		"actions": [{ "type": "LazerLine", "length": 1500, "width": 60, "damage": 1 }]
+	}
 }

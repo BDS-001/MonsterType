@@ -26,7 +26,7 @@ function randomEdgeSpawn(camera, margin = 100) {
 }
 
 export function spawnEntityFromDef(scene, definition, id) {
-  const { x, y } = randomEdgeSpawn(scene.cameras.main);
-  const entity = new CompositeEntity(scene, x, y, definition, id);
-  return entity;
+	const { x, y } = randomEdgeSpawn(scene.cameras.main);
+	const entity = new CompositeEntity(scene, x, y, definition, id);
+	return entity;
 }
