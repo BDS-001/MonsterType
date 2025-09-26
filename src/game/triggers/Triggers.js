@@ -1,25 +1,22 @@
-import { runAction } from '../core/registries/ActionRegistry.js';
+import { TriggerRegistry } from '../core/registries/TriggerRegistry.js';
 
 export default class Triggers {
-	constructor(definition = {}, scene) {
+	constructor(definition = [], scene) {
 		if (!scene) throw new Error('Triggers requires a scene');
 		this.scene = scene;
-		this.timers = [];
-		for (const key in definition) {
-			const match = key.match(/^OnTimer\(([^)]+)\)$/);
-			if (match) {
-				this.timers.push({ interval: parseFloat(match[1]), elapsed: 0, actions: definition[key] });
-			}
-		}
+		this.triggers = (definition ?? [])
+			.map((triggerConfig) => {
+				const TriggerConstructor = TriggerRegistry[triggerConfig.type];
+				if (!TriggerConstructor) return null;
+				return new TriggerConstructor(null, triggerConfig, scene);
+			})
+			.filter(Boolean);
 	}
 
 	tick(deltaSeconds, sprite) {
-		for (const timerEntry of this.timers) {
-			timerEntry.elapsed += deltaSeconds;
-			while (timerEntry.elapsed >= timerEntry.interval) {
-				timerEntry.elapsed -= timerEntry.interval;
-				for (const action of timerEntry.actions) runAction(action, sprite, this.scene);
-			}
+		for (const trigger of this.triggers) {
+			trigger.sprite = sprite;
+			trigger.tick(deltaSeconds);
 		}
 	}
 }

@@ -78,6 +78,13 @@ export default class CompositeEntity extends TypedEntity {
 		);
 	}
 
+	destroy(fromScene) {
+		for (const trigger of this.triggers.triggers) {
+			trigger.destroy?.();
+		}
+		super.destroy(fromScene);
+	}
+
 	knockbackEnemy() {
 		if (this.isDestroyed || this.knockback === 0) return;
 		const player = this.scene.player;

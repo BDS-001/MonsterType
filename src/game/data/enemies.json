@@ -40,14 +40,27 @@
 			{ "type": "StopAtRange", "range": 200, "hysteresis": 20, "tag": "inRange" },
 			{ "type": "FlipTowardsPlayer" }
 		],
-		"triggers": {
-			"OnTimer(5)": [
-				{
-					"type": "IfTag",
-					"tag": "inRange",
-					"then": [{ "type": "EmitEvent", "event": "ENEMY_DUMMY_ACTION" }]
-				}
-			]
-		}
+		"triggers": [
+			{
+				"type": "OnTimer",
+				"interval": 5,
+				"actions": [
+					{
+						"type": "IfTag",
+						"tag": "inRange",
+						"then": [{ "type": "EmitEvent", "event": "ENEMY_DUMMY_ACTION" }]
+					}
+				]
+			}
+		]
+	},
+	"slime": {
+		"id": "slime",
+		"texture": "slime",
+		"wordCategory": "easy",
+		"splitCount": 2,
+		"scale": 3,
+		"entityType": "enemy",
+		"behaviors": [{ "type": "Seek", "speed": 50 }, { "type": "FlipTowardsPlayer" }]
 	}
 }
