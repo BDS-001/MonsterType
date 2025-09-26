@@ -22,8 +22,7 @@ export default class EnemyManager extends BaseManager {
 		for (const entry of spawnList) {
 			const definition = enemies[entry.id];
 			if (!definition) {
-				console.warn(`EnemyManager: unknown enemy id '${entry.id}'`);
-				continue;
+				throw new Error(`EnemyManager: unknown enemy id '${entry.id}'`);
 			}
 			const count = entry.count ?? 1;
 			for (let i = 0; i < count; i++) {

@@ -15,9 +15,9 @@ export default class StopAtRange extends Behavior {
 		const distance = Phaser.Math.Distance.Between(this.sprite.x, this.sprite.y, player.x, player.y);
 		if (distance <= this.range) {
 			this.sprite.setVelocity(0, 0);
-			this.sprite.tags?.add?.(this.tag);
+			this.sprite.tags.add(this.tag);
 		} else if (distance >= this.range + this.hysteresis) {
-			this.sprite.tags?.delete?.(this.tag);
+			this.sprite.tags.delete(this.tag);
 		}
 	}
 }

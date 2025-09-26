@@ -12,7 +12,6 @@ export default class AttackAnimationManager extends BaseManager {
 
 	fireProjectile(data) {
 		const animationType = this.determineAnimationType(data);
-		if (!animationType) return;
 
 		const animation = this.animationFactory.createAnimation(animationType);
 		animation.animate(data);
@@ -22,6 +21,9 @@ export default class AttackAnimationManager extends BaseManager {
 
 	determineAnimationType(data) {
 		const { weapon } = data;
-		return weapon?.attackAnimation;
+		if (!weapon?.attackAnimation) {
+			throw new Error('AttackAnimationManager: weapon.attackAnimation is missing');
+		}
+		return weapon.attackAnimation;
 	}
 }

@@ -1,20 +1,20 @@
 import { createActionHandlers } from '../../actions/handlers.js';
 import { GAME_EVENTS } from '../GameEvents.js';
+import { invariant } from '../assert.js';
 
 const GAME_EVENT_VALUES = new Set(Object.values(GAME_EVENTS));
 
 export function resolveGameEvent(eventKey) {
-	if (!eventKey) return null;
+	invariant(eventKey, 'resolveGameEvent: eventKey is required');
 	if (GAME_EVENTS[eventKey]) return GAME_EVENTS[eventKey];
 	if (GAME_EVENT_VALUES.has(eventKey)) return eventKey;
-	console.warn(`EmitEvent: Unknown game event '${eventKey}'`);
-	return eventKey;
+	throw new Error(`resolveGameEvent: Unknown game event '${eventKey}'`);
 }
 
 export function runAction(action, sprite, scene) {
-	if (!action) return;
+	invariant(action, 'runAction: action is required');
 	const handler = ActionRegistry[action.type];
-	if (!handler) return;
+	invariant(handler, `runAction: Unknown action type '${action?.type}'`);
 	return handler(sprite, action, scene);
 }
 

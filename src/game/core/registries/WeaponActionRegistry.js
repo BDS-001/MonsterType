@@ -1,8 +1,10 @@
 import Phaser from 'phaser';
 import { GAME_EVENTS } from '../GameEvents.js';
+import { invariant } from '../assert.js';
 
 function emitFired(scene, weapon, target, extra = {}, originX, originY) {
-	scene?.events?.emit?.(GAME_EVENTS.WEAPON_FIRED, {
+	invariant(scene?.events, 'emitFired: scene.events missing');
+	scene.events.emit(GAME_EVENTS.WEAPON_FIRED, {
 		target,
 		weapon,
 		originX,
@@ -22,7 +24,8 @@ export const WeaponActionRegistry = {
 
 	RicochetShot(_playerSprite, config, scene, weapon, fireData) {
 		const primary = fireData.targets?.[0];
-		if (!primary || !scene?.physics) return;
+		if (!primary) return; // no targets is a valid no-op
+		invariant(scene?.physics, 'RicochetShot: scene.physics missing');
 		const range = config.range ?? 300;
 		let remaining = config.ricochetCount ?? 3;
 		const visited = new Set([primary]);
@@ -59,7 +62,9 @@ export const WeaponActionRegistry = {
 	ShotgunCone(playerSprite, config, scene, weapon, fireData) {
 		const primary = fireData.targets?.[0];
 		const player = playerSprite;
-		if (!primary || !player || !scene?.physics) return;
+		if (!primary) return; // no targets is a valid no-op
+		invariant(player, 'ShotgunCone: playerSprite missing');
+		invariant(scene?.physics, 'ShotgunCone: scene.physics missing');
 
 		const halfAngle = config.halfAngle ?? 0.6;
 		const maxRange = config.maxRange ?? 1200;
@@ -95,7 +100,9 @@ export const WeaponActionRegistry = {
 	LazerLine(playerSprite, config, scene, weapon, fireData) {
 		const primary = fireData.targets?.[0];
 		const player = playerSprite;
-		if (!primary || !player || !scene?.physics) return;
+		if (!primary) return; // no targets is a valid no-op
+		invariant(player, 'LazerLine: playerSprite missing');
+		invariant(scene?.physics, 'LazerLine: scene.physics missing');
 
 		const beamLength = config.length ?? 1500;
 		const beamWidth = config.width ?? 60;
@@ -131,6 +138,6 @@ export const WeaponActionRegistry = {
 
 export function runWeaponAction(action, playerSprite, scene, weapon, fireData) {
 	const fn = WeaponActionRegistry[action.type];
-	if (!fn) return;
+	invariant(fn, `runWeaponAction: Unknown weapon action type '${action?.type}'`);
 	return fn(playerSprite, action, scene, weapon, fireData);
 }

@@ -4,6 +4,9 @@ import { GAME_EVENTS } from '../core/GameEvents.js';
 export default class TargetManager extends BaseManager {
 	constructor(scene) {
 		super(scene);
+		if (!scene.enemyManager || !scene.itemManager) {
+			throw new Error('TargetManager: requires enemyManager and itemManager on scene');
+		}
 		this.setupEventListeners();
 	}
 

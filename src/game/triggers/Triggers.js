@@ -2,6 +2,7 @@ import { runAction } from '../core/registries/ActionRegistry.js';
 
 export default class Triggers {
 	constructor(definition = {}, scene) {
+		if (!scene) throw new Error('Triggers requires a scene');
 		this.scene = scene;
 		this.timers = [];
 		for (const key in definition) {

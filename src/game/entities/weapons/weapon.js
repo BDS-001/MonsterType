@@ -62,7 +62,10 @@ export default class Weapon {
 		if (this.maxUsages <= 0) return;
 
 		this.currentUsages--;
-		this.scene?.events.emit(GAME_EVENTS.WEAPON_AMMO_CHANGED, {
+		if (!this.scene?.events) {
+			throw new Error('Weapon.performFiring: scene.events missing');
+		}
+		this.scene.events.emit(GAME_EVENTS.WEAPON_AMMO_CHANGED, {
 			ammo: this.currentUsages,
 			maxAmmo: this.maxUsages,
 		});
@@ -73,7 +76,10 @@ export default class Weapon {
 	}
 
 	onAmmoEmpty() {
-		this.scene?.events.emit(GAME_EVENTS.WEAPON_AMMO_EMPTY, { weapon: this });
+		if (!this.scene?.events) {
+			throw new Error('Weapon.onAmmoEmpty: scene.events missing');
+		}
+		this.scene.events.emit(GAME_EVENTS.WEAPON_AMMO_EMPTY, { weapon: this });
 	}
 
 	hasAmmo() {

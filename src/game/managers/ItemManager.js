@@ -34,8 +34,7 @@ export default class ItemManager extends BaseManager {
 		this.currentItemId++;
 
 		if (!this.items) {
-			console.error('ItemManager items group is null');
-			return null;
+			throw new Error('ItemManager: items group is null');
 		}
 
 		this.items.add(item);

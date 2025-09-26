@@ -24,8 +24,7 @@ export default class WeaponManager extends BaseManager {
 	equipWeapon(weaponId) {
 		const def = weaponDefs[weaponId];
 		if (!def) {
-			console.warn(`WeaponManager: Missing config for '${weaponId}'`);
-			return false;
+			throw new Error(`WeaponManager: Missing config for '${weaponId}'`);
 		}
 
 		if (this.currentWeapon) {
@@ -55,7 +54,9 @@ export default class WeaponManager extends BaseManager {
 	}
 
 	handleTypingInput(key) {
-		if (!this.currentWeapon) return;
+		if (!this.currentWeapon) {
+			throw new Error('WeaponManager: currentWeapon is not set');
+		}
 
 		this.emit(GAME_EVENTS.WEAPON_READY_TO_FIRE, {
 			key,

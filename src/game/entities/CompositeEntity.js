@@ -44,7 +44,8 @@ export default class CompositeEntity extends TypedEntity {
 	}
 
 	onKill() {
-		this.scene?.events?.emit?.(GAME_EVENTS.ENEMY_KILLED, { enemy: this, points: 10 });
+		if (!this.scene?.events) throw new Error('CompositeEntity.onKill: scene.events missing');
+		this.scene.events.emit(GAME_EVENTS.ENEMY_KILLED, { enemy: this, points: 10 });
 		if (this.dropTable && this.dropTable.length > 0) {
 			const totalWeight = this.dropTable.reduce((sum, entry) => sum + entry.chance, 0);
 			const dropRoll = Math.random() * 100;
@@ -54,7 +55,7 @@ export default class CompositeEntity extends TypedEntity {
 				for (const dropEntry of this.dropTable) {
 					currentWeight += dropEntry.chance;
 					if (itemRoll <= currentWeight) {
-						this.scene?.events?.emit?.(GAME_EVENTS.ITEM_SPAWNED, {
+						this.scene.events.emit(GAME_EVENTS.ITEM_SPAWNED, {
 							x: this.x,
 							y: this.y,
 							itemType: dropEntry.itemType,
