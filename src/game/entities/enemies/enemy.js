@@ -1,5 +1,5 @@
 import TypedEntity from '../typedEntity';
-import wordBank from '../../data/wordbank';
+import wordBank from '../../data/wordbank.json';
 import { gameSettings } from '../../core/constants';
 import { GAME_EVENTS } from '../../core/GameEvents';
 
