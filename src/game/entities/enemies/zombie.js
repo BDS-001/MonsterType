@@ -1,7 +1,7 @@
 import Enemy from './enemy.js';
 
 export default class Zombie extends Enemy {
-	constructor(scene, id) {
+	constructor(scene, x, y, id) {
 		const zombieOptions = {
 			moveSpeed: 40,
 			knockback: 40,
@@ -14,6 +14,6 @@ export default class Zombie extends Enemy {
 			],
 		};
 
-		super(id, scene, 'zombie', zombieOptions);
+		super(scene, x, y, id, 'zombie', zombieOptions);
 	}
 }

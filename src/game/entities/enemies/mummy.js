@@ -1,7 +1,7 @@
 import Enemy from './enemy.js';
 
 export default class Mummy extends Enemy {
-	constructor(scene, id) {
+	constructor(scene, x, y, id) {
 		const mummyOptions = {
 			moveSpeed: 20,
 			knockback: 20,
@@ -14,6 +14,6 @@ export default class Mummy extends Enemy {
 			],
 		};
 
-		super(id, scene, 'mummy', mummyOptions);
+		super(scene, x, y, id, 'mummy', mummyOptions);
 	}
 }

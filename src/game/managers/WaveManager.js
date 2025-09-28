@@ -30,8 +30,15 @@ export default class WaveManager extends BaseManager {
 		const ghostWaveMultiplier = Math.floor(wave / 5);
 		const ghostCount = wave % 5 === 0 ? 6 + ghostWaveMultiplier : 0;
 		const mummyCount = wave >= 7 && wave % 7 === 0 ? 1 + Math.floor(wave / 14) : 0;
+		const slimeCount = 1;
 
-		return { zombieCount, ghostCount, mummyCount };
+		const enemies = {};
+		if (zombieCount > 0) enemies.zombie = { count: zombieCount };
+		if (ghostCount > 0) enemies.ghost = { count: ghostCount };
+		if (mummyCount > 0) enemies.mummy = { count: mummyCount };
+		if (slimeCount > 0) enemies.slime = { count: slimeCount };
+
+		return enemies;
 	}
 
 	calculateItemCounts(wave) {
@@ -51,7 +58,7 @@ export default class WaveManager extends BaseManager {
 		const enemyCounts = this.calculateEnemyCounts(this.currentWave);
 		const itemCounts = this.calculateItemCounts(this.currentWave);
 
-		this.emit(GAME_EVENTS.WAVE_SPAWN_ENEMIES, enemyCounts);
+		this.emit(GAME_EVENTS.SPAWN_ENEMIES, enemyCounts);
 		this.emit(GAME_EVENTS.WAVE_SPAWN_ITEMS, itemCounts);
 	}
 

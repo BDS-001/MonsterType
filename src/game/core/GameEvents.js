@@ -3,6 +3,7 @@ export const GAME_EVENTS = {
 
 	ENEMY_SPAWNED: 'combat:enemy_spawned',
 	ENEMY_KILLED: 'combat:enemy_killed',
+	SPAWN_ENEMIES: 'combat:spawn_enemies',
 
 	SCORE_CHANGED: 'game:score_changed',
 	HEALTH_CHANGED: 'game:health_changed',

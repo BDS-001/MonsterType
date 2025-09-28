@@ -1,7 +1,7 @@
 import Enemy from './enemy.js';
 
 export default class Ghost extends Enemy {
-	constructor(scene, id) {
+	constructor(scene, x, y, id) {
 		const ghostOptions = {
 			moveSpeed: 100,
 			knockback: 0,
@@ -12,6 +12,6 @@ export default class Ghost extends Enemy {
 			],
 		};
 
-		super(id, scene, 'ghost', ghostOptions);
+		super(scene, x, y, id, 'ghost', ghostOptions);
 	}
 }

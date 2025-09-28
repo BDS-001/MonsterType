@@ -3,36 +3,6 @@ import wordBank from '../../data/wordbank';
 import { gameSettings } from '../../core/constants';
 import { GAME_EVENTS } from '../../core/GameEvents';
 
-function calculateRandomPosition(camera) {
-	const width = camera.width;
-	const height = camera.height;
-	const margin = 100;
-
-	const side = Math.floor(Math.random() * 4);
-
-	let x, y;
-	switch (side) {
-		case 0: // Top
-			x = Math.random() * width;
-			y = -margin;
-			break;
-		case 1: // Right
-			x = width + margin;
-			y = Math.random() * height;
-			break;
-		case 2: // Bottom
-			x = Math.random() * width;
-			y = height + margin;
-			break;
-		case 3: // Left
-			x = -margin;
-			y = Math.random() * height;
-			break;
-	}
-
-	return { x, y };
-}
-
 const defaultOptions = {
 	moveSpeed: 50,
 	knockback: 10,
@@ -42,15 +12,13 @@ const defaultOptions = {
 };
 
 export default class Enemy extends TypedEntity {
-	constructor(id, scene, spriteImage, options = {}) {
+	constructor(scene, x, y, id, spriteImage, options = {}) {
 		const enemyOptions = { ...defaultOptions, ...options };
 
 		const wordBankIndex = Math.floor(Math.random() * wordBank[enemyOptions.wordCategory].length);
 		const word = wordBank[enemyOptions.wordCategory][wordBankIndex];
 
-		const { x: spawnX, y: spawnY } = calculateRandomPosition(scene.cameras.main);
-
-		super(scene, spawnX, spawnY, spriteImage, word, id);
+		super(scene, x, y, spriteImage, word, id);
 
 		if (this.x > scene.player.x) this.flipX = true;
 
@@ -62,7 +30,7 @@ export default class Enemy extends TypedEntity {
 		this.displayedWord = this.word;
 		this.isKnockedBack = false;
 
-		this.setScale(gameSettings.SPRITE_SCALE);
+		this.setScale(enemyOptions.scale ?? gameSettings.SPRITE_SCALE);
 		this.scene.physics.add.existing(this);
 	}
 

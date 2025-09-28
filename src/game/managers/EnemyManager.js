@@ -21,20 +21,67 @@ export default class EnemyManager extends BaseManager {
 		});
 	}
 
+	setupEventListeners() {
+		this.scene.events.on(GAME_EVENTS.SPAWN_ENEMIES, this.spawnEnemiesFromCounts, this);
+	}
+
 	spawnEnemyType(EnemyClass, count = 1, config = {}) {
 		for (let i = 0; i < count; i++) {
 			const enemyId = `enemy${this.currentEnemyId}`;
-			const enemy = new EnemyClass(this.scene, enemyId, config);
+
+			let x, y;
+			if (config.x !== undefined && config.y !== undefined) {
+				x = config.x;
+				y = config.y;
+			} else {
+				const position = this.calculateEdgePosition();
+				x = position.x;
+				y = position.y;
+			}
+
+			const enemy = new EnemyClass(this.scene, x, y, enemyId, config);
 			this.currentEnemyId++;
 			this.enemies.add(enemy);
 			this.emit(GAME_EVENTS.ENEMY_SPAWNED, { enemy });
 		}
 	}
 
-	spawnEnemiesFromCounts({ zombieCount, ghostCount, mummyCount }) {
-		this.spawnEnemyType(Zombie, zombieCount);
-		this.spawnEnemyType(Ghost, ghostCount);
-		this.spawnEnemyType(Mummy, mummyCount);
+	calculateEdgePosition() {
+		const camera = this.scene.cameras.main;
+		const width = camera.width;
+		const height = camera.height;
+		const margin = 100;
+
+		const side = Math.floor(Math.random() * 4);
+
+		let x, y;
+		switch (side) {
+			case 0: // Top
+				x = Math.random() * width;
+				y = -margin;
+				break;
+			case 1: // Right
+				x = width + margin;
+				y = Math.random() * height;
+				break;
+			case 2: // Bottom
+				x = Math.random() * width;
+				y = height + margin;
+				break;
+			case 3: // Left
+				x = -margin;
+				y = Math.random() * height;
+				break;
+		}
+
+		return { x, y };
+	}
+
+	spawnEnemiesFromCounts({ zombie, ghost, mummy, slime }) {
+		if (zombie?.count) this.spawnEnemyType(Zombie, zombie.count, zombie.config || {});
+		if (ghost?.count) this.spawnEnemyType(Ghost, ghost.count, ghost.config || {});
+		if (mummy?.count) this.spawnEnemyType(Mummy, mummy.count, mummy.config || {});
+		if (slime?.count) this.spawnEnemyType(Slime, slime.count, slime.config || {});
 	}
 
 	getEnemies() {
@@ -46,6 +93,7 @@ export default class EnemyManager extends BaseManager {
 	}
 
 	destroy() {
+		this.scene.events.off(GAME_EVENTS.SPAWN_ENEMIES, this.spawnEnemiesFromCounts, this);
 		if (this.enemies) {
 			this.enemies.clear(true, true);
 			this.enemies = null;

@@ -25,6 +25,7 @@ export default class GameScene extends Phaser.Scene {
 		this.load.image('zombie', 'assets/enemies/zombie.png');
 		this.load.image('ghost', 'assets/enemies/ghost.png');
 		this.load.image('mummy', 'assets/enemies/mummy.png');
+		this.load.image('test', 'assets/test.png');
 		this.load.image('grass', 'assets/environment/grass.png');
 		this.load.image('basicShot', 'assets/weapons/basicShot.png');
 		this.load.image('arrowShot', 'assets/weapons/arrow.png');
@@ -59,12 +60,7 @@ export default class GameScene extends Phaser.Scene {
 
 	setupEventListeners() {
 		this.game.events.on(GAME_EVENTS.GAME_OVER, this.handleGameOver, this);
-		this.events.on(GAME_EVENTS.WAVE_SPAWN_ENEMIES, this.handleSpawnEnemies, this);
 		this.events.on(GAME_EVENTS.WAVE_SPAWN_ITEMS, this.handleSpawnItems, this);
-	}
-
-	handleSpawnEnemies(enemyCounts) {
-		this.enemyManager.spawnEnemiesFromCounts(enemyCounts);
 	}
 
 	handleSpawnItems(itemCounts) {
