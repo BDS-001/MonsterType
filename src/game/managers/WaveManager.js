@@ -1,5 +1,6 @@
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
+import waves from '../data/waves.json';
 
 export default class WaveManager extends BaseManager {
 	constructor(scene) {
@@ -25,29 +26,37 @@ export default class WaveManager extends BaseManager {
 		}
 	}
 
-	calculateEnemyCounts(wave) {
-		const zombieCount = wave % 5 > 0 ? Math.max(2, 1 + wave) : 0;
-		const ghostWaveMultiplier = Math.floor(wave / 5);
-		const ghostCount = wave % 5 === 0 ? 6 + ghostWaveMultiplier : 0;
-		const mummyCount = wave >= 7 && wave % 7 === 0 ? 1 + Math.floor(wave / 14) : 0;
-		const slimeCount = 1;
-
-		const enemies = {};
-		if (zombieCount > 0) enemies.zombie = { count: zombieCount };
-		if (ghostCount > 0) enemies.ghost = { count: ghostCount };
-		if (mummyCount > 0) enemies.mummy = { count: mummyCount };
-		if (slimeCount > 0) enemies.slime = { count: slimeCount };
-
-		return enemies;
+	getWaveData(wave) {
+		const configWave = waves[wave];
+		return (
+			configWave ?? {
+				enemies: this.calculateDynamicEnemies(wave),
+				items: this.calculateDynamicItems(wave),
+			}
+		);
 	}
 
-	calculateItemCounts(wave) {
-		let healthUpCount = wave % 10 === 0 ? 1 : 0;
+	calculateDynamicEnemies(wave) {
+		const zombieCount = Math.max(20, Math.floor(wave * 1.5));
+		const ghostCount = Math.max(10, Math.floor(wave * 0.6));
+		const mummyCount = Math.max(3, Math.floor(wave * 0.25));
+		const slimeCount = Math.max(1, Math.floor(wave * 0.1));
 
-		const itemCounts = {};
-		if (healthUpCount > 0) itemCounts['HEALTH_UP'] = healthUpCount;
+		return {
+			zombie: { count: zombieCount },
+			ghost: { count: ghostCount },
+			mummy: { count: mummyCount },
+			slime: { count: slimeCount },
+		};
+	}
 
-		return itemCounts;
+	calculateDynamicItems(wave) {
+		const healthUpCount = wave % 10 === 0 ? Math.min(3, Math.floor(wave / 20)) : 0;
+
+		const items = {};
+		if (healthUpCount > 0) items.HEALTH_UP = healthUpCount;
+
+		return items;
 	}
 
 	startWave(waveNumber) {
@@ -55,11 +64,10 @@ export default class WaveManager extends BaseManager {
 		this.enemiesAlive = 0;
 		this.emitGame(GAME_EVENTS.WAVE_STARTED, { waveNumber: this.currentWave });
 
-		const enemyCounts = this.calculateEnemyCounts(this.currentWave);
-		const itemCounts = this.calculateItemCounts(this.currentWave);
+		const waveData = this.getWaveData(this.currentWave);
 
-		this.emit(GAME_EVENTS.SPAWN_ENEMIES, enemyCounts);
-		this.emit(GAME_EVENTS.WAVE_SPAWN_ITEMS, itemCounts);
+		this.emit(GAME_EVENTS.SPAWN_ENEMIES, waveData.enemies);
+		this.emit(GAME_EVENTS.WAVE_SPAWN_ITEMS, waveData.items);
 	}
 
 	onWaveComplete() {

@@ -4,11 +4,11 @@ import { GAME_EVENTS } from '../../core/GameEvents.js';
 const difficultyMap = {
 	0: { moveSpeed: 80, difficulty: 'veryEasy', scale: 1.5 },
 	1: { moveSpeed: 60, difficulty: 'easy', scale: 2.5 },
-	2: { moveSpeed: 40, difficulty: 'medium', scale: 3.5 }
-}
+	2: { moveSpeed: 40, difficulty: 'medium', scale: 3.5 },
+};
 
 export default class Slime extends Enemy {
-	constructor(scene, x, y, id, config = {splitCount: 2}) {
+	constructor(scene, x, y, id, config = { splitCount: 2 }) {
 		const splitCount = config.splitCount ?? 2;
 		const difficultyData = difficultyMap[splitCount] ?? difficultyMap[2];
 
@@ -44,7 +44,7 @@ export default class Slime extends Enemy {
 						config: {
 							splitCount: this.splitCount - 1,
 							x: spawnX,
-							y: spawnY
+							y: spawnY,
 						},
 					},
 				});
