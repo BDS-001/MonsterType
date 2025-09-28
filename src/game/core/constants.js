@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 
 export const phaserConfig = {
 	type: Phaser.AUTO,
-	width: 1280,
-	height: 720,
+	width: 1600,
+	height: 900,
 	backgroundColor: '#222',
 	pixelArt: true,
 	scale: {
