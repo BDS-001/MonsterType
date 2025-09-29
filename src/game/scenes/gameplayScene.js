@@ -25,7 +25,7 @@ export default class GameScene extends Phaser.Scene {
 		this.load.image('zombie', 'assets/enemies/zombie.png');
 		this.load.image('ghost', 'assets/enemies/ghost.png');
 		this.load.image('mummy', 'assets/enemies/mummy.png');
-		this.load.image('test', 'assets/test.png');
+		this.load.image('slime', 'assets/enemies/slime.png');
 		this.load.image('grass', 'assets/environment/grass.png');
 		this.load.image('basicShot', 'assets/weapons/basicShot.png');
 		this.load.image('arrowShot', 'assets/weapons/arrow.png');

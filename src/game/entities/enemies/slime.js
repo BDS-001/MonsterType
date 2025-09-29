@@ -23,7 +23,7 @@ export default class Slime extends Enemy {
 			],
 		};
 
-		super(scene, x, y, id, 'test', slimeOptions);
+		super(scene, x, y, id, 'slime', slimeOptions);
 		this.splitCount = splitCount;
 	}
 
