@@ -17,6 +17,14 @@ export default class CollisionManager extends BaseManager {
 			null,
 			this
 		);
+
+		physics.add.collider(
+			enemyManager.getEnemies(),
+			enemyManager.getEnemies(),
+			this.handleEnemyEnemyCollision,
+			null,
+			this
+		);
 	}
 
 	handlePlayerEnemyCollision(player, enemy) {
@@ -24,6 +32,12 @@ export default class CollisionManager extends BaseManager {
 
 		this.emit(GAME_EVENTS.PLAYER_HIT, { player, enemy });
 		enemy.knockbackEnemy();
+	}
+
+	handleEnemyEnemyCollision(enemyA, enemyB) {
+		if (enemyA.isDestroyed || enemyB.isDestroyed || enemyA.isDying || enemyB.isDying) {
+			return;
+		}
 	}
 
 	addCollision(objectA, objectB, callback, processCallback = null) {

@@ -33,26 +33,38 @@ export default class ItemManager extends BaseManager {
 
 	spawnItem({ x, y, itemType }) {
 		const itemId = `item${this.currentItemId}`;
+
+		const camera = this.scene.cameras.main;
+		const margin = 80;
+		const adjustedX = Math.max(
+			camera.scrollX + margin,
+			Math.min(x, camera.scrollX + camera.width - margin)
+		);
+		const adjustedY = Math.max(
+			camera.scrollY + margin,
+			Math.min(y, camera.scrollY + camera.height - margin)
+		);
+
 		let item;
 
 		switch (itemType) {
 			case 'MEDKIT':
-				item = new Medkit(this.scene, x, y, itemId);
+				item = new Medkit(this.scene, adjustedX, adjustedY, itemId);
 				break;
 			case 'BOMB':
-				item = new Bomb(this.scene, x, y, itemId);
+				item = new Bomb(this.scene, adjustedX, adjustedY, itemId);
 				break;
 			case 'SHIELD':
-				item = new Shield(this.scene, x, y, itemId);
+				item = new Shield(this.scene, adjustedX, adjustedY, itemId);
 				break;
 			case 'HEALTH_UP':
-				item = new HealthUp(this.scene, x, y, itemId);
+				item = new HealthUp(this.scene, adjustedX, adjustedY, itemId);
 				break;
 			case 'RANDOM_WEAPON_DROP':
-				item = new RandomWeaponDrop(this.scene, x, y, itemId);
+				item = new RandomWeaponDrop(this.scene, adjustedX, adjustedY, itemId);
 				break;
 			default:
-				item = new Item(this.scene, x, y, itemType, itemId);
+				item = new Item(this.scene, adjustedX, adjustedY, itemType, itemId);
 		}
 
 		if (!item) {
