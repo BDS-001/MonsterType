@@ -8,9 +8,9 @@ export default class HealthBar {
 		this.height = height;
 		this.value = initialHealth;
 		this.maxValue = maxHealth;
-		this.borderThickness = 0;
+		this.borderThickness = 3;
 		this.borderOffset = this.borderThickness;
-		this.cornerRadius = 4;
+		this.cornerRadius = 0;
 		this.p = (this.width - this.borderThickness * 2) / this.maxValue;
 
 		this.draw();
@@ -44,41 +44,37 @@ export default class HealthBar {
 	draw() {
 		this.bar.clear();
 
-		if (this.borderThickness > 0) {
-			this.bar.lineStyle(this.borderThickness, 0x444444, 1);
-			this.bar.strokeRoundedRect(this.x, this.y, this.width, this.height, this.cornerRadius);
-		}
+		this.bar.fillStyle(0x000000);
+		this.bar.fillRect(this.x, this.y, this.width, this.height);
 
-		this.bar.fillStyle(0x222222);
-		this.bar.fillRoundedRect(
+		this.bar.fillStyle(0x1a1a1a);
+		this.bar.fillRect(
 			this.x + this.borderThickness,
 			this.y + this.borderThickness,
 			this.width - this.borderThickness * 2,
-			this.height - this.borderThickness * 2,
-			this.cornerRadius
+			this.height - this.borderThickness * 2
 		);
 
 		const healthPercentage = this.value / this.maxValue;
 		let healthColor;
 
 		if (healthPercentage > 0.6) {
-			healthColor = 0x4caf50;
+			healthColor = 0x39ff14;
 		} else if (healthPercentage > 0.3) {
-			healthColor = 0xff9800;
+			healthColor = 0xffff00;
 		} else {
-			healthColor = 0xf44336;
+			healthColor = 0xff0000;
 		}
 
 		const healthBarWidth = Math.floor((this.width - this.borderThickness * 2) * healthPercentage);
 
 		if (healthBarWidth > 0) {
 			this.bar.fillStyle(healthColor);
-			this.bar.fillRoundedRect(
+			this.bar.fillRect(
 				this.x + this.borderThickness,
 				this.y + this.borderThickness,
 				healthBarWidth,
-				this.height - this.borderThickness * 2,
-				this.cornerRadius
+				this.height - this.borderThickness * 2
 			);
 		}
 	}
