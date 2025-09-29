@@ -92,10 +92,8 @@ export default class ItemManager extends BaseManager {
 	}
 
 	destroy() {
-		if (this.items) {
-			this.items.clear(true, true);
-			this.items = null;
-		}
+		this.destroyGroup(this.items);
+		this.items = null;
 		super.destroy();
 	}
 }

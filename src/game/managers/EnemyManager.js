@@ -94,10 +94,8 @@ export default class EnemyManager extends BaseManager {
 
 	destroy() {
 		this.scene.events.off(GAME_EVENTS.SPAWN_ENEMIES, this.spawnEnemiesFromCounts, this);
-		if (this.enemies) {
-			this.enemies.clear(true, true);
-			this.enemies = null;
-		}
+		this.destroyGroup(this.enemies);
+		this.enemies = null;
 		super.destroy();
 	}
 }

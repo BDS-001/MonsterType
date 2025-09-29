@@ -22,6 +22,12 @@ export default class BaseManager {
 		this.scene.game.events.emit(event, ...args);
 	}
 
+	destroyGroup(group) {
+		if (group && group.scene && !group.scene.sys.isDestroyed) {
+			group.destroy(true);
+		}
+	}
+
 	destroy() {
 		this.subscriptions.forEach(({ event, callback, emitter }) => {
 			if (emitter === 'scene') {

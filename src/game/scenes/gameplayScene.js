@@ -61,6 +61,7 @@ export default class GameScene extends Phaser.Scene {
 	setupEventListeners() {
 		this.game.events.on(GAME_EVENTS.GAME_OVER, this.handleGameOver, this);
 		this.events.on(GAME_EVENTS.WAVE_SPAWN_ITEMS, this.handleSpawnItems, this);
+		this.events.once('shutdown', this.shutdown, this);
 	}
 
 	handleSpawnItems(itemCounts) {
@@ -93,7 +94,10 @@ export default class GameScene extends Phaser.Scene {
 
 	update() {}
 
-	destroy() {
+	shutdown() {
+		this.game.events.off(GAME_EVENTS.GAME_OVER, this.handleGameOver, this);
+		this.events.off(GAME_EVENTS.WAVE_SPAWN_ITEMS, this.handleSpawnItems, this);
+
 		this.inputManager?.destroy?.();
 		this.stateManager?.destroy?.();
 		this.enemyManager?.destroy?.();
@@ -103,7 +107,9 @@ export default class GameScene extends Phaser.Scene {
 		this.attackAnimationManager?.destroy?.();
 		this.waveManager?.destroy?.();
 		this.collisionManager?.destroy?.();
+	}
 
+	destroy() {
 		super.destroy();
 	}
 }
