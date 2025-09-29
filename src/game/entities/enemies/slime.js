@@ -14,7 +14,7 @@ export default class Slime extends Enemy {
 
 		const slimeOptions = {
 			moveSpeed: difficultyData.moveSpeed,
-			knockback: 0,
+			knockback: 50,
 			wordCategory: difficultyData.difficulty,
 			scale: config.scale ?? difficultyData.scale,
 			dropTable: [

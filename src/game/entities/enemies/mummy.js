@@ -3,7 +3,7 @@ import Enemy from './enemy.js';
 export default class Mummy extends Enemy {
 	constructor(scene, x, y, id) {
 		const mummyOptions = {
-			moveSpeed: 20,
+			moveSpeed: 30,
 			knockback: 20,
 			wordCategory: 'hard',
 			dropTable: [
