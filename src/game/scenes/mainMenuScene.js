@@ -11,6 +11,8 @@ export class MainMenu extends Phaser.Scene {
 	}
 
 	create() {
+		this.scene.launch('DevOverlayScene');
+
 		this.cameras.main.setBackgroundColor('rgba(0,0,0,0.3)');
 
 		const { width, height } = this.game.config;

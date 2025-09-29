@@ -63,15 +63,8 @@ export class HudScene extends Phaser.Scene {
 	setupUI() {
 		const { width, height } = this.game.config;
 
-		this.uiElements.devBadge = this.add
-			.text(this.PADDING, this.PADDING, 'GAME IS WORK IN PROGRESS', TEXT_STYLES.UI_TINY)
-			.setOrigin(0, 0)
-			.setAlpha(0.9);
-		applyTextShadow(this.uiElements.devBadge);
-
-		const waveY = this.uiElements.devBadge.y + this.uiElements.devBadge.height + 6;
 		this.uiElements.waveText = this.add
-			.text(this.PADDING, waveY, `Wave: ${this.currentWave}`, TEXT_STYLES.UI_SMALL)
+			.text(this.PADDING, this.PADDING, `Wave: ${this.currentWave}`, TEXT_STYLES.UI_SMALL)
 			.setOrigin(0, 0);
 		applyTextShadow(this.uiElements.waveText);
 

@@ -24,7 +24,6 @@ export default class Item extends TypedEntity {
 		scene.add.existing(this);
 		scene.physics.add.existing(this);
 
-		// floating animation
 		this.floatTween = this.scene.tweens.add({
 			targets: this,
 			y: y - 10,
