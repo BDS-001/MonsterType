@@ -1,97 +1,155 @@
 {
-	"1": { "enemies": { "zombie": { "count": 2 } }, "items": {} },
-	"2": { "enemies": { "zombie": { "count": 3 } }, "items": {} },
-	"3": { "enemies": { "zombie": { "count": 5 } }, "items": {} },
-	"4": { "enemies": { "zombie": { "count": 6 } }, "items": {} },
+	"1": { "enemies": { "zombie": { "count": 3 } }, "items": {} },
+	"2": { "enemies": { "zombie": { "count": 4 }, "ghost": { "count": 1 } }, "items": {} },
+	"3": { "enemies": { "zombie": { "count": 5 }, "ghost": { "count": 1 } }, "items": {} },
+	"4": { "enemies": { "zombie": { "count": 6 }, "ghost": { "count": 2 } }, "items": {} },
 	"5": {
-		"enemies": { "ghost": { "count": 5 }, "slime": { "count": 1 } },
+		"enemies": { "zombie": { "count": 5 }, "ghost": { "count": 3 }, "mummy": { "count": 1 } },
 		"items": { "HEALTH_UP": 1 }
 	},
-	"6": { "enemies": { "zombie": { "count": 8 } }, "items": {} },
+	"6": { "enemies": { "zombie": { "count": 8 }, "ghost": { "count": 2 } }, "items": {} },
 	"7": {
-		"enemies": { "zombie": { "count": 9 }, "mummy": { "count": 1 } },
+		"enemies": { "zombie": { "count": 7 }, "ghost": { "count": 3 }, "mummy": { "count": 1 } },
 		"items": {}
 	},
-	"8": { "enemies": { "zombie": { "count": 10 }, "slime": { "count": 1 } }, "items": {} },
-	"9": { "enemies": { "zombie": { "count": 11 }, "ghost": { "count": 2 } }, "items": {} },
+	"8": {
+		"enemies": { "zombie": { "count": 9 }, "ghost": { "count": 3 }, "slime": { "count": 1 } },
+		"items": {}
+	},
+	"9": {
+		"enemies": { "zombie": { "count": 10 }, "ghost": { "count": 4 }, "mummy": { "count": 1 } },
+		"items": {}
+	},
 	"10": {
-		"enemies": { "ghost": { "count": 6 }, "slime": { "count": 1 } },
+		"enemies": { "zombie": { "count": 8 }, "ghost": { "count": 4 }, "mummy": { "count": 2 } },
 		"items": { "HEALTH_UP": 1 }
 	},
 	"11": {
-		"enemies": { "zombie": { "count": 12 }, "ghost": { "count": 3 } },
+		"enemies": { "zombie": { "count": 12 }, "ghost": { "count": 4 }, "mummy": { "count": 1 } },
 		"items": {}
 	},
-	"12": { "enemies": { "zombie": { "count": 14 }, "slime": { "count": 1 } }, "items": {} },
-	"13": { "enemies": { "zombie": { "count": 15 }, "ghost": { "count": 4 } }, "items": {} },
+	"12": {
+		"enemies": { "zombie": { "count": 11 }, "ghost": { "count": 5 }, "slime": { "count": 1 } },
+		"items": {}
+	},
+	"13": {
+		"enemies": { "zombie": { "count": 13 }, "ghost": { "count": 5 }, "mummy": { "count": 2 } },
+		"items": {}
+	},
 	"14": {
-		"enemies": { "zombie": { "count": 16 }, "mummy": { "count": 2 } },
+		"enemies": { "zombie": { "count": 14 }, "ghost": { "count": 5 }, "mummy": { "count": 2 } },
 		"items": {}
 	},
 	"15": {
-		"enemies": { "ghost": { "count": 8 }, "slime": { "count": 2 } },
+		"enemies": {
+			"zombie": { "count": 10 },
+			"ghost": { "count": 6 },
+			"mummy": { "count": 3 },
+			"slime": { "count": 1 }
+		},
 		"items": { "HEALTH_UP": 1 }
 	},
 	"16": {
-		"enemies": { "zombie": { "count": 18 }, "ghost": { "count": 5 } },
+		"enemies": { "zombie": { "count": 16 }, "ghost": { "count": 6 }, "mummy": { "count": 2 } },
 		"items": {}
 	},
-	"17": { "enemies": { "zombie": { "count": 20 }, "slime": { "count": 2 } }, "items": {} },
+	"17": {
+		"enemies": { "zombie": { "count": 15 }, "ghost": { "count": 7 }, "mummy": { "count": 3 } },
+		"items": {}
+	},
 	"18": {
-		"enemies": { "zombie": { "count": 22 }, "mummy": { "count": 2 } },
+		"enemies": {
+			"zombie": { "count": 17 },
+			"ghost": { "count": 7 },
+			"mummy": { "count": 3 },
+			"slime": { "count": 1 }
+		},
 		"items": {}
 	},
 	"19": {
-		"enemies": { "zombie": { "count": 24 }, "ghost": { "count": 6 } },
+		"enemies": { "zombie": { "count": 18 }, "ghost": { "count": 7 }, "mummy": { "count": 4 } },
 		"items": {}
 	},
 	"20": {
-		"enemies": { "ghost": { "count": 10 }, "mummy": { "count": 3 }, "slime": { "count": 2 } },
+		"enemies": {
+			"zombie": { "count": 15 },
+			"ghost": { "count": 8 },
+			"mummy": { "count": 4 },
+			"slime": { "count": 2 }
+		},
 		"items": { "HEALTH_UP": 1 }
 	},
 	"21": {
 		"enemies": {
-			"zombie": { "count": 26 },
+			"zombie": { "count": 20 },
 			"ghost": { "count": 8 },
-			"mummy": { "count": 2 }
+			"mummy": { "count": 4 }
 		},
 		"items": {}
 	},
-	"22": { "enemies": { "zombie": { "count": 28 }, "slime": { "count": 2 } }, "items": {} },
+	"22": {
+		"enemies": {
+			"zombie": { "count": 19 },
+			"ghost": { "count": 9 },
+			"mummy": { "count": 5 },
+			"slime": { "count": 1 }
+		},
+		"items": {}
+	},
 	"23": {
-		"enemies": { "zombie": { "count": 30 }, "ghost": { "count": 10 } },
+		"enemies": { "zombie": { "count": 22 }, "ghost": { "count": 9 }, "mummy": { "count": 5 } },
 		"items": {}
 	},
 	"24": {
-		"enemies": { "zombie": { "count": 32 }, "mummy": { "count": 4 } },
+		"enemies": { "zombie": { "count": 21 }, "ghost": { "count": 10 }, "mummy": { "count": 6 } },
 		"items": {}
 	},
 	"25": {
-		"enemies": { "ghost": { "count": 12 }, "mummy": { "count": 3 }, "slime": { "count": 3 } },
-		"items": { "HEALTH_UP": 1 }
+		"enemies": {
+			"zombie": { "count": 18 },
+			"ghost": { "count": 10 },
+			"mummy": { "count": 6 },
+			"slime": { "count": 2 }
+		},
+		"items": { "HEALTH_UP": 2 }
 	},
 	"26": {
-		"enemies": { "zombie": { "count": 35 }, "ghost": { "count": 12 } },
+		"enemies": { "zombie": { "count": 24 }, "ghost": { "count": 10 }, "mummy": { "count": 6 } },
 		"items": {}
 	},
 	"27": {
-		"enemies": { "zombie": { "count": 38 }, "mummy": { "count": 5 } },
+		"enemies": {
+			"zombie": { "count": 23 },
+			"ghost": { "count": 11 },
+			"mummy": { "count": 7 },
+			"slime": { "count": 1 }
+		},
 		"items": {}
 	},
 	"28": {
 		"enemies": {
-			"zombie": { "count": 40 },
-			"ghost": { "count": 15 },
-			"mummy": { "count": 6 }
+			"zombie": { "count": 26 },
+			"ghost": { "count": 11 },
+			"mummy": { "count": 7 }
 		},
 		"items": {}
 	},
 	"29": {
-		"enemies": { "zombie": { "count": 42 }, "ghost": { "count": 18 } },
+		"enemies": {
+			"zombie": { "count": 25 },
+			"ghost": { "count": 12 },
+			"mummy": { "count": 8 },
+			"slime": { "count": 2 }
+		},
 		"items": {}
 	},
 	"30": {
-		"enemies": { "ghost": { "count": 20 }, "mummy": { "count": 8 }, "slime": { "count": 3 } },
+		"enemies": {
+			"zombie": { "count": 22 },
+			"ghost": { "count": 12 },
+			"mummy": { "count": 9 },
+			"slime": { "count": 2 }
+		},
 		"items": { "HEALTH_UP": 2 }
 	}
 }
