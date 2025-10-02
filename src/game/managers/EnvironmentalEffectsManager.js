@@ -62,7 +62,7 @@ export default class EnvironmentalEffectsManager extends BaseManager {
 			speedX: { min: -20, max: 20 },
 			scale: { min: 0.4, max: 1.2 },
 			alpha: { start: 0.9, end: 0.3 },
-			rotate: { min: 0, max: 360 },
+			rotate: { min: 0, max: 45 },
 			angle: { min: -10, max: 10 },
 			frequency: 80,
 			quantity: 3,
