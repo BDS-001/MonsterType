@@ -56,7 +56,7 @@ export default class EnvironmentalEffectsManager extends BaseManager {
 
 		const particles = this.scene.add.particles(0, 0, 'snowflake', {
 			x: { min: 0, max: camera.width },
-			y: -20,
+			y: { min: -10, max: camera.height },
 			lifespan: 8000,
 			speedY: { min: 30, max: 80 },
 			speedX: { min: -20, max: 20 },
