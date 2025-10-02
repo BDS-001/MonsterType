@@ -81,7 +81,12 @@ export default class Enemy extends TypedEntity {
 			tint: 0xff0000,
 			duration: 50,
 			yoyo: true,
-			onComplete: () => this.clearTint(),
+			onComplete: () => {
+				this.clearTint();
+				if (this.statusEffects.freeze) {
+					this.setTint(0x00ffff);
+				}
+			},
 		});
 
 		this.knockbackEnemy();
@@ -143,9 +148,17 @@ export default class Enemy extends TypedEntity {
 			startTime: this.scene.time.now,
 			...config,
 		};
+
+		if (effectType === 'freeze') {
+			this.setTint(0x00ffff);
+		}
 	}
 
 	removeStatusEffect(effectType) {
+		if (effectType === 'freeze') {
+			this.clearTint();
+		}
+
 		delete this.statusEffects[effectType];
 	}
 

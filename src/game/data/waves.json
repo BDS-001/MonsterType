@@ -1,8 +1,17 @@
 {
-	"1": { "enemies": { "zombie": { "count": 3 } }, "items": {} },
-	"2": { "enemies": { "zombie": { "count": 4 }, "ghost": { "count": 1 } }, "items": {} },
-	"3": { "enemies": { "zombie": { "count": 5 }, "ghost": { "count": 1 } }, "items": {} },
-	"4": { "enemies": { "zombie": { "count": 6 }, "ghost": { "count": 2 } }, "items": {} },
+	"1": { "enemies": { "zombie": { "count": 3 } }, "items": { "BLIZZARD": 1 } },
+	"2": {
+		"enemies": { "zombie": { "count": 4 }, "ghost": { "count": 1 } },
+		"items": { "BLIZZARD": 1 }
+	},
+	"3": {
+		"enemies": { "zombie": { "count": 5 }, "ghost": { "count": 1 } },
+		"items": { "BLIZZARD": 1 }
+	},
+	"4": {
+		"enemies": { "zombie": { "count": 6 }, "ghost": { "count": 2 } },
+		"items": { "BLIZZARD": 1 }
+	},
 	"5": {
 		"enemies": { "zombie": { "count": 5 }, "ghost": { "count": 3 }, "mummy": { "count": 1 } },
 		"items": { "HEALTH_UP": 1 }

@@ -22,4 +22,6 @@ export const GAME_EVENTS = {
 	RANDOM_WEAPON_REQUESTED: 'weapon:random_requested',
 
 	ITEM_SPAWNED: 'item:item_spawn',
+
+	ENVIRONMENTAL_EFFECT_ACTIVATE: 'environment:effect_activate',
 };

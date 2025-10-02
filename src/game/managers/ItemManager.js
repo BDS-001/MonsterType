@@ -4,6 +4,7 @@ import Bomb from '../entities/items/bomb';
 import HealthUp from '../entities/items/healthUp';
 import RandomWeaponDrop from '../entities/items/randomWeaponDrop';
 import Shield from '../entities/items/shield';
+import Blizzard from '../entities/items/blizzard';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
@@ -62,6 +63,9 @@ export default class ItemManager extends BaseManager {
 				break;
 			case 'RANDOM_WEAPON_DROP':
 				item = new RandomWeaponDrop(this.scene, adjustedX, adjustedY, itemId);
+				break;
+			case 'BLIZZARD':
+				item = new Blizzard(this.scene, adjustedX, adjustedY, itemId);
 				break;
 			default:
 				item = new Item(this.scene, adjustedX, adjustedY, itemType, itemId);

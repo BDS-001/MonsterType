@@ -39,4 +39,13 @@ export const ITEM_DATA = {
 		type: 'weapon',
 		rarity: 'common',
 	},
+	BLIZZARD: {
+		id: 'BLIZZARD',
+		name: 'Blizzard',
+		word: 'freeze',
+		type: 'consumable',
+		rarity: 'rare',
+		duration: 5000,
+		speedMultiplier: 0.5,
+	},
 };
