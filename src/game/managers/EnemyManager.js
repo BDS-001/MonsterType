@@ -17,12 +17,22 @@ export default class EnemyManager extends BaseManager {
 
 	setupEnemies() {
 		this.enemies = this.scene.add.group({
-			runChildUpdate: true,
+			runChildUpdate: false,
 		});
 	}
 
 	setupEventListeners() {
 		this.scene.events.on(GAME_EVENTS.SPAWN_ENEMIES, this.spawnEnemiesFromCounts, this);
+	}
+
+	update(delta) {
+		const children = this.enemies.children.entries;
+		for (let i = 0; i < children.length; i++) {
+			const enemy = children[i];
+			if (enemy && !enemy.isDestroyed) {
+				enemy.update(delta);
+			}
+		}
 	}
 
 	spawnEnemyType(EnemyClass, count = 1, config = {}) {

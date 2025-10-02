@@ -92,7 +92,7 @@ export default class Enemy extends TypedEntity {
 		this.knockbackEnemy();
 	}
 
-	moveEnemy() {
+	moveEnemy(delta) {
 		if (this.isDestroyed || this.isKnockedBack) return;
 
 		let speed = this.baseStats.moveSpeed;
@@ -104,11 +104,11 @@ export default class Enemy extends TypedEntity {
 		this.scene.physics.moveToObject(this, this.scene.player, speed);
 	}
 
-	update() {
+	update(delta) {
 		if (this.isDestroyed) return;
 
 		this.updateStatusEffects();
-		this.moveEnemy();
+		this.moveEnemy(delta);
 		this.updateTextPositions();
 	}
 

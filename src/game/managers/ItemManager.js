@@ -11,7 +11,7 @@ import { GAME_EVENTS } from '../core/GameEvents.js';
 export default class ItemManager extends BaseManager {
 	constructor(scene) {
 		super(scene);
-		this.items = scene.add.group({ runChildUpdate: true });
+		this.items = scene.add.group({ runChildUpdate: false });
 		this.currentItemId = 0;
 		this.setupEventListeners();
 	}
@@ -20,6 +20,16 @@ export default class ItemManager extends BaseManager {
 		this.subscribe(GAME_EVENTS.ITEM_SPAWNED, (data) => {
 			this.spawnItem(data);
 		});
+	}
+
+	update(delta) {
+		const children = this.items.children.entries;
+		for (let i = 0; i < children.length; i++) {
+			const item = children[i];
+			if (item && !item.isDestroyed && item.update) {
+				item.update(delta);
+			}
+		}
 	}
 
 	spawnItemsFromCounts(itemCounts) {

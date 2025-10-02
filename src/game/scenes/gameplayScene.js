@@ -36,6 +36,7 @@ export default class GameScene extends Phaser.Scene {
 		this.load.image('healthUp', 'assets/items/healthUp.png');
 		this.load.image('shield', 'assets/items/shield.png');
 		this.load.image('randomWeapon', 'assets/items/randomWeapon.png');
+		this.load.image('snowflake', 'assets/effects/snowflake.png');
 	}
 
 	create() {
@@ -94,7 +95,11 @@ export default class GameScene extends Phaser.Scene {
 		this.player = new Player(this, centerX, centerY);
 	}
 
-	update() {}
+	update(time, delta) {
+		this.enemyManager?.update(delta);
+		this.weaponManager?.update(delta);
+		this.itemManager?.update(delta);
+	}
 
 	shutdown() {
 		this.game.events.off(GAME_EVENTS.GAME_OVER, this.handleGameOver, this);

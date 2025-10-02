@@ -86,6 +86,12 @@ export default class WeaponManager extends BaseManager {
 		}
 	}
 
+	update(delta) {
+		if (this.currentWeapon && this.currentWeapon.update) {
+			this.currentWeapon.update(delta);
+		}
+	}
+
 	getRandomWeaponKey(exclude = []) {
 		const excludeSet = new Set(exclude);
 		const keys = Array.from(this.weaponTypes.keys()).filter((k) => !excludeSet.has(k));
