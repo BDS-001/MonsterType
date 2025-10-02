@@ -23,12 +23,15 @@ export default class Enemy extends TypedEntity {
 		if (this.x > scene.player.x) this.flipX = true;
 
 		this.entityType = 'enemy';
-		this.moveSpeed = enemyOptions.moveSpeed;
+		this.baseStats = {
+			moveSpeed: enemyOptions.moveSpeed,
+			damage: enemyOptions.damage,
+		};
 		this.knockback = enemyOptions.knockback;
-		this.damage = enemyOptions.damage;
 		this.dropTable = enemyOptions.dropTable;
 		this.displayedWord = this.word;
 		this.isKnockedBack = false;
+		this.statusEffects = {};
 
 		this.setScale(enemyOptions.scale ?? gameSettings.SPRITE_SCALE);
 		this.scene.physics.add.existing(this);
@@ -86,12 +89,20 @@ export default class Enemy extends TypedEntity {
 
 	moveEnemy() {
 		if (this.isDestroyed || this.isKnockedBack) return;
-		this.scene.physics.moveToObject(this, this.scene.player, this.moveSpeed);
+
+		let speed = this.baseStats.moveSpeed;
+
+		if (this.statusEffects.freeze) {
+			speed *= this.statusEffects.freeze.speedMultiplier;
+		}
+
+		this.scene.physics.moveToObject(this, this.scene.player, speed);
 	}
 
 	update() {
 		if (this.isDestroyed) return;
 
+		this.updateStatusEffects();
 		this.moveEnemy();
 		this.updateTextPositions();
 	}
@@ -122,6 +133,30 @@ export default class Enemy extends TypedEntity {
 					itemType: dropEntry.itemType,
 				});
 				break;
+			}
+		}
+	}
+
+	applyStatusEffect(effectType, config) {
+		this.statusEffects[effectType] = {
+			duration: config.duration,
+			startTime: this.scene.time.now,
+			...config,
+		};
+	}
+
+	removeStatusEffect(effectType) {
+		delete this.statusEffects[effectType];
+	}
+
+	updateStatusEffects() {
+		const now = this.scene.time.now;
+
+		for (const [type, effect] of Object.entries(this.statusEffects)) {
+			if (now - effect.startTime >= effect.duration) {
+				this.removeStatusEffect(type);
+			} else {
+				effect.action?.(this, now);
 			}
 		}
 	}
