@@ -13,6 +13,7 @@ export default class StateManager extends BaseManager {
 	resetState() {
 		this.state = {
 			score: 0,
+			scoreMultiplier: 1,
 			gameOver: false,
 		};
 	}
@@ -21,6 +22,7 @@ export default class StateManager extends BaseManager {
 		this.subscribe(GAME_EVENTS.ENEMY_KILLED, this.handleEnemyKilled);
 		this.subscribe(GAME_EVENTS.PLAYER_HIT, this.playerHit);
 		this.subscribe(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged);
+		this.subscribe(GAME_EVENTS.MULTIPLIER_REQUESTED, this.handleMultiplierRequested);
 		this.subscribeGame(GAME_EVENTS.GAME_OVER, this.handleGameRestart);
 	}
 
@@ -36,8 +38,18 @@ export default class StateManager extends BaseManager {
 	}
 
 	updateScore(points) {
-		this.state.score += points;
+		this.state.score += points * this.state.scoreMultiplier;
 		this.emitGame(GAME_EVENTS.SCORE_CHANGED, { amount: points, newScore: this.state.score });
+	}
+
+	handleMultiplierRequested(data) {
+		const { multiplier } = data;
+		this.updateScoreMultiplier(multiplier);
+	}
+
+	updateScoreMultiplier(multiplier) {
+		this.state.scoreMultiplier = multiplier;
+		this.emitGame(GAME_EVENTS.MULTIPLIER_CHANGED, { multiplier });
 	}
 
 	playerHit(data) {

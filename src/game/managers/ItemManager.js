@@ -5,6 +5,7 @@ import HealthUp from '../entities/items/healthUp';
 import RandomWeaponDrop from '../entities/items/randomWeaponDrop';
 import Shield from '../entities/items/shield';
 import Blizzard from '../entities/items/blizzard';
+import Multiplier from '../entities/items/multiplier';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
@@ -76,6 +77,9 @@ export default class ItemManager extends BaseManager {
 				break;
 			case 'BLIZZARD':
 				item = new Blizzard(this.scene, adjustedX, adjustedY, itemId);
+				break;
+			case 'MULTIPLIER':
+				item = new Multiplier(this.scene, adjustedX, adjustedY, itemId);
 				break;
 			default:
 				item = new Item(this.scene, adjustedX, adjustedY, itemType, itemId);

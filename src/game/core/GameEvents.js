@@ -6,6 +6,8 @@ export const GAME_EVENTS = {
 	SPAWN_ENEMIES: 'combat:spawn_enemies',
 
 	SCORE_CHANGED: 'game:score_changed',
+	MULTIPLIER_CHANGED: 'game:multiplier_changed',
+	MULTIPLIER_REQUESTED: 'game:multiplier_requested',
 	HEALTH_CHANGED: 'game:health_changed',
 	SHIELD_CHANGED: 'game:shield_changed',
 	PLAYER_HIT: 'game:player_hit',

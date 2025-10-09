@@ -3,7 +3,7 @@ import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class Blizzard extends Item {
 	constructor(scene, x, y, itemId) {
-		super(scene, x, y, 'BLIZZARD', itemId, 'bomb');
+		super(scene, x, y, 'BLIZZARD', itemId, 'item-sprite');
 	}
 
 	onKill() {

@@ -18,6 +18,7 @@ export class HudScene extends Phaser.Scene {
 		this.currentWeapon = 'Basic Rifle';
 		this.currentAmmo = null;
 		this.currentMaxAmmo = null;
+		this.currentMultiplier = 1;
 		this.INITIAL_HEALTH = 100;
 		this.PADDING = 20;
 	}
@@ -73,6 +74,13 @@ export class HudScene extends Phaser.Scene {
 			.setOrigin(0.5, 0);
 		applyTextShadow(this.uiElements.scoreText);
 
+		this.uiElements.multiplierText = this.add
+			.text(width / 2, this.PADDING, `x${this.currentMultiplier}`, TEXT_STYLES.UI_MEDIUM)
+			.setOrigin(0, 0)
+			.setDepth(1500)
+			.setVisible(false);
+		applyTextShadow(this.uiElements.multiplierText);
+
 		this.uiElements.weaponAmmoText = this.add
 			.text(width - this.PADDING, height - this.PADDING, '', TEXT_STYLES.UI_SMALL)
 			.setOrigin(1, 1);
@@ -84,6 +92,7 @@ export class HudScene extends Phaser.Scene {
 
 	setupEventListeners() {
 		this.game.events.on(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
+		this.game.events.on(GAME_EVENTS.MULTIPLIER_CHANGED, this.updateMultiplier, this);
 		this.game.events.on(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
 		this.game.events.on(GAME_EVENTS.WEAPON_EQUIPPED, this.updateWeapon, this);
 		this.game.events.on(GAME_EVENTS.WEAPON_AMMO_CHANGED, this.updateAmmo, this);
@@ -106,6 +115,50 @@ export class HudScene extends Phaser.Scene {
 			const y = this.uiElements.scoreText.y + this.uiElements.scoreText.height + 8;
 			spawnFloatingText(this, x, y, `+${added}`, '#ffd54f');
 			this.pulseText(this.uiElements.scoreText, 1.12, 140);
+		}
+	}
+
+	updateMultiplier(data) {
+		const { multiplier } = data;
+		const previous = this.currentMultiplier;
+		this.currentMultiplier = multiplier;
+
+		if (multiplier > 1) {
+			const color = this.getMultiplierColor(multiplier);
+			const badge = this.uiElements.multiplierText;
+			badge.setText(`x${multiplier}`);
+			badge.setColor(color);
+			badge.setVisible(true);
+			badge.setAlpha(1);
+			badge.setScale(0.3);
+			this.positionMultiplier();
+
+			this.tweens.killTweensOf(badge);
+			this.tweens.add({
+				targets: badge,
+				scaleX: 1.4,
+				scaleY: 1.4,
+				duration: 220,
+				ease: 'Back.Out',
+				onComplete: () => {
+					this.tweens.add({
+						targets: badge,
+						scaleX: 1.0,
+						scaleY: 1.0,
+						duration: 140,
+						ease: 'Sine.Out',
+						onComplete: () => this.startContinuousPulse(badge, 1.08, 700),
+					});
+				},
+			});
+
+			if (multiplier !== previous) {
+				this.showMultiplierBurst(multiplier, color);
+				this.pulseText(this.uiElements.scoreText, 1.12, 160);
+			}
+		} else {
+			this.uiElements.multiplierText.setVisible(false);
+			this.tweens.killTweensOf(this.uiElements.multiplierText);
 		}
 	}
 
@@ -169,15 +222,19 @@ export class HudScene extends Phaser.Scene {
 			this.currentWave = 1;
 			this.currentAmmo = null;
 			this.currentMaxAmmo = null;
+			this.currentMultiplier = 1;
 			this.renderScoreText();
 			this.renderWaveText();
 			this.renderWeaponAmmoText();
 			this.uiElements.shieldText.setVisible(false);
+			this.uiElements.multiplierText.setVisible(false);
+			this.tweens.killTweensOf(this.uiElements.multiplierText);
 		}
 	}
 
 	renderScoreText() {
 		this.uiElements.scoreText?.setText(`Score: ${this.currentScore}`);
+		this.positionMultiplier();
 	}
 
 	renderWaveText() {
@@ -208,6 +265,75 @@ export class HudScene extends Phaser.Scene {
 			duration,
 			yoyo: true,
 			ease: 'Sine.easeOut',
+		});
+	}
+
+	startContinuousPulse(target, scaleTo = 1.08, duration = 800) {
+		if (!target || !target.visible) return;
+		this.tweens.add({
+			targets: target,
+			scaleX: scaleTo,
+			scaleY: scaleTo,
+			duration,
+			yoyo: true,
+			repeat: -1,
+			ease: 'Sine.easeInOut',
+		});
+	}
+
+	positionMultiplier() {
+		const badge = this.uiElements.multiplierText;
+		const score = this.uiElements.scoreText;
+		if (!badge || !score) return;
+		const gap = 12;
+		const rightEdge = score.x + (score.displayWidth || score.width || 0) / 2;
+		badge.setPosition(rightEdge + gap, score.y);
+	}
+
+	getMultiplierColor(mult) {
+		if (mult >= 5) return '#ff1744';
+		if (mult >= 4) return '#ff4081';
+		if (mult >= 3) return '#ff9800';
+		return '#ffd54f';
+	}
+
+	showMultiplierBurst(multiplier, color) {
+		const { width } = this.game.config;
+		const baseY =
+			(this.uiElements.scoreText?.y || this.PADDING) +
+			(this.uiElements.scoreText?.height || 0) +
+			10;
+		const text = this.add
+			.text(width / 2, baseY - 24, `x${multiplier}!`, {
+				...TEXT_STYLES.UI_LARGE,
+				fill: color,
+				strokeThickness: 6,
+			})
+			.setOrigin(0.5, 0)
+			.setDepth(3200)
+			.setAlpha(0)
+			.setAngle(Phaser.Math.Between(-6, 6));
+
+		applyTextShadow(text, 0, 4, '#000000', 8, true, true);
+		this.tweens.add({
+			targets: text,
+			scaleX: 1.6,
+			scaleY: 1.6,
+			alpha: 1,
+			duration: 160,
+			ease: 'Back.Out',
+			onComplete: () => {
+				this.tweens.add({
+					targets: text,
+					y: text.y - 20,
+					scaleX: 1.0,
+					scaleY: 1.0,
+					alpha: 0,
+					duration: 340,
+					ease: 'Sine.In',
+					onComplete: () => text.destroy(),
+				});
+			},
 		});
 	}
 
@@ -251,6 +377,7 @@ export class HudScene extends Phaser.Scene {
 
 	destroy() {
 		this.game.events.off(GAME_EVENTS.SCORE_CHANGED, this.updateScore, this);
+		this.game.events.off(GAME_EVENTS.MULTIPLIER_CHANGED, this.updateMultiplier, this);
 		this.game.events.off(GAME_EVENTS.WAVE_STARTED, this.updateWave, this);
 		this.game.events.off(GAME_EVENTS.WEAPON_EQUIPPED, this.updateWeapon, this);
 		this.game.events.off(GAME_EVENTS.WEAPON_AMMO_CHANGED, this.updateAmmo, this);

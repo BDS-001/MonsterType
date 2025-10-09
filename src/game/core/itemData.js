@@ -48,4 +48,12 @@ export const ITEM_DATA = {
 		duration: 5000,
 		speedMultiplier: 0.5,
 	},
+	MULTIPLIER: {
+		id: 'MULTIPLIER',
+		name: '2x Score Multiplier',
+		word: 'boost',
+		type: 'consumable',
+		rarity: 'uncommon',
+		baseValue: 2,
+	},
 };
