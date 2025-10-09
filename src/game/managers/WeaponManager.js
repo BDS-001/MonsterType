@@ -2,6 +2,7 @@ import Pistol from '../entities/weapons/pistol.js';
 import Crossbow from '../entities/weapons/crossbow.js';
 import Shotgun from '../entities/weapons/shotgun.js';
 import Minigun from '../entities/weapons/miniGun.js';
+import DualPistols from '../entities/weapons/dualPistols.js';
 import LazerGun from '../entities/weapons/lazer.js';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
@@ -16,6 +17,7 @@ export default class WeaponManager extends BaseManager {
 			['crossbow', Crossbow],
 			['shotgun', Shotgun],
 			['minigun', Minigun],
+			['dualPistols', DualPistols],
 			['lazerGun', LazerGun],
 		]);
 
