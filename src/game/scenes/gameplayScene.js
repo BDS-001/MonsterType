@@ -8,6 +8,7 @@ import WeaponManager from '../managers/WeaponManager';
 import InputManager from '../managers/InputManager';
 import CollisionManager from '../managers/CollisionManager';
 import StateManager from '../managers/StateManager';
+import ScoreMultiplierManager from '../managers/ScoreMultiplierManager';
 import AttackAnimationManager from '../managers/AttackAnimationManager';
 import EnvironmentalEffectsManager from '../managers/EnvironmentalEffectsManager';
 import { GAME_EVENTS } from '../core/GameEvents';
@@ -47,6 +48,7 @@ export default class GameScene extends Phaser.Scene {
 
 		this.inputManager = new InputManager(this);
 		this.stateManager = new StateManager(this);
+		this.scoreMultiplierManager = new ScoreMultiplierManager(this);
 		this.environmentalEffectsManager = new EnvironmentalEffectsManager(this);
 		this.enemyManager = new EnemyManager(this);
 		this.itemManager = new ItemManager(this);
@@ -107,6 +109,7 @@ export default class GameScene extends Phaser.Scene {
 
 		this.inputManager?.destroy?.();
 		this.stateManager?.destroy?.();
+		this.scoreMultiplierManager?.destroy?.();
 		this.environmentalEffectsManager?.destroy?.();
 		this.enemyManager?.destroy?.();
 		this.itemManager?.destroy?.();

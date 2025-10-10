@@ -7,7 +7,9 @@ export const GAME_EVENTS = {
 
 	SCORE_CHANGED: 'game:score_changed',
 	MULTIPLIER_CHANGED: 'game:multiplier_changed',
-	MULTIPLIER_REQUESTED: 'game:multiplier_requested',
+	MULTIPLIER_BOOST_COLLECTED: 'game:multiplier_boost_collected',
+	COMBO_CHANGED: 'game:combo_changed',
+	COMBO_BROKEN: 'game:combo_broken',
 	HEALTH_CHANGED: 'game:health_changed',
 	SHIELD_CHANGED: 'game:shield_changed',
 	PLAYER_HIT: 'game:player_hit',
