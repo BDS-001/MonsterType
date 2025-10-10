@@ -14,7 +14,7 @@ export default class ScoreMultiplierManager extends BaseManager {
 		this.combo = 0;
 		this.multiplier = 1;
 		this.comboTimer = null;
-		this.frozen = false;
+		this.freezeEvent = null;
 
 		this.setupEventListeners();
 	}
@@ -43,11 +43,12 @@ export default class ScoreMultiplierManager extends BaseManager {
 			this.comboTimer.remove();
 		}
 
-		if (!this.frozen) {
-			const comboWindow = this.getComboWindow();
-			this.comboTimer = this.scene.time.delayedCall(comboWindow, () => {
-				this.breakCombo();
-			});
+		const comboWindow = this.getComboWindow();
+		this.comboTimer = this.scene.time.delayedCall(comboWindow, () => {
+			this.breakCombo();
+		});
+		if (this.freezeEvent) {
+			this.comboTimer.paused = true;
 		}
 	}
 
@@ -65,6 +66,11 @@ export default class ScoreMultiplierManager extends BaseManager {
 		this.multiplier = 1;
 		this.emit(GAME_EVENTS.COMBO_CHANGED, { combo: this.combo });
 		this.emitGame(GAME_EVENTS.MULTIPLIER_CHANGED, { multiplier: this.multiplier });
+		this.comboTimer = null;
+		if (this.freezeEvent) {
+			this.freezeEvent.remove();
+			this.freezeEvent = null;
+		}
 	}
 
 	handleBoostCollected(data) {
@@ -74,16 +80,13 @@ export default class ScoreMultiplierManager extends BaseManager {
 		this.updateMultiplier();
 		this.emit(GAME_EVENTS.COMBO_CHANGED, { combo: this.combo });
 
-		this.frozen = true;
-		if (this.comboTimer) {
-			this.comboTimer.paused = true;
-		}
-
-		this.scene.time.delayedCall(duration, () => {
-			this.frozen = false;
-			if (this.comboTimer) {
-				this.comboTimer.paused = false;
-			}
+		this.resetComboTimer();
+		const comboWindow = this.getActiveWindowMs();
+		if (this.comboTimer) this.comboTimer.paused = true;
+		if (this.freezeEvent) this.freezeEvent.remove();
+		this.freezeEvent = this.scene.time.delayedCall(duration, () => {
+			if (this.comboTimer) this.comboTimer.paused = false;
+			this.freezeEvent = null;
 		});
 	}
 
@@ -98,14 +101,40 @@ export default class ScoreMultiplierManager extends BaseManager {
 			this.comboTimer.remove();
 			this.comboTimer = null;
 		}
+		if (this.freezeEvent) {
+			this.freezeEvent.remove();
+			this.freezeEvent = null;
+		}
 		this.combo = 0;
 		this.multiplier = 1;
-		this.frozen = false;
+	}
+
+	getActiveWindowMs() {
+		return this.comboTimer ? this.comboTimer.delay : 0;
+	}
+
+	isFrozen() {
+		return !!this.freezeEvent;
+	}
+
+	isTimerActive() {
+		return !!this.comboTimer;
+	}
+
+	getTimerSnapshot() {
+		if (!this.comboTimer) return { totalMs: 0, remainingMs: 0 };
+		const totalMs = this.comboTimer.delay || 0;
+		const elapsed = this.comboTimer.elapsed || 0;
+		return { totalMs, remainingMs: Math.max(0, totalMs - elapsed) };
 	}
 
 	destroy() {
 		if (this.comboTimer) {
 			this.comboTimer.remove();
+		}
+		if (this.freezeEvent) {
+			this.freezeEvent.remove();
+			this.freezeEvent = null;
 		}
 		super.destroy();
 	}

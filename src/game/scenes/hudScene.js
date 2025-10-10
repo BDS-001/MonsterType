@@ -1,4 +1,5 @@
 import HealthBar from '../util/healthBar';
+import TimerBar from '../util/timerBar';
 import fpsCounter from '../util/fpsCounter';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 import { TEXT_STYLES } from '../config/fontConfig.js';
@@ -12,6 +13,7 @@ export class HudScene extends Phaser.Scene {
 		this.uiElements = {};
 		this.healthBar = null;
 		this.fpsDisplay = null;
+		this.comboTimerBar = null;
 
 		this.currentScore = 0;
 		this.currentWave = 1;
@@ -27,6 +29,9 @@ export class HudScene extends Phaser.Scene {
 		this.setupEventListeners();
 
 		const { width, height } = this.game.config;
+
+		this.gameScene = this.scene.get('GameScene');
+		this.multiplierManager = this.gameScene?.scoreMultiplierManager || null;
 
 		this.healthBar = new HealthBar(
 			this,
@@ -59,6 +64,14 @@ export class HudScene extends Phaser.Scene {
 		this.fpsDisplay.setPosition(width - this.PADDING, this.PADDING);
 
 		this.updateHealthText();
+
+		const barWidth = 360;
+		const barHeight = 12;
+		const scoreY = this.uiElements.scoreText?.y || this.PADDING;
+		const barX = width / 2 - barWidth / 2;
+		const barY = scoreY + (this.uiElements.scoreText?.height || 0) + 8;
+		this.comboTimerBar = new TimerBar(this, barX, barY, 0, barWidth, barHeight);
+		this.comboTimerBar.setVisible(false);
 	}
 
 	setupUI() {
@@ -103,6 +116,21 @@ export class HudScene extends Phaser.Scene {
 
 	update() {
 		this.fpsDisplay.updateFPS();
+
+		if (!this.multiplierManager || !this.multiplierManager.scene) {
+			this.gameScene = this.scene.get('GameScene');
+			this.multiplierManager = this.gameScene?.scoreMultiplierManager || null;
+		}
+
+		if (!this.comboTimerBar || !this.multiplierManager) return;
+		const isActive = this.multiplierManager.isTimerActive();
+		const show = isActive && this.currentMultiplier > 1;
+		this.comboTimerBar.setVisible(show);
+		if (show) {
+			const { totalMs, remainingMs } = this.multiplierManager.getTimerSnapshot();
+			this.comboTimerBar.setWindow(totalMs, remainingMs);
+			this.comboTimerBar.setFrozen(this.multiplierManager.isFrozen());
+		}
 	}
 
 	updateScore(data) {
@@ -229,6 +257,7 @@ export class HudScene extends Phaser.Scene {
 			this.uiElements.shieldText.setVisible(false);
 			this.uiElements.multiplierText.setVisible(false);
 			this.tweens.killTweensOf(this.uiElements.multiplierText);
+			this.comboTimerBar?.setVisible(false);
 		}
 	}
 
@@ -384,6 +413,7 @@ export class HudScene extends Phaser.Scene {
 		this.game.events.off(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
 		this.game.events.off(GAME_EVENTS.SHIELD_CHANGED, this.updateShield, this);
 		this.game.events.off(GAME_EVENTS.GAME_OVER, this.handleGameRestart, this);
+		this.comboTimerBar?.destroy?.();
 		super.destroy();
 	}
 }
