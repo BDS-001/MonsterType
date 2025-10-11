@@ -30,7 +30,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	}
 
 	updateTextPositions() {
-		this.healthText?.setPosition(this.x, this.y - 30);
+		this.healthText.setPosition(this.x, this.y - 30);
 	}
 
 	takeDamage(damage = 1) {
@@ -45,7 +45,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 		if (this.isDestroyed || this.isDying) return;
 
 		this.displayedWord = this.word.slice(this.hitIndex);
-		this.healthText?.setText(this.displayedWord);
+		this.healthText.setText(this.displayedWord);
 
 		if (this.displayedWord.length === 0) {
 			this.markForDestruction();
@@ -69,7 +69,7 @@ export default class TypedEntity extends Phaser.Physics.Arcade.Image {
 	}
 
 	destroy(fromScene) {
-		this.healthText?.destroy();
+		this.healthText.destroy();
 		super.destroy(fromScene);
 	}
 }

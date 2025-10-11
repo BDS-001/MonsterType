@@ -1,5 +1,6 @@
 import Weapon from './weapon.js';
 import { GAME_EVENTS } from '../../core/GameEvents.js';
+import { getDamageableEnemiesInRadius } from '../../util/physicsUtils.js';
 
 export default class Shotgun extends Weapon {
 	constructor() {
@@ -21,24 +22,24 @@ export default class Shotgun extends Weapon {
 			target.takeDamage();
 		});
 
-		const player = this.scene?.player;
+		const player = this.scene.player;
 		this.scene.events.emit(GAME_EVENTS.WEAPON_FIRED, {
 			target: primaryTarget,
 			weapon: this,
 			pelletFxCount: this.pelletFxCount,
 			halfAngle: this.halfAngle,
 			maxRange: this.maxRange,
-			originX: player?.x || 0,
-			originY: player?.y || 0,
+			originX: player.x,
+			originY: player.y,
 		});
 	}
 
 	findConeTargets(primaryTarget) {
-		const player = this.scene?.player;
-		if (!player || !this.scene?.physics) return [];
+		const player = this.scene.player;
+		if (!player) return [];
 
-		const bodies = this.scene.physics.overlapCirc(player.x, player.y, this.maxRange, true, false);
-		if (!bodies || bodies.length === 0) return [];
+		const targets = getDamageableEnemiesInRadius(this.scene, player.x, player.y, this.maxRange);
+		if (!targets.length) return [];
 
 		const dx = primaryTarget.x - player.x;
 		const dy = primaryTarget.y - player.y;
@@ -51,9 +52,8 @@ export default class Shotgun extends Weapon {
 		const cosThreshSq = Math.cos(this.halfAngle) ** 2;
 
 		const coneTargets = [];
-		for (const body of bodies) {
-			const target = body.gameObject;
-			if (!target?.takeDamage || target === primaryTarget) continue;
+		for (const target of targets) {
+			if (target === primaryTarget) continue;
 
 			const ex = target.x - player.x;
 			const ey = target.y - player.y;

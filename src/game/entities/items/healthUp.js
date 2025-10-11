@@ -1,5 +1,4 @@
 import Item from './item.js';
-import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class HealthUp extends Item {
 	constructor(scene, x, y, itemId) {
@@ -8,9 +7,8 @@ export default class HealthUp extends Item {
 	}
 
 	onKill() {
-		this.scene.events.emit(GAME_EVENTS.HEALTH_CHANGED, {
-			maxHealthIncrease: this.healthIncreaseValue,
-			healthIncrease: this.healthIncreaseValue,
-		});
+		const player = this.scene.player;
+		if (!player) throw new Error('Player not initialized');
+		player.increaseMaxHealth(this.healthIncreaseValue, this.healthIncreaseValue);
 	}
 }

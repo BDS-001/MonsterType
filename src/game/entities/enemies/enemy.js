@@ -74,7 +74,7 @@ export default class Enemy extends TypedEntity {
 			return;
 		}
 
-		super.hitEffect?.(damage);
+		super.hitEffect(damage);
 
 		this.scene.tweens.add({
 			targets: this,

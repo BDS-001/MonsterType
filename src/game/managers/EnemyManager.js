@@ -54,7 +54,7 @@ export default class EnemyManager extends BaseManager {
 			this.enemies.add(enemy);
 
 			// Apply all active environmental effects to newly spawned enemy
-			this.scene.environmentalEffectsManager?.applyEffectsToEnemy(enemy);
+			this.scene.environmentalEffectsManager.applyEffectsToEnemy(enemy);
 
 			this.emit(GAME_EVENTS.ENEMY_SPAWNED, { enemy });
 		}

@@ -72,7 +72,6 @@ export class MainMenu extends Phaser.Scene {
 		this.input.enabled = false;
 		this.scene.setVisible(false);
 		this.scene.start('GameScene');
-		this.scene.launch('HudScene');
 	}
 
 	destroy() {

@@ -1,5 +1,6 @@
 import Weapon from './weapon.js';
 import { GAME_EVENTS } from '../../core/GameEvents.js';
+import { getDamageableEnemiesInRadius } from '../../util/physicsUtils.js';
 
 export default class LazerGun extends Weapon {
 	constructor() {
@@ -13,7 +14,7 @@ export default class LazerGun extends Weapon {
 	}
 
 	shotEffect(primaryTarget) {
-		const player = this.scene?.player;
+		const player = this.scene.player;
 		if (!player) return;
 
 		primaryTarget.takeDamage();
@@ -30,24 +31,15 @@ export default class LazerGun extends Weapon {
 	}
 
 	damageEnemiesInLine(primaryTarget, player) {
-		if (!this.scene?.physics) return;
-
-		const bodies = this.scene.physics.overlapCirc(
-			player.x,
-			player.y,
-			this.lazerLength,
-			true,
-			false
-		);
-		if (!bodies || bodies.length === 0) return;
+		const targets = getDamageableEnemiesInRadius(this.scene, player.x, player.y, this.lazerLength);
+		if (!targets.length) return;
 
 		const angle = Phaser.Math.Angle.Between(player.x, player.y, primaryTarget.x, primaryTarget.y);
 		const laserDirX = Math.cos(angle);
 		const laserDirY = Math.sin(angle);
 
-		for (const body of bodies) {
-			const target = body.gameObject;
-			if (!target?.takeDamage || target.id === primaryTarget.id) continue;
+		for (const target of targets) {
+			if (target.id === primaryTarget.id) continue;
 
 			const toTargetX = target.x - player.x;
 			const toTargetY = target.y - player.y;

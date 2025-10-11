@@ -1,3 +1,5 @@
+import { UI_COLORS } from '../config/uiTheme';
+
 export default class HealthBar {
 	constructor(scene, x, y, initialHealth = 100, maxHealth = 100, width = 200, height = 24) {
 		this.scene = scene;
@@ -44,10 +46,10 @@ export default class HealthBar {
 	draw() {
 		this.bar.clear();
 
-		this.bar.fillStyle(0x000000);
+		this.bar.fillStyle(UI_COLORS.BAR_BORDER);
 		this.bar.fillRect(this.x, this.y, this.width, this.height);
 
-		this.bar.fillStyle(0x1a1a1a);
+		this.bar.fillStyle(UI_COLORS.BAR_TRACK);
 		this.bar.fillRect(
 			this.x + this.borderThickness,
 			this.y + this.borderThickness,
@@ -59,11 +61,11 @@ export default class HealthBar {
 		let healthColor;
 
 		if (healthPercentage > 0.6) {
-			healthColor = 0x39ff14;
+			healthColor = UI_COLORS.HEALTH_HIGH;
 		} else if (healthPercentage > 0.3) {
-			healthColor = 0xffff00;
+			healthColor = UI_COLORS.HEALTH_MED;
 		} else {
-			healthColor = 0xff0000;
+			healthColor = UI_COLORS.HEALTH_LOW;
 		}
 
 		const healthBarWidth = Math.floor((this.width - this.borderThickness * 2) * healthPercentage);

@@ -14,6 +14,16 @@ export default class ItemManager extends BaseManager {
 		super(scene);
 		this.items = scene.add.group({ runChildUpdate: false });
 		this.currentItemId = 0;
+
+		this.itemTypes = new Map([
+			['MEDKIT', Medkit],
+			['BOMB', Bomb],
+			['SHIELD', Shield],
+			['HEALTH_UP', HealthUp],
+			['RANDOM_WEAPON_DROP', RandomWeaponDrop],
+			['BLIZZARD', Blizzard],
+			['MULTIPLIER', Multiplier],
+		]);
 		this.setupEventListeners();
 	}
 
@@ -58,31 +68,11 @@ export default class ItemManager extends BaseManager {
 		);
 
 		let item;
-
-		switch (itemType) {
-			case 'MEDKIT':
-				item = new Medkit(this.scene, adjustedX, adjustedY, itemId);
-				break;
-			case 'BOMB':
-				item = new Bomb(this.scene, adjustedX, adjustedY, itemId);
-				break;
-			case 'SHIELD':
-				item = new Shield(this.scene, adjustedX, adjustedY, itemId);
-				break;
-			case 'HEALTH_UP':
-				item = new HealthUp(this.scene, adjustedX, adjustedY, itemId);
-				break;
-			case 'RANDOM_WEAPON_DROP':
-				item = new RandomWeaponDrop(this.scene, adjustedX, adjustedY, itemId);
-				break;
-			case 'BLIZZARD':
-				item = new Blizzard(this.scene, adjustedX, adjustedY, itemId);
-				break;
-			case 'MULTIPLIER':
-				item = new Multiplier(this.scene, adjustedX, adjustedY, itemId);
-				break;
-			default:
-				item = new Item(this.scene, adjustedX, adjustedY, itemType, itemId);
+		const ItemClass = this.itemTypes.get(itemType);
+		if (ItemClass) {
+			item = new ItemClass(this.scene, adjustedX, adjustedY, itemId);
+		} else {
+			item = new Item(this.scene, adjustedX, adjustedY, itemType, itemId);
 		}
 
 		if (!item) {

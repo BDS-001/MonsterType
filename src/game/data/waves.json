@@ -1,5 +1,8 @@
 {
-	"1": { "enemies": { "zombie": { "count": 3 } }, "items": { "BLIZZARD": 1, "MULTIPLIER": 1 } },
+	"1": {
+		"enemies": { "zombie": { "count": 3 } },
+		"items": { "BLIZZARD": 1, "MULTIPLIER": 1, "SHIELD": 1 }
+	},
 	"2": {
 		"enemies": { "zombie": { "count": 4 }, "ghost": { "count": 1 } },
 		"items": { "BLIZZARD": 1, "MULTIPLIER": 1 }

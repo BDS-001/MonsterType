@@ -81,7 +81,6 @@ export default class ScoreMultiplierManager extends BaseManager {
 		this.emit(GAME_EVENTS.COMBO_CHANGED, { combo: this.combo });
 
 		this.resetComboTimer();
-		const comboWindow = this.getActiveWindowMs();
 		if (this.comboTimer) this.comboTimer.paused = true;
 		if (this.freezeEvent) this.freezeEvent.remove();
 		this.freezeEvent = this.scene.time.delayedCall(duration, () => {

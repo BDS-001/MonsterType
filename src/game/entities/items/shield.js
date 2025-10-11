@@ -7,8 +7,8 @@ export default class Shield extends Item {
 	}
 
 	onKill() {
-		this.scene.stateManager.applyShield({
-			amount: this.shieldAmount,
-		});
+		const player = this.scene.player;
+		if (!player) throw new Error('Player not initialized');
+		player.applyShield(this.shieldAmount);
 	}
 }

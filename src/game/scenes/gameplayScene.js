@@ -57,6 +57,9 @@ export default class GameScene extends Phaser.Scene {
 		this.attackAnimationManager = new AttackAnimationManager(this);
 		this.waveManager = new WaveManager(this);
 
+		this.game.registry.set('scoreMultiplierManager', this.scoreMultiplierManager);
+		this.scene.launch('HudScene');
+
 		this.createPlayer();
 		this.waveManager.startWaves();
 
@@ -98,26 +101,28 @@ export default class GameScene extends Phaser.Scene {
 	}
 
 	update(time, delta) {
-		this.enemyManager?.update(delta);
-		this.weaponManager?.update(delta);
-		this.itemManager?.update(delta);
+		this.enemyManager.update(delta);
+		this.weaponManager.update(delta);
+		this.itemManager.update(delta);
 	}
 
 	shutdown() {
 		this.game.events.off(GAME_EVENTS.GAME_OVER, this.handleGameOver, this);
 		this.events.off(GAME_EVENTS.WAVE_SPAWN_ITEMS, this.handleSpawnItems, this);
 
-		this.inputManager?.destroy?.();
-		this.stateManager?.destroy?.();
-		this.scoreMultiplierManager?.destroy?.();
-		this.environmentalEffectsManager?.destroy?.();
-		this.enemyManager?.destroy?.();
-		this.itemManager?.destroy?.();
-		this.targetManager?.destroy?.();
-		this.weaponManager?.destroy?.();
-		this.attackAnimationManager?.destroy?.();
-		this.waveManager?.destroy?.();
-		this.collisionManager?.destroy?.();
+		this.inputManager.destroy();
+		this.stateManager.destroy();
+		this.scoreMultiplierManager.destroy();
+		this.environmentalEffectsManager.destroy();
+		this.enemyManager.destroy();
+		this.itemManager.destroy();
+		this.targetManager.destroy();
+		this.weaponManager.destroy();
+		this.attackAnimationManager.destroy();
+		this.waveManager.destroy();
+		this.collisionManager.destroy();
+
+		this.game.registry.set('scoreMultiplierManager', null);
 	}
 
 	destroy() {

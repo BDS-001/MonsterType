@@ -22,6 +22,6 @@ export default class AttackAnimationManager extends BaseManager {
 
 	determineAnimationType(data) {
 		const { weapon } = data;
-		return weapon?.attackAnimation;
+		return weapon.attackAnimation;
 	}
 }

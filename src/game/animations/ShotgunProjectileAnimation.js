@@ -62,8 +62,8 @@ export default class ShotgunProjectileAnimation extends BasicProjectileAnimation
 	}
 
 	calculateMaxDistance() {
-		const cam = this.scene.cameras?.main;
-		return cam ? Math.hypot(cam.width, cam.height) + 200 : 1600;
+		const cam = this.scene.cameras.main;
+		return Math.hypot(cam.width, cam.height) + 200;
 	}
 
 	calculatePelletAngle(centerAngle) {

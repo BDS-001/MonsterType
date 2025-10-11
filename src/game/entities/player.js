@@ -36,17 +36,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 		this.playHitEffect(this.immunityLength);
 
-		this.scene.events.emit(GAME_EVENTS.SHIELD_CHANGED, { shield: this.shield });
-		this.scene.events.emit(GAME_EVENTS.PLAYER_HIT, {
-			damage: trueDamage,
-			immunityLength: this.immunityLength,
-			currentHealth: this.health,
-			maxHealth: this.maxHealth,
-		});
-		this.scene.events.emit(GAME_EVENTS.HEALTH_CHANGED, {
-			currentHealth: this.health,
-			maxHealth: this.maxHealth,
-		});
+		this.scene.game.events.emit(GAME_EVENTS.SHIELD_CHANGED, { shield: this.shield });
 
 		if (trueDamage > 0) {
 			spawnFloatingText(
@@ -57,6 +47,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 				'#f44336'
 			);
 		}
+
+		this.scene.game.events.emit(GAME_EVENTS.HEALTH_CHANGED, {
+			currentHealth: this.health,
+			maxHealth: this.maxHealth,
+		});
 
 		if (this.health <= 0) {
 			this.die();
@@ -71,7 +66,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		this.health = Math.min(this.maxHealth, this.health + healAmount);
 		const actualHeal = this.health - oldHealth;
 
-		this.scene.events.emit(GAME_EVENTS.HEALTH_CHANGED, {
+		this.scene.game.events.emit(GAME_EVENTS.HEALTH_CHANGED, {
 			currentHealth: this.health,
 			maxHealth: this.maxHealth,
 		});
@@ -95,7 +90,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		this.shield = Math.min(this.maxShield, this.shield + shieldAmount);
 		const actualShield = this.shield - oldShield;
 
-		this.scene.events.emit(GAME_EVENTS.SHIELD_CHANGED, { shield: this.shield });
+		this.scene.game.events.emit(GAME_EVENTS.SHIELD_CHANGED, { shield: this.shield });
 
 		if (actualShield > 0) {
 			spawnFloatingText(
@@ -114,9 +109,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 		this.maxHealth += maxHealthIncrease;
 		this.health += healthIncrease;
 
-		this.scene.events.emit(GAME_EVENTS.HEALTH_CHANGED, {
-			maxHealthIncrease,
-			healthIncrease,
+		this.scene.game.events.emit(GAME_EVENTS.HEALTH_CHANGED, {
 			currentHealth: this.health,
 			maxHealth: this.maxHealth,
 		});
@@ -133,7 +126,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	die() {
-		this.scene.events.emit(GAME_EVENTS.GAME_OVER);
+		this.scene.game.events.emit(GAME_EVENTS.GAME_OVER);
 	}
 
 	reset() {

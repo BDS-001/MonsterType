@@ -21,7 +21,6 @@ export default class StateManager extends BaseManager {
 	setupEventListeners() {
 		this.subscribe(GAME_EVENTS.ENEMY_KILLED, this.handleEnemyKilled);
 		this.subscribe(GAME_EVENTS.PLAYER_HIT, this.playerHit);
-		this.subscribe(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged);
 		this.subscribeGame(GAME_EVENTS.MULTIPLIER_CHANGED, this.handleMultiplierChanged);
 		this.subscribeGame(GAME_EVENTS.GAME_OVER, this.handleGameRestart);
 	}
@@ -29,12 +28,6 @@ export default class StateManager extends BaseManager {
 	handleEnemyKilled(data) {
 		const { points } = data;
 		this.updateScore(points);
-	}
-
-	handleHealthChanged(data) {
-		if (data.maxHealthIncrease && this.scene.player) {
-			this.scene.player.increaseMaxHealth(data.maxHealthIncrease, data.healthIncrease);
-		}
 	}
 
 	updateScore(points) {
@@ -49,10 +42,11 @@ export default class StateManager extends BaseManager {
 
 	playerHit(data) {
 		const { enemy } = data;
-		if (!this.scene.player) return;
+		const player = this.scene.player;
+		if (!player) throw new Error('Player not initialized');
 
-		const damage = typeof enemy?.baseStats?.damage === 'number' ? enemy.baseStats.damage : 10;
-		const trueDamage = this.scene.player.takeDamage(damage, enemy);
+		const damage = typeof enemy.baseStats.damage === 'number' ? enemy.baseStats.damage : 10;
+		const trueDamage = player.takeDamage(damage, enemy) ?? 0;
 
 		if (trueDamage > 0) {
 			shakeCamera(this.scene);
@@ -61,9 +55,9 @@ export default class StateManager extends BaseManager {
 
 	playerHeal(data) {
 		const { amount } = data;
-		if (!this.scene.player) return;
-
-		this.scene.player.heal(amount);
+		const player = this.scene.player;
+		if (!player) throw new Error('Player not initialized');
+		player.heal(amount);
 	}
 
 	handleGameOver() {
@@ -77,11 +71,5 @@ export default class StateManager extends BaseManager {
 				this.scene.player.reset();
 			}
 		}
-	}
-
-	applyShield({ amount }) {
-		if (!this.scene.player) return;
-
-		this.scene.player.applyShield(amount);
 	}
 }

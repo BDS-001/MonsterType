@@ -1,3 +1,5 @@
+import { UI_COLORS } from '../config/uiTheme';
+
 export default class TimerBar {
 	constructor(scene, x, y, totalMs = 5000, width = 360, height = 10) {
 		this.scene = scene;
@@ -37,7 +39,7 @@ export default class TimerBar {
 	}
 
 	destroy() {
-		this.bar?.destroy();
+		this.bar.destroy();
 	}
 
 	draw() {
@@ -46,10 +48,10 @@ export default class TimerBar {
 
 		this.bar.clear();
 
-		this.bar.fillStyle(0x000000);
+		this.bar.fillStyle(UI_COLORS.BAR_BORDER);
 		this.bar.fillRect(this.x, this.y, this.width, this.height);
 
-		this.bar.fillStyle(0x1a1a1a);
+		this.bar.fillStyle(UI_COLORS.BAR_TRACK);
 		this.bar.fillRect(
 			this.x + this.borderThickness,
 			this.y + this.borderThickness,
@@ -60,15 +62,15 @@ export default class TimerBar {
 		const ratio = this.remainingMs / this.totalMs;
 		const fillWidth = Math.floor(innerWidth * ratio);
 
-		let color = 0x00e5ff;
+		let color = UI_COLORS.TIMER_DEFAULT;
 		if (!this.frozen) {
 			if (ratio <= 0.33) {
-				color = 0xff1744;
+				color = UI_COLORS.TIMER_DANGER;
 			} else if (ratio <= 0.66) {
-				color = 0xffd54f;
+				color = UI_COLORS.TIMER_WARN;
 			}
 		} else {
-			color = 0x66ccff;
+			color = UI_COLORS.TIMER_FROZEN;
 		}
 
 		if (fillWidth > 0) {
@@ -92,7 +94,7 @@ export default class TimerBar {
 		}
 
 		if (this.frozen) {
-			this.bar.lineStyle(2, 0x66ccff, 1);
+			this.bar.lineStyle(2, UI_COLORS.TIMER_FROZEN, 1);
 			this.bar.strokeRect(this.x + 1, this.y + 1, this.width - 2, this.height - 2);
 			this.bar.lineStyle();
 		}

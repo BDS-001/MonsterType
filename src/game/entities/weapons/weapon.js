@@ -17,15 +17,11 @@ export default class Weapon {
 	}
 
 	setupEventListeners() {
-		if (this.scene) {
-			this.scene.events.on(GAME_EVENTS.TARGETS_SELECTED, this.handleTargetsSelected, this);
-		}
+		this.scene.events.on(GAME_EVENTS.TARGETS_SELECTED, this.handleTargetsSelected, this);
 	}
 
 	removeEventListeners() {
-		if (this.scene) {
-			this.scene.events.off(GAME_EVENTS.TARGETS_SELECTED, this.handleTargetsSelected, this);
-		}
+		this.scene.events.off(GAME_EVENTS.TARGETS_SELECTED, this.handleTargetsSelected, this);
 	}
 
 	fire() {
@@ -49,7 +45,7 @@ export default class Weapon {
 		if (this.maxUsages <= 0) return;
 
 		this.currentUsages--;
-		this.scene?.events.emit(GAME_EVENTS.WEAPON_AMMO_CHANGED, {
+		this.scene.events.emit(GAME_EVENTS.WEAPON_AMMO_CHANGED, {
 			ammo: this.currentUsages,
 			maxAmmo: this.maxUsages,
 		});
@@ -60,7 +56,7 @@ export default class Weapon {
 	}
 
 	onAmmoEmpty() {
-		this.scene?.events.emit('weapon:ammo_empty', { weapon: this });
+		this.scene.events.emit('weapon:ammo_empty', { weapon: this });
 	}
 
 	hasAmmo() {

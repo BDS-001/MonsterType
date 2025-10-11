@@ -1,5 +1,6 @@
 import Weapon from './weapon.js';
 import { GAME_EVENTS } from '../../core/GameEvents.js';
+import { getDamageableEnemiesInRadius } from '../../util/physicsUtils.js';
 
 export default class Crossbow extends Weapon {
 	constructor() {
@@ -13,7 +14,7 @@ export default class Crossbow extends Weapon {
 	}
 
 	shotEffect(primaryTarget) {
-		const player = this.scene?.player;
+		const player = this.scene.player;
 		if (!player) return;
 
 		primaryTarget.takeDamage();
@@ -46,23 +47,19 @@ export default class Crossbow extends Weapon {
 	}
 
 	findClosestTarget(fromX, fromY, visited) {
-		const bodies = this.scene.physics?.overlapCirc(fromX, fromY, this.range, true, false);
-		if (!bodies) return null;
+		const targets = getDamageableEnemiesInRadius(this.scene, fromX, fromY, this.range);
+		if (!targets.length) return null;
 
 		let closest = null;
 		let closestDist = Infinity;
-
-		for (const body of bodies) {
-			const target = body.gameObject;
-			if (!target?.takeDamage || visited.has(target)) continue;
-
+		for (const target of targets) {
+			if (visited.has(target)) continue;
 			const dist = (target.x - fromX) ** 2 + (target.y - fromY) ** 2;
 			if (dist < closestDist) {
 				closestDist = dist;
 				closest = target;
 			}
 		}
-
 		return closest;
 	}
 }

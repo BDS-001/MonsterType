@@ -5,6 +5,7 @@ import { GAME_EVENTS } from '../core/GameEvents.js';
 import { TEXT_STYLES } from '../config/fontConfig.js';
 import { spawnFloatingText } from '../util/floatingText.js';
 import { applyTextShadow } from '../util/textEffects.js';
+import { getMultiplierColor } from '../util/multiplierUtil.js';
 
 export class HudScene extends Phaser.Scene {
 	constructor() {
@@ -17,7 +18,7 @@ export class HudScene extends Phaser.Scene {
 
 		this.currentScore = 0;
 		this.currentWave = 1;
-		this.currentWeapon = 'Basic Rifle';
+		this.currentWeapon = '';
 		this.currentAmmo = null;
 		this.currentMaxAmmo = null;
 		this.currentMultiplier = 1;
@@ -30,8 +31,8 @@ export class HudScene extends Phaser.Scene {
 
 		const { width, height } = this.game.config;
 
-		this.gameScene = this.scene.get('GameScene');
-		this.multiplierManager = this.gameScene?.scoreMultiplierManager || null;
+		this.multiplierManager = this.game.registry.get('scoreMultiplierManager');
+		if (!this.multiplierManager) throw new Error('ScoreMultiplierManager not found in registry');
 
 		this.healthBar = new HealthBar(
 			this,
@@ -67,9 +68,9 @@ export class HudScene extends Phaser.Scene {
 
 		const barWidth = 360;
 		const barHeight = 12;
-		const scoreY = this.uiElements.scoreText?.y || this.PADDING;
+		const scoreY = this.uiElements.scoreText.y;
 		const barX = width / 2 - barWidth / 2;
-		const barY = scoreY + (this.uiElements.scoreText?.height || 0) + 8;
+		const barY = scoreY + this.uiElements.scoreText.height + 8;
 		this.comboTimerBar = new TimerBar(this, barX, barY, 0, barWidth, barHeight);
 		this.comboTimerBar.setVisible(false);
 	}
@@ -117,12 +118,6 @@ export class HudScene extends Phaser.Scene {
 	update() {
 		this.fpsDisplay.updateFPS();
 
-		if (!this.multiplierManager || !this.multiplierManager.scene) {
-			this.gameScene = this.scene.get('GameScene');
-			this.multiplierManager = this.gameScene?.scoreMultiplierManager || null;
-		}
-
-		if (!this.comboTimerBar || !this.multiplierManager) return;
 		const isActive = this.multiplierManager.isTimerActive();
 		const show = isActive && this.currentMultiplier > 1;
 		this.comboTimerBar.setVisible(show);
@@ -134,11 +129,11 @@ export class HudScene extends Phaser.Scene {
 	}
 
 	updateScore(data) {
-		const added = data?.amount || 0;
+		const added = data.amount || 0;
 		this.currentScore = data.newScore || this.currentScore + added;
 		this.renderScoreText();
 
-		if (added > 0 && this.uiElements.scoreText) {
+		if (added > 0) {
 			const x = this.uiElements.scoreText.x;
 			const y = this.uiElements.scoreText.y + this.uiElements.scoreText.height + 8;
 			spawnFloatingText(this, x, y, `+${added}`, '#ffd54f');
@@ -152,7 +147,7 @@ export class HudScene extends Phaser.Scene {
 		this.currentMultiplier = multiplier;
 
 		if (multiplier > 1) {
-			const color = this.getMultiplierColor(multiplier);
+			const color = getMultiplierColor(multiplier);
 			const badge = this.uiElements.multiplierText;
 			badge.setText(`x${multiplier}`);
 			badge.setColor(color);
@@ -214,7 +209,7 @@ export class HudScene extends Phaser.Scene {
 			return;
 		}
 
-		if (data?.maxHealthIncrease) {
+		if (data.maxHealthIncrease) {
 			this.healthBar.increaseMax(data.maxHealthIncrease, data.healthIncrease);
 			this.updateHealthText();
 		}
@@ -238,8 +233,8 @@ export class HudScene extends Phaser.Scene {
 		const maxHealth = Math.floor(this.healthBar.maxValue);
 		const centerX = this.healthBar.x + this.healthBar.width / 2;
 		const centerY = this.healthBar.y + this.healthBar.height / 2;
-		this.uiElements.healthValueText?.setText(`${currentHealth}/${maxHealth}`);
-		this.uiElements.healthValueText?.setPosition(centerX, centerY);
+		this.uiElements.healthValueText.setText(`${currentHealth}/${maxHealth}`);
+		this.uiElements.healthValueText.setPosition(centerX, centerY);
 	}
 
 	handleGameRestart(data) {
@@ -257,17 +252,17 @@ export class HudScene extends Phaser.Scene {
 			this.uiElements.shieldText.setVisible(false);
 			this.uiElements.multiplierText.setVisible(false);
 			this.tweens.killTweensOf(this.uiElements.multiplierText);
-			this.comboTimerBar?.setVisible(false);
+			this.comboTimerBar.setVisible(false);
 		}
 	}
 
 	renderScoreText() {
-		this.uiElements.scoreText?.setText(`Score: ${this.currentScore}`);
+		this.uiElements.scoreText.setText(`Score: ${this.currentScore}`);
 		this.positionMultiplier();
 	}
 
 	renderWaveText() {
-		this.uiElements.waveText?.setText(`Wave: ${this.currentWave}`);
+		this.uiElements.waveText.setText(`Wave: ${this.currentWave}`);
 	}
 
 	renderWeaponAmmoText() {
@@ -282,7 +277,7 @@ export class HudScene extends Phaser.Scene {
 		) {
 			ammoText = ` · Ammo: ${this.currentAmmo}/${this.currentMaxAmmo}`;
 		}
-		this.uiElements.weaponAmmoText?.setText(`Weapon: ${this.currentWeapon}${ammoText}`);
+		this.uiElements.weaponAmmoText.setText(`Weapon: ${this.currentWeapon}${ammoText}`);
 	}
 
 	pulseText(target, scaleTo = 1.12, duration = 140) {
@@ -319,19 +314,10 @@ export class HudScene extends Phaser.Scene {
 		badge.setPosition(rightEdge + gap, score.y);
 	}
 
-	getMultiplierColor(mult) {
-		if (mult >= 5) return '#ff1744';
-		if (mult >= 4) return '#ff4081';
-		if (mult >= 3) return '#ff9800';
-		return '#ffd54f';
-	}
-
 	showMultiplierBurst(multiplier, color) {
 		const { width } = this.game.config;
 		const baseY =
-			(this.uiElements.scoreText?.y || this.PADDING) +
-			(this.uiElements.scoreText?.height || 0) +
-			10;
+			(this.uiElements.scoreText.y || this.PADDING) + (this.uiElements.scoreText.height || 0) + 10;
 		const text = this.add
 			.text(width / 2, baseY - 24, `x${multiplier}!`, {
 				...TEXT_STYLES.UI_LARGE,
@@ -371,9 +357,7 @@ export class HudScene extends Phaser.Scene {
 		this.uiElements.waveBanner?.destroy();
 
 		const finalY =
-			(this.uiElements.scoreText?.y || this.PADDING) +
-			(this.uiElements.scoreText?.height || 0) +
-			12;
+			(this.uiElements.scoreText.y || this.PADDING) + (this.uiElements.scoreText.height || 0) + 12;
 		const text = this.add
 			.text(width / 2, finalY - 30, `Wave ${waveNumber}`, TEXT_STYLES.UI_MEDIUM)
 			.setOrigin(0.5, 0)
@@ -413,7 +397,7 @@ export class HudScene extends Phaser.Scene {
 		this.game.events.off(GAME_EVENTS.HEALTH_CHANGED, this.handleHealthChanged, this);
 		this.game.events.off(GAME_EVENTS.SHIELD_CHANGED, this.updateShield, this);
 		this.game.events.off(GAME_EVENTS.GAME_OVER, this.handleGameRestart, this);
-		this.comboTimerBar?.destroy?.();
+		this.comboTimerBar.destroy();
 		super.destroy();
 	}
 }
