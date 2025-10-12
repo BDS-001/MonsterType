@@ -1,5 +1,5 @@
 import TypedEntity from '../typedEntity';
-import { ITEM_DATA } from '../../core/itemData.js';
+import ITEM_DATA from '../../data/items.json';
 import { gameSettings } from '../../core/constants';
 
 export default class Item extends TypedEntity {

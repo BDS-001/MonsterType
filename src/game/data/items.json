@@ -1,0 +1,60 @@
+{
+	"BOMB": {
+		"name": "Bomb",
+		"word": "explode",
+		"type": "consumable",
+		"rarity": "common",
+		"baseValue": 2,
+		"radius": 300
+	},
+	"MEDKIT": {
+		"name": "Medkit",
+		"word": "heal",
+		"type": "consumable",
+		"rarity": "common",
+		"baseValue": 10
+	},
+	"HEALTH_UP": {
+		"name": "Max Health Upgrade",
+		"word": "endurance",
+		"type": "upgrade",
+		"rarity": "rare",
+		"baseValue": 10
+	},
+	"SHIELD": {
+		"name": "Shield",
+		"word": "protect",
+		"type": "consumable",
+		"rarity": "uncommon",
+		"baseValue": 5
+	},
+	"RANDOM_WEAPON_DROP": {
+		"name": "Random Weapon",
+		"word": "weapon",
+		"type": "weapon",
+		"rarity": "common"
+	},
+	"BLIZZARD": {
+		"name": "Blizzard",
+		"word": "freeze",
+		"type": "consumable",
+		"rarity": "rare",
+		"duration": 5000,
+		"speedMultiplier": 0.5
+	},
+	"MULTIPLIER": {
+		"name": "Multiplier Boost",
+		"word": "boost",
+		"type": "consumable",
+		"rarity": "uncommon",
+		"multiplierBoost": 1,
+		"duration": 5000
+	},
+	"THUNDERSTORM": {
+		"name": "Thunderstorm",
+		"word": "lightning",
+		"type": "consumable",
+		"rarity": "rare",
+		"duration": 5000
+	}
+}
