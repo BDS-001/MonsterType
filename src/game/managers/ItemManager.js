@@ -5,6 +5,7 @@ import HealthUp from '../entities/items/healthUp';
 import RandomWeaponDrop from '../entities/items/randomWeaponDrop';
 import Shield from '../entities/items/shield';
 import Blizzard from '../entities/items/blizzard';
+import Thunderstorm from '../entities/items/thunderstorm';
 import Multiplier from '../entities/items/multiplier';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
@@ -22,6 +23,7 @@ export default class ItemManager extends BaseManager {
 			['HEALTH_UP', HealthUp],
 			['RANDOM_WEAPON_DROP', RandomWeaponDrop],
 			['BLIZZARD', Blizzard],
+			['THUNDERSTORM', Thunderstorm],
 			['MULTIPLIER', Multiplier],
 		]);
 		this.setupEventListeners();

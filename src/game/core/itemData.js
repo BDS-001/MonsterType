@@ -57,4 +57,12 @@ export const ITEM_DATA = {
 		multiplierBoost: 1,
 		duration: 5000,
 	},
+	THUNDERSTORM: {
+		id: 'THUNDERSTORM',
+		name: 'Thunderstorm',
+		word: 'lightning',
+		type: 'consumable',
+		rarity: 'rare',
+		duration: 5000,
+	},
 };

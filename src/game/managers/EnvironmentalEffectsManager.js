@@ -6,6 +6,10 @@ export default class EnvironmentalEffectsManager extends BaseManager {
 		super(scene);
 		this.activeEffects = new Map();
 		this.overlays = new Map();
+		this.effectHandlers = {
+			blizzard: () => this.addBlizzardEffect(),
+			thunderstorm: () => this.addThunderstormEffect(),
+		};
 		this.setupEventListeners();
 	}
 
@@ -22,9 +26,7 @@ export default class EnvironmentalEffectsManager extends BaseManager {
 			}
 		});
 
-		if (effectType === 'blizzard') {
-			this.addBlizzardEffect();
-		}
+		this.effectHandlers[effectType]?.();
 
 		this.scene.time.delayedCall(duration, () => {
 			this.deactivateEffect(effectType);
@@ -32,10 +34,7 @@ export default class EnvironmentalEffectsManager extends BaseManager {
 	}
 
 	deactivateEffect(effectType) {
-		if (effectType === 'blizzard') {
-			this.removeOverlay('blizzard');
-		}
-
+		this.removeOverlay(effectType);
 		this.activeEffects.delete(effectType);
 	}
 
@@ -43,17 +42,7 @@ export default class EnvironmentalEffectsManager extends BaseManager {
 		if (this.overlays.has('blizzard')) return;
 
 		const camera = this.scene.cameras.main;
-		const overlay = this.scene.add.rectangle(
-			camera.centerX,
-			camera.centerY,
-			camera.width,
-			camera.height,
-			0xaaddff,
-			0.15
-		);
-		overlay.setDepth(10000);
-		overlay.setScrollFactor(0);
-
+		const overlay = this.createOverlay(camera, 0xaaddff, 0.15);
 		const particles = this.scene.add.particles(0, 0, 'snowflake', {
 			x: { min: 0, max: camera.width },
 			y: { min: -10, max: camera.height },
@@ -71,6 +60,50 @@ export default class EnvironmentalEffectsManager extends BaseManager {
 		particles.setScrollFactor(0);
 
 		this.overlays.set('blizzard', { overlay, particles });
+	}
+
+	addThunderstormEffect() {
+		if (this.overlays.has('thunderstorm')) return;
+
+		const camera = this.scene.cameras.main;
+		const overlay = this.createOverlay(camera, 0x0a0a15, 0.6);
+
+		const graphics = this.scene.add.graphics();
+		graphics.fillStyle(0x4d94ff, 1);
+		graphics.fillRect(0, 0, 2, 8);
+		graphics.generateTexture('raindrop', 2, 8);
+		graphics.destroy();
+
+		const rain = this.scene.add.particles(0, 0, 'raindrop', {
+			x: { min: -100, max: camera.width + 100 },
+			y: { min: -10, max: 0 },
+			lifespan: 2000,
+			speedY: { min: 400, max: 600 },
+			speedX: { min: -50, max: -30 },
+			scale: { min: 0.8, max: 1.2 },
+			alpha: { start: 0.6, end: 0.3 },
+			angle: 15,
+			frequency: 20,
+			quantity: 1,
+		});
+		rain.setDepth(10001);
+		rain.setScrollFactor(0);
+
+		this.overlays.set('thunderstorm', { overlay, particles: rain });
+	}
+
+	createOverlay(camera, color, alpha) {
+		const overlay = this.scene.add.rectangle(
+			camera.centerX,
+			camera.centerY,
+			camera.width,
+			camera.height,
+			color,
+			alpha
+		);
+		overlay.setDepth(10000);
+		overlay.setScrollFactor(0);
+		return overlay;
 	}
 
 	removeOverlay(effectType) {
