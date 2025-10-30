@@ -47,12 +47,9 @@ describe('Multiplier', () => {
 	it('should emit multiplier boost event on kill', () => {
 		multiplier.onKill();
 
-		expect(mockScene.events.emit).toHaveBeenCalledWith(
-			'MULTIPLIER_BOOST_COLLECTED',
-			{
-				boost: 2,
-				duration: 10000,
-			}
-		);
+		expect(mockScene.events.emit).toHaveBeenCalledWith('MULTIPLIER_BOOST_COLLECTED', {
+			boost: 2,
+			duration: 10000,
+		});
 	});
 });

@@ -117,12 +117,7 @@ describe('ItemManager', () => {
 			itemType: 'TEST_ITEM',
 		});
 
-		expect(ItemClass).toHaveBeenCalledWith(
-			mockScene,
-			100,
-			100,
-			'item0'
-		);
+		expect(ItemClass).toHaveBeenCalledWith(mockScene, 100, 100, 'item0');
 		expect(mockGroup.add).toHaveBeenCalledWith(mockItem);
 		expect(result).toBe(mockItem);
 		expect(itemManager.currentItemId).toBe(1);
