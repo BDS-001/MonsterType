@@ -1,26 +1,19 @@
 import Enemy from './enemy.js';
 import { GAME_EVENTS } from '../../core/GameEvents.js';
-
-const difficultyMap = {
-	0: { moveSpeed: 80, difficulty: 'veryEasy', scale: 1.5 },
-	1: { moveSpeed: 60, difficulty: 'easy', scale: 2.5 },
-	2: { moveSpeed: 40, difficulty: 'medium', scale: 3.5 },
-};
+import enemyConfig from '../../data/enemyConfig.json';
 
 export default class Slime extends Enemy {
 	constructor(scene, x, y, id, config = { splitCount: 2 }) {
 		const splitCount = config.splitCount ?? 2;
-		const difficultyData = difficultyMap[splitCount] ?? difficultyMap[2];
+		const difficultyData =
+			enemyConfig.slime.difficulties[splitCount] ?? enemyConfig.slime.difficulties[2];
 
 		const slimeOptions = {
 			moveSpeed: difficultyData.moveSpeed,
-			knockback: 50,
+			knockback: enemyConfig.slime.knockback,
 			wordCategory: difficultyData.difficulty,
 			scale: config.scale ?? difficultyData.scale,
-			dropTable: [
-				{ itemType: 'SHIELD', chance: 1 },
-				{ itemType: 'BOMB', chance: 1 },
-			],
+			dropTable: enemyConfig.slime.dropTable,
 		};
 
 		super(scene, x, y, id, 'slime', slimeOptions);
