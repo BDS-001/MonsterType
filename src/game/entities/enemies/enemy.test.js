@@ -268,11 +268,7 @@ describe('Enemy', () => {
 		it('should move towards player at base speed', () => {
 			enemy.moveEnemy(16);
 
-			expect(mockScene.physics.moveToObject).toHaveBeenCalledWith(
-				enemy,
-				mockScene.player,
-				50
-			);
+			expect(mockScene.physics.moveToObject).toHaveBeenCalledWith(enemy, mockScene.player, 50);
 		});
 
 		it('should apply freeze speed multiplier', () => {
@@ -280,11 +276,7 @@ describe('Enemy', () => {
 
 			enemy.moveEnemy(16);
 
-			expect(mockScene.physics.moveToObject).toHaveBeenCalledWith(
-				enemy,
-				mockScene.player,
-				25
-			);
+			expect(mockScene.physics.moveToObject).toHaveBeenCalledWith(enemy, mockScene.player, 25);
 		});
 
 		it('should not move when destroyed', () => {

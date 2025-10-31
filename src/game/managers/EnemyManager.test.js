@@ -95,13 +95,7 @@ describe('EnemyManager', () => {
 
 			enemyManager.spawnEnemyType(EnemyClass, 1, { x: 100, y: 200 });
 
-			expect(EnemyClass).toHaveBeenCalledWith(
-				mockScene,
-				100,
-				200,
-				'enemy0',
-				{ x: 100, y: 200 }
-			);
+			expect(EnemyClass).toHaveBeenCalledWith(mockScene, 100, 200, 'enemy0', { x: 100, y: 200 });
 			expect(mockGroup.add).toHaveBeenCalledWith(mockEnemy);
 			expect(enemyManager.currentEnemyId).toBe(1);
 		});
@@ -122,10 +116,7 @@ describe('EnemyManager', () => {
 		it('should spawn multiple enemies', () => {
 			const mockEnemy1 = { isDestroyed: false };
 			const mockEnemy2 = { isDestroyed: false };
-			const EnemyClass = vi
-				.fn()
-				.mockReturnValueOnce(mockEnemy1)
-				.mockReturnValueOnce(mockEnemy2);
+			const EnemyClass = vi.fn().mockReturnValueOnce(mockEnemy1).mockReturnValueOnce(mockEnemy2);
 
 			enemyManager.spawnEnemyType(EnemyClass, 2, { x: 100, y: 100 });
 
