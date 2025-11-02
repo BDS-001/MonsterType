@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mockPhaser from '../../../test-utils/phaser.mock.js';
+import { createMockScene } from '../../../test-utils/scene.mock.js';
 import LazerGun from './lazer.js';
 import { getDamageableEnemiesInRadius } from '../../util/physicsUtils.js';
+
+mockPhaser();
 
 vi.mock('./weapon.js', () => ({
 	default: class Weapon {
@@ -20,14 +24,6 @@ vi.mock('../../core/GameEvents.js', () => ({
 	GAME_EVENTS: { WEAPON_FIRED: 'WEAPON_FIRED' },
 }));
 
-global.Phaser = {
-	Math: {
-		Angle: {
-			Between: vi.fn((x1, y1, x2, y2) => Math.atan2(y2 - y1, x2 - x1)),
-		},
-	},
-};
-
 describe('LazerGun', () => {
 	let lazer;
 	let mockScene;
@@ -43,12 +39,7 @@ describe('LazerGun', () => {
 			takeDamage: vi.fn(),
 		};
 
-		mockScene = {
-			player: mockPlayer,
-			events: {
-				emit: vi.fn(),
-			},
-		};
+		mockScene = createMockScene({ player: mockPlayer });
 
 		lazer = new LazerGun();
 		lazer.scene = mockScene;
