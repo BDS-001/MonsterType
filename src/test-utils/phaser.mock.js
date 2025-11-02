@@ -7,6 +7,11 @@ export default function mockPhaser() {
 				FIT: 1,
 				CENTER_BOTH: 1,
 			},
+			Math: {
+				Angle: {
+					Between: vi.fn((x1, y1, x2, y2) => Math.atan2(y2 - y1, x2 - x1)),
+				},
+			},
 			Physics: {
 				Arcade: {
 					Image: class Image {},
@@ -25,4 +30,32 @@ export default function mockPhaser() {
 			},
 		},
 	}));
+
+	global.Phaser = {
+		Scale: {
+			FIT: 1,
+			CENTER_BOTH: 1,
+		},
+		Math: {
+			Angle: {
+				Between: vi.fn((x1, y1, x2, y2) => Math.atan2(y2 - y1, x2 - x1)),
+			},
+		},
+		Physics: {
+			Arcade: {
+				Image: class Image {},
+				Sprite: class Sprite {
+					constructor(scene, x, y, texture) {
+						this.scene = scene;
+						this.x = x;
+						this.y = y;
+						this.texture = texture;
+						this.displayHeight = 32;
+					}
+					setScale() {}
+					setAlpha() {}
+				},
+			},
+		},
+	};
 }
