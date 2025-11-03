@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TargetManager from './TargetManager.js';
 import mockPhaser from '../../test-utils/phaser.mock.js';
 import { createMockScene } from '../../test-utils/scene.mock.js';
+import { GAME_EVENTS } from '../core/GameEvents.js';
 
 mockPhaser();
 
@@ -13,13 +14,6 @@ vi.mock('../core/BaseManager.js', () => ({
 		subscribe() {}
 		emit() {}
 		destroy() {}
-	},
-}));
-
-vi.mock('../core/GameEvents.js', () => ({
-	GAME_EVENTS: {
-		WEAPON_READY_TO_FIRE: 'WEAPON_READY_TO_FIRE',
-		TARGETS_SELECTED: 'TARGETS_SELECTED',
 	},
 }));
 
@@ -283,7 +277,7 @@ describe('TargetManager', () => {
 			});
 
 			expect(weapon.fire).toHaveBeenCalled();
-			expect(targetManager.emit).toHaveBeenCalledWith('TARGETS_SELECTED', {
+			expect(targetManager.emit).toHaveBeenCalledWith(GAME_EVENTS.TARGETS_SELECTED, {
 				targets: [enemy1, enemy2],
 				weapon,
 				key: 'a',
