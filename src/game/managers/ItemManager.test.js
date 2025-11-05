@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import ItemManager from './ItemManager.js';
+import { createMockScene } from '../../test-utils/scene.mock.js';
 
 vi.mock('../entities/items/item', () => ({
 	default: vi.fn(),
@@ -66,25 +67,7 @@ describe('ItemManager', () => {
 			getChildren: vi.fn(() => []),
 		};
 
-		mockScene = {
-			add: {
-				group: vi.fn(() => mockGroup),
-			},
-			game: {
-				config: {
-					width: 800,
-					height: 600,
-				},
-			},
-			cameras: {
-				main: {
-					scrollX: 0,
-					scrollY: 0,
-					width: 800,
-					height: 600,
-				},
-			},
-		};
+		mockScene = createMockScene({add: {group: vi.fn(() => mockGroup)}})
 
 		itemManager = new ItemManager(mockScene);
 	});
