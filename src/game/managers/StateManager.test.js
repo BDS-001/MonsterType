@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import StateManager from './StateManager';
 import { createMockScene } from '../../test-utils/scene.mock';
+import { GAME_EVENTS } from '../core/GameEvents';
 
 vi.mock('../core/BaseManager.js', () => {
 	return {
@@ -8,9 +9,10 @@ vi.mock('../core/BaseManager.js', () => {
 			constructor(scene) {
 				this.scene = scene;
 			}
-			subscribe() {}
-			emit() {}
-			subscribeGame() {}
+			subscribe = vi.fn();
+			emit = vi.fn();
+			subscribeGame = vi.fn();
+			emitGame = vi.fn();
 		},
 	};
 });
@@ -34,4 +36,11 @@ describe('StateManager', () => {
 		expect(reset).toHaveBeenCalled();
 		expect(setupListeners).toHaveBeenCalled();
 	});
+
+    it('should subscribe to correct events', () => {
+        expect(stateManager.subscribe).toHaveBeenCalledWith(GAME_EVENTS.ENEMY_KILLED, stateManager.handleEnemyKilled);
+        expect(stateManager.subscribe).toHaveBeenCalledWith(GAME_EVENTS.PLAYER_HIT, stateManager.playerHit);
+        expect(stateManager.subscribeGame).toHaveBeenCalledWith(GAME_EVENTS.MULTIPLIER_CHANGED, stateManager.handleMultiplierChanged);
+        expect(stateManager.subscribeGame).toHaveBeenCalledWith(GAME_EVENTS.GAME_OVER, stateManager.handleGameRestart);
+    })
 });
