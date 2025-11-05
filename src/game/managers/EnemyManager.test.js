@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import EnemyManager from './EnemyManager.js';
+import { createMockScene } from '../../test-utils/scene.mock.js';
 
 vi.mock('../entities/enemies/zombie', () => ({
 	default: vi.fn(),
@@ -47,24 +48,14 @@ describe('EnemyManager', () => {
 			getChildren: vi.fn(() => []),
 		};
 
-		mockScene = {
+		mockScene = createMockScene({
 			add: {
 				group: vi.fn(() => mockGroup),
-			},
-			events: {
-				on: vi.fn(),
-				off: vi.fn(),
-			},
-			cameras: {
-				main: {
-					width: 800,
-					height: 600,
-				},
 			},
 			environmentalEffectsManager: {
 				applyEffectsToEnemy: vi.fn(),
 			},
-		};
+		});
 
 		enemyManager = new EnemyManager(mockScene);
 	});

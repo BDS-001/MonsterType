@@ -67,7 +67,7 @@ describe('ItemManager', () => {
 			getChildren: vi.fn(() => []),
 		};
 
-		mockScene = createMockScene({add: {group: vi.fn(() => mockGroup)}})
+		mockScene = createMockScene({ add: { group: vi.fn(() => mockGroup) } });
 
 		itemManager = new ItemManager(mockScene);
 	});
