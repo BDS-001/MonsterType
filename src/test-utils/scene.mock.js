@@ -19,6 +19,7 @@ export const createMockScene = (overrides = {}) => {
 				scrollY: 0,
 				width: 800,
 				height: 600,
+				shake: vi.fn(),
 			},
 		},
 		tweens: {
