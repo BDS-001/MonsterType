@@ -1,17 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import InputManager from './InputManager.js';
 import { createMockScene } from '../../test-utils/scene.mock.js';
+import { mockBaseManager } from '../../test-utils/basemanager.mock.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
-vi.mock('../core/BaseManager.js', () => ({
-	default: class BaseManager {
-		constructor(scene) {
-			this.scene = scene;
-		}
-		emit() {}
-		destroy() {}
-	},
-}));
+mockBaseManager();
 
 describe('InputManager', () => {
 	let mockScene;

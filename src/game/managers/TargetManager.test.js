@@ -2,20 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TargetManager from './TargetManager.js';
 import mockPhaser from '../../test-utils/phaser.mock.js';
 import { createMockScene } from '../../test-utils/scene.mock.js';
+import { mockBaseManager } from '../../test-utils/basemanager.mock.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
 mockPhaser();
-
-vi.mock('../core/BaseManager.js', () => ({
-	default: class BaseManager {
-		constructor(scene) {
-			this.scene = scene;
-		}
-		subscribe() {}
-		emit() {}
-		destroy() {}
-	},
-}));
+mockBaseManager();
 
 describe('TargetManager', () => {
 	let mockScene;

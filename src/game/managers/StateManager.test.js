@@ -1,21 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import StateManager from './StateManager';
 import { createMockScene } from '../../test-utils/scene.mock';
+import { mockBaseManager } from '../../test-utils/basemanager.mock';
 import { GAME_EVENTS } from '../core/GameEvents';
 
-vi.mock('../core/BaseManager.js', () => {
-	return {
-		default: class BaseManager {
-			constructor(scene) {
-				this.scene = scene;
-			}
-			subscribe = vi.fn();
-			emit = vi.fn();
-			subscribeGame = vi.fn();
-			emitGame = vi.fn();
-		},
-	};
-});
+mockBaseManager();
 
 describe('StateManager', () => {
 	let stateManager;
@@ -38,21 +27,25 @@ describe('StateManager', () => {
 	});
 
 	it('should subscribe to correct events', () => {
-		expect(stateManager.subscribe).toHaveBeenCalledWith(
+		expect(scene.events.on).toHaveBeenCalledWith(
 			GAME_EVENTS.ENEMY_KILLED,
-			stateManager.handleEnemyKilled
+			stateManager.handleEnemyKilled,
+			stateManager
 		);
-		expect(stateManager.subscribe).toHaveBeenCalledWith(
+		expect(scene.events.on).toHaveBeenCalledWith(
 			GAME_EVENTS.PLAYER_HIT,
-			stateManager.playerHit
+			stateManager.playerHit,
+			stateManager
 		);
-		expect(stateManager.subscribeGame).toHaveBeenCalledWith(
+		expect(scene.game.events.on).toHaveBeenCalledWith(
 			GAME_EVENTS.MULTIPLIER_CHANGED,
-			stateManager.handleMultiplierChanged
+			stateManager.handleMultiplierChanged,
+			stateManager
 		);
-		expect(stateManager.subscribeGame).toHaveBeenCalledWith(
+		expect(scene.game.events.on).toHaveBeenCalledWith(
 			GAME_EVENTS.GAME_OVER,
-			stateManager.handleGameRestart
+			stateManager.handleGameRestart,
+			stateManager
 		);
 	});
 
@@ -97,7 +90,7 @@ describe('StateManager', () => {
 
 			stateManager.updateScore(50);
 
-			expect(stateManager.emitGame).toHaveBeenCalledWith(GAME_EVENTS.SCORE_CHANGED, {
+			expect(scene.game.events.emit).toHaveBeenCalledWith(GAME_EVENTS.SCORE_CHANGED, {
 				amount: 50,
 				newScore: 200,
 			});

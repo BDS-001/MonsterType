@@ -1,20 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import WaveManager from './WaveManager.js';
 import { createMockScene } from '../../test-utils/scene.mock.js';
+import { mockBaseManager } from '../../test-utils/basemanager.mock.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 import waves from '../data/waves.json';
 
-vi.mock('../core/BaseManager.js', () => ({
-	default: class BaseManager {
-		constructor(scene) {
-			this.scene = scene;
-		}
-		subscribe() {}
-		emit() {}
-		emitGame() {}
-		destroy() {}
-	},
-}));
+mockBaseManager();
 
 describe('WaveManager', () => {
 	let mockScene;

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import ItemManager from './ItemManager.js';
 import { createMockScene } from '../../test-utils/scene.mock.js';
+import { mockBaseManager } from '../../test-utils/basemanager.mock.js';
 
 vi.mock('../entities/items/item', () => ({
 	default: vi.fn(),
@@ -38,16 +39,7 @@ vi.mock('../entities/items/multiplier', () => ({
 	default: vi.fn(),
 }));
 
-vi.mock('../core/BaseManager.js', () => ({
-	default: class BaseManager {
-		constructor(scene) {
-			this.scene = scene;
-		}
-		subscribe() {}
-		destroy() {}
-		destroyGroup() {}
-	},
-}));
+mockBaseManager();
 
 vi.mock('../core/GameEvents.js', () => ({
 	GAME_EVENTS: {
