@@ -30,6 +30,13 @@ export const createMockScene = (overrides = {}) => {
 			on: vi.fn(),
 			off: vi.fn(),
 		},
+		game: {
+			events: {
+				emit: vi.fn(),
+				on: vi.fn(),
+				off: vi.fn(),
+			},
+		},
 		add: {
 			existing: vi.fn(),
 			group: vi.fn(),
