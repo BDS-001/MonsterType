@@ -8,11 +8,18 @@ import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
 export default class WeaponManager extends BaseManager {
-	constructor(scene) {
+	constructor(scene, weaponTypes = null) {
 		super(scene);
 		this.currentWeapon = null;
 		this.STARTER_WEAPON = 'pistol';
-		this.weaponTypes = new Map([
+		this.weaponTypes = weaponTypes || this.getDefaultWeapons();
+
+		this.setupEventListeners();
+		this.equipWeapon(this.STARTER_WEAPON);
+	}
+
+	getDefaultWeapons() {
+		return new Map([
 			['pistol', Pistol],
 			['crossbow', Crossbow],
 			['shotgun', Shotgun],
@@ -20,9 +27,6 @@ export default class WeaponManager extends BaseManager {
 			['dualPistols', DualPistols],
 			['lazerGun', LazerGun],
 		]);
-
-		this.setupEventListeners();
-		this.equipWeapon(this.STARTER_WEAPON);
 	}
 
 	setupEventListeners() {
