@@ -108,7 +108,9 @@ describe('AttackAnimationManager', () => {
 
 			attackAnimationManager.fireProjectile(weaponData);
 
-			expect(attackAnimationManager.animationFactory.createAnimation).toHaveBeenCalledWith('shotgun');
+			expect(attackAnimationManager.animationFactory.createAnimation).toHaveBeenCalledWith(
+				'shotgun'
+			);
 			expect(mockAnimation.animate).toHaveBeenCalledWith(weaponData);
 		});
 
@@ -125,7 +127,9 @@ describe('AttackAnimationManager', () => {
 
 			attackAnimationManager.fireProjectile(weaponData);
 
-			expect(attackAnimationManager.animationFactory.createAnimation).toHaveBeenCalledWith('crossbow');
+			expect(attackAnimationManager.animationFactory.createAnimation).toHaveBeenCalledWith(
+				'crossbow'
+			);
 			expect(mockAnimation.animate).toHaveBeenCalledWith(weaponData);
 		});
 	});
