@@ -71,5 +71,13 @@ export default function mockPhaser() {
 				},
 			},
 		},
+		Scene: class Scene {
+			constructor(config) {
+				this.scene = {
+					key: config?.key || '',
+				};
+			}
+			destroy() {}
+		},
 	};
 }
