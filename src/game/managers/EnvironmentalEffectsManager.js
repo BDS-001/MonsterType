@@ -34,6 +34,10 @@ export default class EnvironmentalEffectsManager extends BaseManager {
 	}
 
 	deactivateEffect(effectType) {
+		const effect = this.activeEffects.get(effectType);
+		if (effect?.config?.timer) {
+			effect.config.timer.remove();
+		}
 		this.removeOverlay(effectType);
 		this.activeEffects.delete(effectType);
 	}
