@@ -12,6 +12,7 @@ export const createMockScene = (overrides = {}) => {
 		time: {
 			now: 1000,
 			delayedCall: vi.fn(),
+			addEvent: vi.fn(() => ({ reset: vi.fn() })),
 		},
 		cameras: {
 			main: {
@@ -45,6 +46,17 @@ export const createMockScene = (overrides = {}) => {
 				setPosition: vi.fn(),
 				setText: vi.fn(),
 				destroy: vi.fn(),
+			})),
+			graphics: vi.fn(() => ({
+				lineStyle: vi.fn(),
+				lineBetween: vi.fn(),
+				setDepth: vi.fn(),
+				destroy: vi.fn(),
+			})),
+		},
+		enemyManager: {
+			getEnemies: vi.fn(() => ({
+				getChildren: vi.fn(() => []),
 			})),
 		},
 		...overrides,

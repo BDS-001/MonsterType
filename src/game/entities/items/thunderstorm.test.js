@@ -1,5 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Thunderstorm from './thunderstorm.js';
+import { createMockScene } from '../../../test-utils/scene.mock.js';
+
+global.Phaser = {
+	Math: {
+		Between: (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
+	},
+	Utils: {
+		Array: {
+			GetRandom: (array) => array[0],
+		},
+	},
+};
 
 vi.mock('./item.js', () => ({
 	default: class Item {
@@ -29,12 +41,7 @@ describe('Thunderstorm', () => {
 	let thunderstorm;
 
 	beforeEach(() => {
-		mockScene = {
-			events: {
-				emit: vi.fn(),
-			},
-		};
-
+		mockScene = createMockScene();
 		thunderstorm = new Thunderstorm(mockScene, 100, 200, 'thunderstorm1');
 	});
 
@@ -55,13 +62,22 @@ describe('Thunderstorm', () => {
 		);
 	});
 
-	it('should include config with onEnemySpawn callback', () => {
+	it('should include config with timer', () => {
 		thunderstorm.onKill();
 
 		const emitCall = mockScene.events.emit.mock.calls[0];
 		const config = emitCall[1].config;
 
 		expect(config.duration).toBe(8000);
-		expect(typeof config.onEnemySpawn).toBe('function');
+		expect(config.timer).toBeDefined();
+	});
+
+	it('should create lightning timer', () => {
+		thunderstorm.onKill();
+
+		expect(mockScene.time.addEvent).toHaveBeenCalled();
+		const timerConfig = mockScene.time.addEvent.mock.calls[0][0];
+		expect(timerConfig.callback).toBeDefined();
+		expect(timerConfig.loop).toBe(false);
 	});
 });
