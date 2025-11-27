@@ -7,6 +7,7 @@ import Shield from '../entities/items/shield';
 import Blizzard from '../entities/items/blizzard';
 import Thunderstorm from '../entities/items/thunderstorm';
 import Multiplier from '../entities/items/multiplier';
+import HolyWater from '../entities/items/holyWater';
 import BaseManager from '../core/BaseManager.js';
 import { GAME_EVENTS } from '../core/GameEvents.js';
 
@@ -25,6 +26,7 @@ export default class ItemManager extends BaseManager {
 			['BLIZZARD', Blizzard],
 			['THUNDERSTORM', Thunderstorm],
 			['MULTIPLIER', Multiplier],
+			['HOLY_WATER', HolyWater],
 		]);
 		this.setupEventListeners();
 	}

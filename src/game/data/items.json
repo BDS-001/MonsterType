@@ -56,5 +56,11 @@
 		"type": "consumable",
 		"rarity": "rare",
 		"duration": 5000
+	},
+	"HOLY_WATER": {
+		"name": "Holy Water",
+		"word": "divine",
+		"type": "consumable",
+		"rarity": "epic"
 	}
 }
