@@ -67,7 +67,7 @@ describe('ItemManager', () => {
 	it('should initialize with correct properties', () => {
 		expect(itemManager.items).toBe(mockGroup);
 		expect(itemManager.currentItemId).toBe(0);
-		expect(itemManager.itemTypes.size).toBe(8);
+		expect(itemManager.itemTypes.size).toBe(9);
 	});
 
 	it('should have all item types registered', () => {
@@ -79,6 +79,7 @@ describe('ItemManager', () => {
 		expect(itemManager.itemTypes.has('BLIZZARD')).toBe(true);
 		expect(itemManager.itemTypes.has('THUNDERSTORM')).toBe(true);
 		expect(itemManager.itemTypes.has('MULTIPLIER')).toBe(true);
+		expect(itemManager.itemTypes.has('HOLY_WATER')).toBe(true);
 	});
 
 	it('should spawn item with adjusted coordinates', () => {
