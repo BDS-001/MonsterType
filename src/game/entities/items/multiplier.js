@@ -3,7 +3,7 @@ import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class Multiplier extends Item {
 	constructor(scene, x, y, itemId) {
-		super(scene, x, y, 'MULTIPLIER', itemId, 'item-sprite');
+		super(scene, x, y, 'MULTIPLIER', itemId, 'scoreMultiplier');
 	}
 
 	onKill() {

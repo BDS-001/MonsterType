@@ -3,7 +3,7 @@ import { GAME_EVENTS } from '../../core/GameEvents.js';
 
 export default class Thunderstorm extends Item {
 	constructor(scene, x, y, itemId) {
-		super(scene, x, y, 'THUNDERSTORM', itemId, 'item-sprite');
+		super(scene, x, y, 'THUNDERSTORM', itemId, 'thunderstorm');
 	}
 
 	onKill() {

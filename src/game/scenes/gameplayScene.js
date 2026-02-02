@@ -37,6 +37,9 @@ export default class GameScene extends Phaser.Scene {
 		this.load.image('healthUp', 'assets/items/healthUp.png');
 		this.load.image('shield', 'assets/items/shield.png');
 		this.load.image('randomWeapon', 'assets/items/randomWeapon.png');
+		this.load.image('blizzard', 'assets/items/blizzard.png');
+		this.load.image('scoreMultiplier', 'assets/items/scoreMultiplier.png');
+		this.load.image('thunderstorm', 'assets/items/thunderstorm.png');
 		this.load.image('snowflake', 'assets/effects/snowflake.png');
 	}
 
